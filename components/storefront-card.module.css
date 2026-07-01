@@ -1,0 +1,131 @@
+.card {
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-card);
+  padding: 20px 20px 22px;
+  box-shadow: var(--shadow-card);
+}
+
+.eyebrow {
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 6px;
+}
+
+.shopname {
+  font-family: var(--font-display-stack);
+  font-weight: 700;
+  font-size: 24px;
+  line-height: 1.05;
+  letter-spacing: -0.01em;
+  color: var(--ink);
+  margin: 0;
+}
+
+.tagline {
+  margin: 6px 0 0;
+  font-size: 14px;
+  color: var(--muted);
+  line-height: 1.45;
+}
+
+.open {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 10px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--green);
+}
+.closed {
+  composes: open;
+  color: var(--muted);
+}
+.gdot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--green);
+}
+.rdot {
+  composes: gdot;
+  background: var(--muted);
+}
+
+.meta {
+  margin-top: 14px;
+  font-size: 14px;
+  color: var(--ink);
+  line-height: 1.5;
+}
+.label {
+  color: var(--muted);
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  display: block;
+  margin-bottom: 2px;
+}
+.hoursLine {
+  display: block;
+}
+
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+  margin-top: 8px;
+}
+.chip {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--petrol);
+  background: var(--surface-tint);
+  border-radius: 999px;
+  padding: 6px 12px;
+}
+.chipPrice {
+  color: var(--marigold-deep);
+  font-weight: 600;
+}
+
+.about {
+  margin-top: 14px;
+  font-size: 14px;
+  line-height: 1.55;
+  color: var(--ink);
+}
+
+.actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 18px;
+}
+.btn {
+  flex: 1;
+  text-align: center;
+  border-radius: var(--radius-control);
+  padding: 12px 0;
+  font-weight: 600;
+  font-size: 14px;
+  text-decoration: none;
+}
+.call {
+  background: var(--ink);
+  color: var(--paper);
+}
+.wa {
+  background: var(--surface-tint);
+  color: var(--petrol);
+}
+
+.empty {
+  margin-top: 12px;
+  font-size: 14px;
+  color: var(--muted);
+  line-height: 1.55;
+}

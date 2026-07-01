@@ -1,26 +1,82 @@
 @import "tailwindcss";
 
+/* ---- DESIGN.md tokens (the only palette + type scale allowed) ---- */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --paper: #f4f3ef;
+  --ink: #15201e;
+  --petrol: #0c3b38;
+  --petrol-deep: #072724;
+  --marigold: #f59e1b;
+  --marigold-deep: #c77c0a;
+  --muted: #7c8482;
+  --line: #e2e1da;
+  --green: #2e9e5b;
+  --surface-tint: #e9f0ee;
+
+  --font-display-stack: var(--font-display), system-ui, sans-serif;
+  --font-body-stack: var(--font-body), system-ui, sans-serif;
+  --font-deva-stack: var(--font-deva), sans-serif;
+  --font-gurmukhi-stack: var(--font-gurmukhi), sans-serif;
+
+  --shadow-card: 0 6px 20px rgba(21, 32, 30, 0.05);
+  --shadow-voice: 0 12px 28px rgba(245, 158, 27, 0.4);
 }
 
+/* Expose tokens to Tailwind utilities (text-petrol, bg-paper, font-display, …) */
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-paper: var(--paper);
+  --color-ink: var(--ink);
+  --color-petrol: var(--petrol);
+  --color-petrol-deep: var(--petrol-deep);
+  --color-marigold: var(--marigold);
+  --color-marigold-deep: var(--marigold-deep);
+  --color-muted: var(--muted);
+  --color-line: var(--line);
+  --color-green: var(--green);
+  --color-surface-tint: var(--surface-tint);
+
+  --font-display: var(--font-display-stack);
+  --font-body: var(--font-body-stack);
+  --font-deva: var(--font-deva-stack);
+  --font-gurmukhi: var(--font-gurmukhi-stack);
+
+  --radius-card: 18px;
+  --radius-control: 12px;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-body-stack);
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+/* Devanagari / Gurmukhi content must never fall back to tofu */
+.deva {
+  font-family: var(--font-deva-stack);
+}
+.gurmukhi {
+  font-family: var(--font-gurmukhi-stack);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
 }

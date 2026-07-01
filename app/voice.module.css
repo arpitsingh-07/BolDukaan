@@ -1,0 +1,486 @@
+.page {
+  min-height: 100svh;
+  background: var(--paper);
+  display: flex;
+  flex-direction: column;
+}
+
+/* ---------- HERO (petrol ground) ---------- */
+.hero {
+  background: var(--petrol);
+  color: var(--paper);
+  padding: 54px 28px 46px;
+  position: relative;
+  overflow: hidden;
+}
+.hero::after {
+  /* faint enamel signboard frame — used once per screen */
+  content: "";
+  position: absolute;
+  inset: 14px;
+  border: 1.5px solid rgba(245, 158, 27, 0.22);
+  border-radius: 20px;
+  pointer-events: none;
+}
+.inner {
+  max-width: 430px;
+  margin: 0 auto;
+  width: 100%;
+  position: relative;
+  z-index: 1;
+}
+
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--marigold);
+}
+.dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--marigold);
+  animation: ping 2.4s ease-out infinite;
+}
+@keyframes ping {
+  0% {
+    box-shadow: 0 0 0 0 rgba(245, 158, 27, 0.5);
+  }
+  70%,
+  100% {
+    box-shadow: 0 0 0 9px rgba(245, 158, 27, 0);
+  }
+}
+
+.title {
+  font-family: var(--font-display-stack);
+  font-weight: 800;
+  font-size: 40px;
+  line-height: 0.98;
+  letter-spacing: -0.02em;
+  margin: 18px 0 10px;
+}
+.amber {
+  color: var(--marigold);
+}
+.subline {
+  font-weight: 600;
+  font-size: 17px;
+  color: rgba(244, 243, 239, 0.66);
+}
+
+/* ---------- language chooser ---------- */
+.langRow {
+  display: flex;
+  gap: 8px;
+  margin: 26px 0 4px;
+}
+.langChip {
+  border: 1px solid rgba(244, 243, 239, 0.22);
+  background: transparent;
+  color: rgba(244, 243, 239, 0.78);
+  border-radius: 999px;
+  padding: 7px 14px;
+  font-size: 13px;
+  font-weight: 600;
+  font-family: inherit;
+  cursor: pointer;
+}
+.langChipActive {
+  composes: langChip;
+  background: var(--paper);
+  color: var(--petrol);
+  border-color: var(--paper);
+}
+
+/* ---------- voice button (the signature) ---------- */
+.voiceWrap {
+  margin: 34px auto 14px;
+  width: 168px;
+  height: 168px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  touch-action: none;
+  -webkit-user-select: none;
+  user-select: none;
+}
+.ring {
+  position: absolute;
+  border-radius: 50%;
+  border: 1.5px solid rgba(245, 158, 27, 0.35);
+  pointer-events: none;
+}
+.r1 {
+  width: 168px;
+  height: 168px;
+  animation: breathe 3.4s ease-in-out infinite;
+}
+.r2 {
+  width: 140px;
+  height: 140px;
+  animation: breathe 3.4s ease-in-out infinite 0.25s;
+  border-color: rgba(245, 158, 27, 0.5);
+}
+@keyframes breathe {
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 0.8;
+  }
+  50% {
+    transform: scale(1.08);
+    opacity: 0.35;
+  }
+}
+
+.voiceBtn {
+  width: 116px;
+  height: 116px;
+  border-radius: 50%;
+  background: var(--marigold);
+  border: none;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  gap: 5px;
+  padding-bottom: 35px;
+  box-shadow:
+    var(--shadow-voice),
+    inset 0 -3px 0 rgba(0, 0, 0, 0.12);
+  position: relative;
+  cursor: pointer;
+  touch-action: none;
+}
+.voiceBtn:active {
+  background: var(--marigold-deep);
+}
+.voiceBtn:disabled {
+  cursor: default;
+}
+
+.bars {
+  display: flex;
+  align-items: flex-end;
+  gap: 5px;
+  height: 46px;
+}
+.bar {
+  width: 6px;
+  border-radius: 3px;
+  background: var(--petrol-deep);
+  transform-origin: bottom;
+  animation: eq 1s ease-in-out infinite;
+}
+.bar:nth-child(1) {
+  height: 18px;
+  animation-delay: 0s;
+}
+.bar:nth-child(2) {
+  height: 38px;
+  animation-delay: 0.18s;
+}
+.bar:nth-child(3) {
+  height: 26px;
+  animation-delay: 0.36s;
+}
+.bar:nth-child(4) {
+  height: 44px;
+  animation-delay: 0.12s;
+}
+.bar:nth-child(5) {
+  height: 20px;
+  animation-delay: 0.3s;
+}
+@keyframes eq {
+  0%,
+  100% {
+    transform: scaleY(0.45);
+  }
+  50% {
+    transform: scaleY(1);
+  }
+}
+/* During recording, JS drives scaleY from real mic amplitude */
+.recording .bar {
+  animation: none;
+}
+
+.voiceCap {
+  text-align: center;
+  font-size: 14px;
+  font-weight: 500;
+  color: rgba(244, 243, 239, 0.8);
+}
+.voiceCapDeva {
+  display: block;
+  font-size: 13px;
+  color: rgba(244, 243, 239, 0.5);
+  margin-top: 3px;
+}
+
+.transcript {
+  margin: 14px auto 0;
+  max-width: 430px;
+  text-align: center;
+  font-size: 14px;
+  color: rgba(244, 243, 239, 0.92);
+  min-height: 20px;
+  line-height: 1.45;
+}
+
+/* ---------- result area (paper) ---------- */
+.result {
+  padding: 0 22px 40px;
+}
+.resultInner {
+  max-width: 430px;
+  margin: 0 auto;
+  width: 100%;
+}
+.flow {
+  text-align: center;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+  padding: 26px 0 8px;
+}
+.arrow {
+  display: block;
+  color: var(--marigold-deep);
+  font-size: 16px;
+  margin-top: 4px;
+}
+
+/* staggered field reveal as the card resolves */
+.reveal {
+  animation: cardIn 0.45s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+}
+@keyframes cardIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.resultActions {
+  display: flex;
+  gap: 10px;
+  margin-top: 16px;
+}
+.secondaryBtn {
+  flex: 1;
+  border-radius: var(--radius-control);
+  padding: 12px 0;
+  font-weight: 600;
+  font-size: 14px;
+  font-family: inherit;
+  background: var(--surface-tint);
+  color: var(--petrol);
+  border: none;
+  cursor: pointer;
+}
+.linkBtn {
+  background: transparent;
+  border: none;
+  color: var(--muted);
+  font-size: 13px;
+  font-weight: 600;
+  font-family: inherit;
+  cursor: pointer;
+  padding: 12px 0;
+}
+
+.primaryBtn {
+  width: 100%;
+  margin-top: 16px;
+  border-radius: var(--radius-control);
+  padding: 13px 0;
+  font-weight: 600;
+  font-size: 15px;
+  font-family: inherit;
+  background: var(--ink);
+  color: var(--paper);
+  border: none;
+  cursor: pointer;
+}
+.primaryBtn:disabled {
+  opacity: 0.6;
+  cursor: default;
+}
+
+.publishedBox {
+  margin-top: 16px;
+  background: var(--surface-tint);
+  border-radius: var(--radius-card);
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.publishedLabel {
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.publishedLink {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--petrol);
+  word-break: break-all;
+  text-decoration: none;
+}
+.publishedLink:hover {
+  text-decoration: underline;
+}
+.publishErrorNote {
+  margin-top: 10px;
+  font-size: 13px;
+  color: var(--marigold-deep);
+  text-align: center;
+}
+
+.partialNote {
+  margin-top: 12px;
+  font-size: 13px;
+  color: var(--marigold-deep);
+  text-align: center;
+}
+.statusNote {
+  margin-top: 10px;
+  font-size: 13px;
+  color: rgba(244, 243, 239, 0.8);
+  text-align: center;
+}
+.errorNote {
+  margin: 16px auto 0;
+  max-width: 430px;
+  font-size: 13px;
+  color: #ffd9b0;
+  text-align: center;
+}
+
+/* ---------- typed fallback (no Web Speech) ---------- */
+.fallback {
+  max-width: 430px;
+  margin: 22px auto 0;
+}
+.fallbackArea {
+  width: 100%;
+  min-height: 96px;
+  border-radius: var(--radius-control);
+  border: 1px solid rgba(244, 243, 239, 0.22);
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--paper);
+  padding: 12px 14px;
+  font-family: inherit;
+  font-size: 15px;
+  line-height: 1.5;
+  resize: vertical;
+}
+.fallbackArea::placeholder {
+  color: rgba(244, 243, 239, 0.45);
+}
+.fallbackBtn {
+  margin-top: 10px;
+  width: 100%;
+  border-radius: var(--radius-control);
+  padding: 13px 0;
+  font-weight: 600;
+  font-size: 15px;
+  font-family: inherit;
+  background: var(--paper);
+  color: var(--petrol);
+  border: none;
+  cursor: pointer;
+}
+.fallbackBtn:disabled {
+  opacity: 0.6;
+  cursor: default;
+}
+.fallbackToggle {
+  display: block;
+  margin: 8px auto 0;
+  background: transparent;
+  border: none;
+  color: rgba(244, 243, 239, 0.6);
+  font-size: 13px;
+  font-family: inherit;
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+/* On mobile, an empty result panel takes no space (single-column flow). */
+.resultEmpty {
+  display: none;
+}
+
+/* Quiet placeholder shown in the desktop right panel before a result exists. */
+.placeholder {
+  border: 1.5px dashed var(--line);
+  border-radius: var(--radius-card);
+  padding: 48px 28px;
+  text-align: center;
+  width: 100%;
+}
+.placeholderTitle {
+  font-family: var(--font-display-stack);
+  font-weight: 700;
+  font-size: 18px;
+  color: var(--muted);
+  margin: 0;
+}
+.placeholderSub {
+  margin: 6px 0 0;
+  font-size: 14px;
+  color: var(--muted);
+}
+
+/* ---------- desktop / web layout: asymmetric two columns ---------- */
+@media (min-width: 900px) {
+  .page {
+    display: grid;
+    grid-template-columns: 1.05fr 0.95fr;
+    max-width: 1180px;
+    margin: 0 auto;
+    min-height: 100svh;
+  }
+  .hero {
+    display: flex;
+    align-items: center;
+    padding: 64px 56px;
+  }
+  .title {
+    font-size: 52px;
+  }
+  /* the right column is always visible on desktop (card or placeholder) */
+  .result,
+  .resultEmpty {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 64px 56px;
+    overflow-y: auto;
+  }
+  /* the downward "your voice ↓" cue only makes sense in the stacked mobile flow */
+  .flow {
+    display: none;
+  }
+  .resultInner {
+    width: 100%;
+  }
+}

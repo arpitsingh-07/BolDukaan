@@ -1,0 +1,51 @@
+/* Public storefront page: calm, content-first, fast — NOT the bold app chrome.
+   Same palette foundation as the brand, but quiet (DESIGN.md, surface #2). */
+.page {
+  min-height: 100svh;
+  background: var(--paper);
+  display: flex;
+  justify-content: center;
+  padding: 32px 20px 48px;
+}
+.wrap {
+  width: 100%;
+  max-width: 480px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--petrol);
+  margin: 4px 0 0;
+}
+.brandDot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--marigold);
+}
+
+.shareRow {
+  margin-top: 2px;
+}
+
+.footer {
+  margin-top: 8px;
+  text-align: center;
+}
+.footerLink {
+  font-size: 13px;
+  color: var(--muted);
+  text-decoration: none;
+}
+.footerLink:hover {
+  color: var(--petrol);
+}

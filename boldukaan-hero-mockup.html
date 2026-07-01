@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BolDukaan — direction mockup</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&family=Hanken+Grotesk:wght@400;500;600;700&family=Noto+Sans+Devanagari:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#F4F3EF;
+    --ink:#15201E;
+    --petrol:#0C3B38;
+    --petrol-deep:#072724;
+    --marigold:#F59E1B;
+    --marigold-deep:#C77C0A;
+    --muted:#7C8482;
+    --line:#E2E1DA;
+    --green:#2E9E5B;
+    --display:"Bricolage Grotesque",system-ui,sans-serif;
+    --body:"Hanken Grotesk",system-ui,sans-serif;
+    --deva:"Noto Sans Devanagari",sans-serif;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{
+    background:#3a3a38;
+    font-family:var(--body);
+    min-height:100vh;
+    display:flex;align-items:center;justify-content:center;
+    padding:32px 16px;
+    -webkit-font-smoothing:antialiased;
+  }
+  .phone{
+    width:390px;max-width:100%;
+    background:var(--paper);
+    border-radius:36px;
+    overflow:hidden;
+    box-shadow:0 30px 80px rgba(0,0,0,.45);
+  }
+
+  /* ---------- HERO (petrol ground) ---------- */
+  .hero{
+    background:var(--petrol);
+    color:var(--paper);
+    padding:54px 28px 46px;
+    position:relative;
+    overflow:hidden;
+  }
+  .hero::after{ /* faint enamel signboard frame */
+    content:"";position:absolute;inset:14px;
+    border:1.5px solid rgba(245,158,27,.22);
+    border-radius:20px;pointer-events:none;
+  }
+  .eyebrow{
+    display:inline-flex;align-items:center;gap:8px;
+    font-size:12px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;
+    color:var(--marigold);
+    position:relative;z-index:1;
+  }
+  .eyebrow .dot{width:7px;height:7px;border-radius:50%;background:var(--marigold);
+    box-shadow:0 0 0 0 rgba(245,158,27,.6);animation:ping 2.4s ease-out infinite}
+  @keyframes ping{0%{box-shadow:0 0 0 0 rgba(245,158,27,.5)}70%,100%{box-shadow:0 0 0 9px rgba(245,158,27,0)}}
+
+  h1{
+    font-family:var(--display);
+    font-weight:800;
+    font-size:40px;line-height:.98;letter-spacing:-.02em;
+    margin:18px 0 10px;
+    position:relative;z-index:1;
+  }
+  h1 .amber{color:var(--marigold)}
+  .subline{
+    font-family:var(--deva);font-weight:600;font-size:17px;
+    color:rgba(244,243,239,.66);
+    position:relative;z-index:1;
+  }
+
+  /* ---------- voice button (the signature) ---------- */
+  .voice-wrap{
+    margin:40px auto 14px;width:168px;height:168px;
+    display:flex;align-items:center;justify-content:center;
+    position:relative;z-index:1;
+  }
+  .ring{position:absolute;border-radius:50%;border:1.5px solid rgba(245,158,27,.35)}
+  .r1{width:168px;height:168px;animation:breathe 3.4s ease-in-out infinite}
+  .r2{width:140px;height:140px;animation:breathe 3.4s ease-in-out infinite .25s;border-color:rgba(245,158,27,.5)}
+  @keyframes breathe{0%,100%{transform:scale(1);opacity:.8}50%{transform:scale(1.08);opacity:.35}}
+  .voice-btn{
+    width:116px;height:116px;border-radius:50%;
+    background:var(--marigold);
+    display:flex;align-items:flex-end;justify-content:center;gap:5px;
+    padding-bottom:0;
+    box-shadow:0 12px 28px rgba(245,158,27,.4), inset 0 -3px 0 rgba(0,0,0,.12);
+    position:relative;
+  }
+  .voice-btn .bars{display:flex;align-items:center;gap:5px;height:46px}
+  .voice-btn .bars span{
+    width:6px;border-radius:3px;background:var(--petrol-deep);
+    animation:eq 1s ease-in-out infinite;
+  }
+  .voice-btn .bars span:nth-child(1){height:18px;animation-delay:0s}
+  .voice-btn .bars span:nth-child(2){height:38px;animation-delay:.18s}
+  .voice-btn .bars span:nth-child(3){height:26px;animation-delay:.36s}
+  .voice-btn .bars span:nth-child(4){height:44px;animation-delay:.12s}
+  .voice-btn .bars span:nth-child(5){height:20px;animation-delay:.30s}
+  @keyframes eq{0%,100%{transform:scaleY(.45)}50%{transform:scaleY(1)}}
+
+  .voice-cap{
+    text-align:center;font-size:14px;font-weight:500;
+    color:rgba(244,243,239,.8);
+    position:relative;z-index:1;
+  }
+  .voice-cap .deva{font-family:var(--deva);display:block;font-size:13px;color:rgba(244,243,239,.5);margin-top:3px}
+
+  /* ---------- resolved storefront card (the output) ---------- */
+  .flow{
+    text-align:center;font-size:12px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;
+    color:var(--muted);
+    padding:26px 0 0;
+  }
+  .flow .arrow{display:block;color:var(--marigold);font-size:16px;margin-top:4px}
+  .out{padding:14px 22px 30px}
+  .card{
+    background:#fff;border:1px solid var(--line);border-radius:18px;
+    padding:20px 20px 22px;
+    box-shadow:0 6px 20px rgba(21,32,30,.05);
+  }
+  .shopname{font-family:var(--display);font-weight:700;font-size:24px;line-height:1.05;letter-spacing:-.01em;color:var(--ink)}
+  .open{display:inline-flex;align-items:center;gap:6px;margin-top:8px;font-size:13px;font-weight:600;color:var(--green)}
+  .open .gdot{width:8px;height:8px;border-radius:50%;background:var(--green)}
+  .meta{margin-top:14px;font-size:14px;color:var(--ink);line-height:1.5}
+  .meta .label{color:var(--muted);font-size:12px;text-transform:uppercase;letter-spacing:.08em;display:block;margin-bottom:2px}
+  .chips{display:flex;flex-wrap:wrap;gap:7px;margin-top:14px}
+  .chip{font-size:13px;font-weight:500;color:var(--petrol);background:#E9F0EE;border-radius:999px;padding:6px 12px}
+  .actions{display:flex;gap:10px;margin-top:18px}
+  .btn{flex:1;text-align:center;border-radius:12px;padding:12px 0;font-weight:600;font-size:14px}
+  .btn.call{background:var(--ink);color:var(--paper)}
+  .btn.wa{background:#E9F0EE;color:var(--petrol)}
+
+  @media (prefers-reduced-motion:reduce){
+    *{animation:none!important}
+  }
+</style>
+</head>
+<body>
+  <div class="phone">
+    <div class="hero">
+      <span class="eyebrow"><span class="dot"></span>BolDukaan</span>
+      <h1>Bol, aur <span class="amber">dukaan</span> taiyaar.</h1>
+      <p class="subline">बोलो — दुकान अपने आप बन जाएगी</p>
+
+      <div class="voice-wrap">
+        <div class="ring r1"></div>
+        <div class="ring r2"></div>
+        <div class="voice-btn">
+          <div class="bars"><span></span><span></span><span></span><span></span><span></span></div>
+        </div>
+      </div>
+      <p class="voice-cap">Hold and describe your shop<span class="deva">दबाकर अपनी दुकान बताइए</span></p>
+    </div>
+
+    <p class="flow">your voice<span class="arrow">↓</span></p>
+
+    <div class="out">
+      <div class="card">
+        <div class="shopname">Sharma General Store</div>
+        <span class="open"><span class="gdot"></span>Open now · closes 9:00 PM</span>
+        <div class="meta">
+          <span class="label">Hours</span>
+          Mon–Sun · 9:00 AM – 9:00 PM
+        </div>
+        <div class="meta" style="margin-top:12px">
+          <span class="label">Sells</span>
+        </div>
+        <div class="chips">
+          <span class="chip">Atta</span><span class="chip">Daal</span><span class="chip">Chawal</span><span class="chip">Daily needs</span>
+        </div>
+        <div class="actions">
+          <span class="btn call">Call shop</span>
+          <span class="btn wa">WhatsApp</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
