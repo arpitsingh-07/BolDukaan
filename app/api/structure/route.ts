@@ -5,8 +5,13 @@ import {
   emptyStorefront,
   type Storefront,
 } from "@/lib/storefront";
+import { rateLimit, clientIp } from "@/lib/rate-limit";
 
 export const runtime = "nodejs";
+
+// This endpoint spends LLM quota per call — cap per-IP rate and input size.
+const RATE_LIMIT_PER_MIN = 10;
+const MAX_TRANSCRIPT_CHARS = 8_000;
 
 // Runtime structuring model — Gemini Flash: fast, cheap, on the free tier, and
 // strong with Hindi/Punjabi. Swap to "gemini-2.0-flash" / "gemini-1.5-flash"
@@ -96,16 +101,23 @@ interface StructureRequest {
   transcript?: unknown;
   category?: unknown;
   existing?: unknown;
+  language?: unknown;
 }
 
 function buildUserContent(
   transcript: string,
   category: string | null,
   existing: Storefront | null,
+  language: string | null,
 ): string {
   const parts: string[] = [];
   if (category) {
     parts.push(`Shop category hint from the owner: ${category}.`);
+  }
+  if (language) {
+    parts.push(
+      `The owner's chosen app language is "${language}". If the description's language is ambiguous, use it for the tagline and the language field.`,
+    );
   }
   if (existing) {
     parts.push(
@@ -176,6 +188,13 @@ export async function POST(request: Request) {
     );
   }
 
+  if (!rateLimit(`structure:${clientIp(request)}`, RATE_LIMIT_PER_MIN, 60_000)) {
+    return NextResponse.json(
+      { error: "Too many requests — wait a minute and try again." },
+      { status: 429 },
+    );
+  }
+
   let body: StructureRequest;
   try {
     body = (await request.json()) as StructureRequest;
@@ -188,6 +207,12 @@ export async function POST(request: Request) {
   if (transcript.length < 2) {
     return NextResponse.json(
       { error: "No transcript provided. Speak or type a description first." },
+      { status: 400 },
+    );
+  }
+  if (transcript.length > MAX_TRANSCRIPT_CHARS) {
+    return NextResponse.json(
+      { error: "That description is too long — keep it under a few minutes." },
       { status: 400 },
     );
   }
@@ -204,7 +229,12 @@ export async function POST(request: Request) {
     if (parsed.success) existing = parsed.data;
   }
 
-  const userContent = buildUserContent(transcript, category, existing);
+  const language =
+    body.language === "hi" || body.language === "pa" || body.language === "en"
+      ? body.language
+      : null;
+
+  const userContent = buildUserContent(transcript, category, existing, language);
   const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
 
   // responseSchema already constrains the shape; the retry covers transient

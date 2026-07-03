@@ -13,8 +13,13 @@
   --green: #2e9e5b;
   --surface-tint: #e9f0ee;
 
-  --font-display-stack: var(--font-display), system-ui, sans-serif;
-  --font-body-stack: var(--font-body), system-ui, sans-serif;
+  /* Noto faces come after the Latin faces: browsers fall back PER GLYPH, so
+     Devanagari/Gurmukhi characters render in Noto while Latin keeps the brand
+     faces — no per-language classes needed anywhere. */
+  --font-display-stack: var(--font-display), var(--font-deva), var(--font-gurmukhi),
+    system-ui, sans-serif;
+  --font-body-stack: var(--font-body), var(--font-deva), var(--font-gurmukhi),
+    system-ui, sans-serif;
   --font-deva-stack: var(--font-deva), sans-serif;
   --font-gurmukhi-stack: var(--font-gurmukhi), sans-serif;
 

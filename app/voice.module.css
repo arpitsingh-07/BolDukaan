@@ -74,11 +74,19 @@
   color: rgba(244, 243, 239, 0.66);
 }
 
-/* ---------- language chooser ---------- */
+/* ---------- top bar: language switcher + account controls ---------- */
+.topRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-bottom: 26px;
+}
+
 .langRow {
   display: flex;
   gap: 8px;
-  margin: 26px 0 4px;
 }
 .langChip {
   border: 1px solid rgba(244, 243, 239, 0.22);

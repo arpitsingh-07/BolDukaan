@@ -3,28 +3,41 @@ import {
   summarizeHours,
   type Storefront,
 } from "@/lib/storefront";
+import { normalizeLang, t, type UiLang } from "@/lib/i18n";
 import styles from "./storefront-card.module.css";
-
-/** Map the detected input language to the right font class (avoids tofu). */
-function langClass(language: string | null): string {
-  if (language === "hi") return "deva";
-  if (language === "pa") return "gurmukhi";
-  return "";
-}
 
 function telHref(num: string): string {
   return `tel:${num.replace(/[^\d+]/g, "")}`;
 }
 
 function waHref(num: string): string {
-  const digits = num.replace(/[^\d]/g, "");
+  // wa.me requires the international format. Owners speak local 10-digit
+  // numbers (often with a leading 0), so normalise to 91XXXXXXXXXX.
+  let digits = num.replace(/[^\d]/g, "").replace(/^0+/, "");
+  if (digits.length === 10) digits = `91${digits}`;
   return `https://wa.me/${digits}`;
 }
 
-export function StorefrontCard({ storefront }: { storefront: Storefront }) {
-  const lang = langClass(storefront.language);
+export function StorefrontCard({
+  storefront,
+  theme = "classic",
+  lang,
+}: {
+  storefront: Storefront;
+  theme?: string;
+  /** Viewer's language override; falls back to the shop's own language. */
+  lang?: UiLang;
+}) {
+  // Labels follow the VIEWER's chosen language when known, otherwise the
+  // shop's language (first-time visitors clicking a shared link). Content
+  // (name, tagline, products) is always whatever the owner spoke.
+  const tr = t(lang ?? normalizeLang(storefront.language));
+
   const open = getOpenState(storefront.hours);
-  const hoursLines = summarizeHours(storefront.hours);
+  const hoursLines = summarizeHours(storefront.hours, {
+    dayLabels: tr.dayLabels,
+    closedWord: tr.closedWord,
+  });
   const hasContent =
     storefront.name ||
     storefront.products.length > 0 ||
@@ -34,37 +47,35 @@ export function StorefrontCard({ storefront }: { storefront: Storefront }) {
     hoursLines.length > 0;
 
   return (
-    <div className={styles.card}>
+    <div className={styles.card} data-theme={theme}>
       {storefront.category && (
         <div className={styles.eyebrow}>{storefront.category}</div>
       )}
 
-      <h2 className={`${styles.shopname} ${lang}`.trim()}>
-        {storefront.name ?? "Your shop"}
-      </h2>
+      <h2 className={styles.shopname}>{storefront.name ?? tr.yourShop}</h2>
 
       {storefront.tagline && (
-        <p className={`${styles.tagline} ${lang}`.trim()}>
-          {storefront.tagline}
-        </p>
+        <p className={styles.tagline}>{storefront.tagline}</p>
       )}
 
       {open.status === "open" && (
         <span className={styles.open}>
           <span className={styles.gdot} />
-          Open now · closes {open.closesAt}
+          {tr.openNow} · {tr.closes(open.closesAt)}
         </span>
       )}
       {open.status === "closed" && (
         <span className={styles.closed}>
           <span className={styles.rdot} />
-          {open.opensAt ? `Closed · opens ${open.opensAt}` : "Closed"}
+          {open.opensAt
+            ? `${tr.closedNow} · ${tr.opens(open.opensAt)}`
+            : tr.closedNow}
         </span>
       )}
 
       {hoursLines.length > 0 && (
         <div className={styles.meta}>
-          <span className={styles.label}>Hours</span>
+          <span className={styles.label}>{tr.hours}</span>
           {hoursLines.map((line) => (
             <span key={line} className={styles.hoursLine}>
               {line}
@@ -75,17 +86,17 @@ export function StorefrontCard({ storefront }: { storefront: Storefront }) {
 
       {storefront.address && (
         <div className={styles.meta}>
-          <span className={styles.label}>Address</span>
-          <span className={lang}>{storefront.address}</span>
+          <span className={styles.label}>{tr.address}</span>
+          <span>{storefront.address}</span>
         </div>
       )}
 
       {storefront.products.length > 0 && (
         <div className={styles.meta}>
-          <span className={styles.label}>Sells</span>
+          <span className={styles.label}>{tr.sells}</span>
           <div className={styles.chips}>
             {storefront.products.map((product, i) => (
-              <span key={`${product.name}-${i}`} className={`${styles.chip} ${lang}`.trim()}>
+              <span key={`${product.name}-${i}`} className={styles.chip}>
                 {product.name}
                 {product.price && (
                   <span className={styles.chipPrice}> · {product.price}</span>
@@ -96,15 +107,16 @@ export function StorefrontCard({ storefront }: { storefront: Storefront }) {
         </div>
       )}
 
-      {storefront.about && (
-        <p className={`${styles.about} ${lang}`.trim()}>{storefront.about}</p>
-      )}
+      {storefront.about && <p className={styles.about}>{storefront.about}</p>}
 
       {(storefront.phone || storefront.whatsapp) && (
         <div className={styles.actions}>
           {storefront.phone && (
-            <a className={`${styles.btn} ${styles.call}`} href={telHref(storefront.phone)}>
-              Call shop
+            <a
+              className={`${styles.btn} ${styles.call}`}
+              href={telHref(storefront.phone)}
+            >
+              {tr.callShop}
             </a>
           )}
           {storefront.whatsapp && (
@@ -120,12 +132,7 @@ export function StorefrontCard({ storefront }: { storefront: Storefront }) {
         </div>
       )}
 
-      {!hasContent && (
-        <p className={styles.empty}>
-          We couldn&apos;t pick out shop details yet. Try again and describe your
-          shop&apos;s name, what you sell, your hours, and a phone number.
-        </p>
-      )}
+      {!hasContent && <p className={styles.empty}>{tr.emptyCard}</p>}
     </div>
   );
 }

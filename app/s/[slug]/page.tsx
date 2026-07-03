@@ -1,8 +1,12 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { notFound } from "next/navigation";
+import { auth } from "@/auth";
 import { StorefrontCard } from "@/components/StorefrontCard";
 import { ShareButton } from "@/components/ShareButton";
-import { getActiveStorefrontBySlug } from "@/lib/shops";
+import { getPublicShopBySlug, recordView } from "@/lib/shops";
+import { normalizeLang, t } from "@/lib/i18n";
+import { viewerLang } from "@/lib/server-lang";
 import styles from "./public.module.css";
 
 // Always render on demand (fresh from the DB) — never statically cached.
@@ -12,12 +16,13 @@ type Params = { params: Promise<{ slug: string }> };
 
 export async function generateMetadata({ params }: Params): Promise<Metadata> {
   const { slug } = await params;
-  const sf = await getActiveStorefrontBySlug(slug).catch(() => null);
+  const shop = await getPublicShopBySlug(slug).catch(() => null);
 
-  if (!sf) {
+  if (!shop) {
     return { title: "Shop not found · BolDukaan" };
   }
 
+  const sf = shop.storefront;
   const title = sf.name ? `${sf.name} · BolDukaan` : "Storefront · BolDukaan";
   const description =
     sf.tagline ??
@@ -34,29 +39,68 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
 
 export default async function PublicStorefrontPage({ params }: Params) {
   const { slug } = await params;
-  const sf = await getActiveStorefrontBySlug(slug).catch(() => null);
+  const shop = await getPublicShopBySlug(slug).catch(() => null);
 
-  if (!sf) notFound();
+  if (!shop) notFound();
+
+  // Basic analytics — count the visit (best-effort).
+  await recordView(slug).catch(() => {});
+
+  // Free plan (or unowned) shows branding; Pro removes it.
+  const showBranding = !shop.ownerIsPro;
+
+  // If the signed-in viewer owns this shop, offer a way back to editing.
+  // Purely additive: anonymous visitors take the identical read-only path.
+  const session = await auth();
+  const isOwner = Boolean(
+    session?.user?.id &&
+      shop.ownerUserId &&
+      session.user.id === shop.ownerUserId,
+  );
+
+  // The viewer's chosen language wins; a first-time visitor with no choice
+  // gets the shop's own language (its customers read that language).
+  const lang = (await viewerLang()) ?? normalizeLang(shop.storefront.language);
+  const tr = t(lang);
 
   return (
     <main className={styles.page}>
       <div className={styles.wrap}>
+        {isOwner && (
+          <div className={styles.ownerBar}>
+            <span>This is your shop — you&apos;re seeing it as visitors do.</span>
+            <span className={styles.ownerBarLinks}>
+              <Link href={`/dashboard/${slug}/edit`}>Edit</Link>
+              <Link href="/dashboard">Dashboard</Link>
+            </span>
+          </div>
+        )}
         <p className={styles.brand}>
           <span className={styles.brandDot} />
           BolDukaan
         </p>
 
-        <StorefrontCard storefront={sf} />
+        <StorefrontCard
+          storefront={shop.storefront}
+          theme={shop.theme}
+          lang={lang}
+        />
 
         <div className={styles.shareRow}>
-          <ShareButton name={sf.name} />
+          <ShareButton
+            name={shop.storefront.name}
+            label={tr.shareOnWhatsApp}
+            shareText={tr.shareText}
+          />
         </div>
 
-        <footer className={styles.footer}>
-          <a href="/" className={styles.footerLink}>
-            Made with BolDukaan — speak your shop into existence
-          </a>
-        </footer>
+        {showBranding && (
+          <footer className={styles.footer}>
+            <a href="/" className={styles.footerLink}>
+              {tr.madeWith}
+            </a>
+          </footer>
+        )}
       </div>
     </main>
   );

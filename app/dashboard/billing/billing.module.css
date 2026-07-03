@@ -1,0 +1,87 @@
+.page {
+  min-height: 100svh;
+  background: var(--paper);
+}
+.header {
+  position: relative;
+  background: var(--petrol);
+  color: var(--paper);
+  padding: 20px 24px 28px;
+}
+.headerInner {
+  max-width: 640px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+.back {
+  color: rgba(244, 243, 239, 0.75);
+  font-size: 13px;
+  font-weight: 600;
+  text-decoration: none;
+}
+.title {
+  max-width: 640px;
+  margin: 16px auto 0;
+  font-family: var(--font-display-stack);
+  font-weight: 800;
+  font-size: 30px;
+  letter-spacing: -0.02em;
+}
+.main {
+  max-width: 640px;
+  margin: 0 auto;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.planCard {
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-card);
+  padding: 20px;
+  box-shadow: var(--shadow-card);
+}
+.planName {
+  font-family: var(--font-display-stack);
+  font-weight: 700;
+  font-size: 20px;
+  color: var(--ink);
+}
+.features {
+  margin: 12px 0 0;
+  padding-left: 18px;
+  color: var(--ink);
+  font-size: 14px;
+  line-height: 1.7;
+}
+.upgradeBtn {
+  margin-top: 16px;
+  width: 100%;
+  background: var(--ink);
+  color: var(--paper);
+  border: none;
+  border-radius: var(--radius-control);
+  padding: 13px 0;
+  font-weight: 600;
+  font-size: 15px;
+  font-family: inherit;
+  cursor: pointer;
+}
+.upgradeBtn:disabled {
+  opacity: 0.6;
+  cursor: default;
+}
+.note {
+  margin-top: 14px;
+  font-size: 13px;
+  color: var(--muted);
+}
+.error {
+  margin-top: 10px;
+  font-size: 13px;
+  color: var(--marigold-deep);
+}

@@ -15,6 +15,29 @@
   gap: 18px;
 }
 
+/* Owner-only bar: quiet, tint surface — visible only to the signed-in owner */
+.ownerBar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+  background: var(--surface-tint);
+  border-radius: var(--radius-control);
+  padding: 10px 14px;
+  font-size: 13px;
+  color: var(--petrol);
+}
+.ownerBarLinks {
+  display: inline-flex;
+  gap: 14px;
+}
+.ownerBarLinks a {
+  color: var(--petrol);
+  font-weight: 600;
+  text-decoration: underline;
+}
+
 .brand {
   display: inline-flex;
   align-items: center;

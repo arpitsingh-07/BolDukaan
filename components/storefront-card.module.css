@@ -129,3 +129,45 @@
   color: var(--muted);
   line-height: 1.55;
 }
+
+/* ---- themes (Pro) ---- */
+.card[data-theme="petrol"] {
+  background: var(--petrol);
+  border-color: var(--petrol-deep);
+}
+.card[data-theme="petrol"] .eyebrow,
+.card[data-theme="petrol"] .label,
+.card[data-theme="petrol"] .tagline {
+  color: rgba(244, 243, 239, 0.6);
+}
+.card[data-theme="petrol"] .shopname,
+.card[data-theme="petrol"] .meta,
+.card[data-theme="petrol"] .about {
+  color: var(--paper);
+}
+.card[data-theme="petrol"] .chip {
+  background: rgba(244, 243, 239, 0.12);
+  color: var(--paper);
+}
+.card[data-theme="petrol"] .wa {
+  background: rgba(244, 243, 239, 0.12);
+  color: var(--paper);
+}
+.card[data-theme="petrol"] .call {
+  background: var(--marigold);
+  color: var(--petrol-deep);
+}
+.card[data-theme="petrol"] .open {
+  color: #7fdca3;
+}
+
+.card[data-theme="warm"] {
+  background: #fbf7ef;
+}
+.card[data-theme="warm"] .shopname {
+  color: var(--marigold-deep);
+}
+.card[data-theme="warm"] .chip {
+  background: #f5ead6;
+  color: var(--marigold-deep);
+}

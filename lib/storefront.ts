@@ -28,13 +28,20 @@ export const DAY_LABELS: Record<DayKey, string> = {
   sun: "Sun",
 };
 
+/**
+ * Every field is nullable AND defaulted: a well-behaved model sends explicit
+ * nulls, but if a key is omitted entirely (models do this occasionally), the
+ * default fills it instead of failing the whole parse into the fallback path.
+ * z.infer output types are unchanged by .default().
+ */
 const dayHoursSchema = z
   .object({
     // 24-hour "HH:MM"
-    open: z.string().nullable(),
-    close: z.string().nullable(),
+    open: z.string().nullable().default(null),
+    close: z.string().nullable().default(null),
   })
-  .nullable();
+  .nullable()
+  .default(null);
 
 const hoursSchema = z
   .object({
@@ -46,26 +53,27 @@ const hoursSchema = z
     sat: dayHoursSchema,
     sun: dayHoursSchema,
   })
-  .nullable();
+  .nullable()
+  .default(null);
 
 const productSchema = z.object({
   name: z.string(),
-  price: z.string().nullable(),
-  note: z.string().nullable(),
+  price: z.string().nullable().default(null),
+  note: z.string().nullable().default(null),
 });
 
 export const storefrontSchema = z.object({
-  name: z.string().nullable(),
-  tagline: z.string().nullable(),
-  about: z.string().nullable(),
-  category: z.string().nullable(),
-  phone: z.string().nullable(),
-  whatsapp: z.string().nullable(),
-  address: z.string().nullable(),
+  name: z.string().nullable().default(null),
+  tagline: z.string().nullable().default(null),
+  about: z.string().nullable().default(null),
+  category: z.string().nullable().default(null),
+  phone: z.string().nullable().default(null),
+  whatsapp: z.string().nullable().default(null),
+  address: z.string().nullable().default(null),
   hours: hoursSchema,
-  products: z.array(productSchema),
+  products: z.array(productSchema).default([]),
   /** ISO-639 hint for the dominant input language: "hi" | "pa" | "en". */
-  language: z.string().nullable(),
+  language: z.string().nullable().default(null),
 });
 
 export type Storefront = z.infer<typeof storefrontSchema>;
@@ -117,9 +125,36 @@ export type OpenState =
   | { status: "unknown" };
 
 /**
- * Compute the open/closed-now state from the hours object using the provided
- * time (defaults to now, in the viewer's local timezone — fine for the M0
- * preview). Does not handle overnight spans that cross midnight.
+ * BolDukaan shops are Indian shops, so "open now" is always evaluated in IST —
+ * regardless of the server's timezone (Vercel runs UTC) or the viewer's.
+ * Intl.DateTimeFormat does the timezone math; no date library needed.
+ */
+function istDayAndMinutes(date: Date): { dayIndex: number; minutes: number } {
+  const parts = new Intl.DateTimeFormat("en-US", {
+    timeZone: "Asia/Kolkata",
+    weekday: "short",
+    hour: "2-digit",
+    minute: "2-digit",
+    hourCycle: "h23",
+  }).formatToParts(date);
+
+  let weekday = "Mon";
+  let hour = 0;
+  let minute = 0;
+  for (const part of parts) {
+    if (part.type === "weekday") weekday = part.value;
+    else if (part.type === "hour") hour = Number(part.value);
+    else if (part.type === "minute") minute = Number(part.value);
+  }
+  const dayIndex = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].indexOf(
+    weekday,
+  );
+  return { dayIndex: dayIndex === -1 ? 1 : dayIndex, minutes: hour * 60 + minute };
+}
+
+/**
+ * Compute the open/closed-now state from the hours object, evaluated in IST.
+ * Does not handle overnight spans that cross midnight.
  */
 export function getOpenState(
   hours: Storefront["hours"],
@@ -127,9 +162,9 @@ export function getOpenState(
 ): OpenState {
   if (!hours) return { status: "unknown" };
 
-  const todayKey = JS_DAY_TO_KEY[now.getDay()];
+  const { dayIndex, minutes: minutesNow } = istDayAndMinutes(now);
+  const todayKey = JS_DAY_TO_KEY[dayIndex];
   const today = hours[todayKey];
-  const minutesNow = now.getHours() * 60 + now.getMinutes();
 
   const toMinutes = (hhmm: string | null): number | null => {
     if (!hhmm) return null;
@@ -151,7 +186,7 @@ export function getOpenState(
 
   // Closed now — find the next day that has an opening time.
   for (let i = 1; i <= 7; i++) {
-    const key = JS_DAY_TO_KEY[(now.getDay() + i) % 7];
+    const key = JS_DAY_TO_KEY[(dayIndex + i) % 7];
     const day = hours[key];
     if (day?.open) {
       return { status: "closed", opensAt: formatTime(day.open) };
@@ -165,9 +200,16 @@ export function getOpenState(
  * Collapse the per-day hours into a few human-readable lines, grouping
  * consecutive days that share the same open/close window.
  * e.g. "Mon–Sat · 9:00 AM – 9:00 PM", "Sun · Closed".
+ * Labels default to English; pass localized ones for Hindi/Punjabi shops.
  */
-export function summarizeHours(hours: Storefront["hours"]): string[] {
+export function summarizeHours(
+  hours: Storefront["hours"],
+  opts?: { dayLabels?: Record<DayKey, string>; closedWord?: string },
+): string[] {
   if (!hours) return [];
+
+  const dayLabels = opts?.dayLabels ?? DAY_LABELS;
+  const closedWord = opts?.closedWord ?? "Closed";
 
   const sig = (d: DayHours): string =>
     d && d.open && d.close ? `${d.open}-${d.close}` : "closed";
@@ -185,14 +227,14 @@ export function summarizeHours(hours: Storefront["hours"]): string[] {
     const endKey = DAY_KEYS[i - 1];
     const label =
       runStart === i - 1
-        ? DAY_LABELS[startKey]
-        : `${DAY_LABELS[startKey]}–${DAY_LABELS[endKey]}`;
+        ? dayLabels[startKey]
+        : `${dayLabels[startKey]}–${dayLabels[endKey]}`;
 
     const day = hours[startKey];
     const window =
       day && day.open && day.close
         ? `${formatTime(day.open)} – ${formatTime(day.close)}`
-        : "Closed";
+        : closedWord;
 
     lines.push(`${label} · ${window}`);
     runStart = i;

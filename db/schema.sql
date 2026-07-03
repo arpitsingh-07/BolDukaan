@@ -10,9 +10,13 @@ CREATE TABLE IF NOT EXISTS shops (
   edit_token    TEXT NOT NULL,                   -- M1 login-less ownership; replaced by auth in M2
   status        TEXT NOT NULL DEFAULT 'draft',   -- draft | active | unpublished
   category      TEXT,
+  views         INTEGER NOT NULL DEFAULT 0,      -- M4: basic page-view analytics
   created_at    TIMESTAMPTZ NOT NULL DEFAULT now(),
   updated_at    TIMESTAMPTZ NOT NULL DEFAULT now()
 );
+
+-- Idempotent add for databases created before M4.
+ALTER TABLE shops ADD COLUMN IF NOT EXISTS views INTEGER NOT NULL DEFAULT 0;
 
 CREATE INDEX IF NOT EXISTS shops_owner_user_id_idx ON shops (owner_user_id);
 CREATE INDEX IF NOT EXISTS shops_slug_idx ON shops (slug);
@@ -32,3 +36,19 @@ CREATE TABLE IF NOT EXISTS storefronts (
   language       TEXT,
   raw_transcript TEXT
 );
+
+-- M3: billing. One row per owner (free by default; flips to pro on payment).
+CREATE TABLE IF NOT EXISTS subscriptions (
+  id                 UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  owner_user_id      TEXT NOT NULL,
+  provider           TEXT NOT NULL DEFAULT 'razorpay',
+  provider_sub_id    TEXT,
+  plan               TEXT NOT NULL DEFAULT 'free',
+  status             TEXT NOT NULL DEFAULT 'active',
+  current_period_end TIMESTAMPTZ,
+  created_at         TIMESTAMPTZ NOT NULL DEFAULT now(),
+  updated_at         TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+
+CREATE UNIQUE INDEX IF NOT EXISTS subscriptions_owner_unique ON subscriptions (owner_user_id);
+CREATE INDEX IF NOT EXISTS subscriptions_provider_sub_idx ON subscriptions (provider_sub_id);

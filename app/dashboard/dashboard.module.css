@@ -1,0 +1,234 @@
+/* ---- signed-out gate (petrol) ---- */
+.gate {
+  min-height: 100svh;
+  background: var(--petrol);
+  color: var(--paper);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 32px 24px;
+}
+.gateInner {
+  max-width: 400px;
+  width: 100%;
+  text-align: center;
+}
+.gateTitle {
+  font-family: var(--font-display-stack);
+  font-weight: 800;
+  font-size: 30px;
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+  margin: 18px 0 10px;
+}
+.gateSub {
+  color: rgba(244, 243, 239, 0.66);
+  font-size: 15px;
+  margin: 0 0 22px;
+}
+.gateBtn {
+  width: 100%;
+  background: var(--paper);
+  color: var(--petrol);
+  border: none;
+  border-radius: var(--radius-control);
+  padding: 13px 0;
+  font-weight: 600;
+  font-size: 15px;
+  font-family: inherit;
+  cursor: pointer;
+}
+.gateLink {
+  display: inline-block;
+  margin-top: 18px;
+  color: rgba(244, 243, 239, 0.6);
+  font-size: 13px;
+  text-decoration: none;
+}
+
+/* ---- dashboard chrome ---- */
+.page {
+  min-height: 100svh;
+  background: var(--paper);
+}
+.header {
+  position: relative;
+  background: var(--petrol);
+  color: var(--paper);
+  padding: 20px 24px 28px;
+}
+.headerInner {
+  max-width: 760px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--marigold);
+  margin: 0;
+}
+.brandDot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--marigold);
+}
+.title {
+  max-width: 760px;
+  margin: 16px auto 0;
+  font-family: var(--font-display-stack);
+  font-weight: 800;
+  font-size: 32px;
+  letter-spacing: -0.02em;
+}
+.subtitle {
+  max-width: 760px;
+  margin: 6px auto 0;
+  color: rgba(244, 243, 239, 0.6);
+  font-size: 14px;
+}
+.planLink {
+  color: var(--marigold);
+  font-weight: 600;
+  text-decoration: none;
+}
+.planLink:hover {
+  text-decoration: underline;
+}
+.main {
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 24px;
+}
+.notice {
+  font-size: 14px;
+  color: var(--muted);
+}
+.notice code {
+  background: var(--surface-tint);
+  padding: 2px 6px;
+  border-radius: 6px;
+}
+.empty {
+  text-align: center;
+  padding: 40px 0;
+}
+.emptyText {
+  color: var(--muted);
+  margin: 0 0 12px;
+}
+.emptyCta {
+  color: var(--petrol);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+/* ---- shop list ---- */
+.list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.card {
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-card);
+  padding: 16px 18px;
+  box-shadow: var(--shadow-card);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+.cardMain {
+  min-width: 0; /* let long names truncate inside the flex row */
+}
+.cardName {
+  font-family: var(--font-display-stack);
+  font-weight: 700;
+  font-size: 18px;
+  color: var(--ink);
+}
+.cardMeta {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 6px;
+}
+.badgeLive,
+.badgeDraft {
+  font-size: 12px;
+  font-weight: 600;
+  border-radius: 999px;
+  padding: 3px 9px;
+}
+.badgeLive {
+  background: rgba(46, 158, 91, 0.14);
+  color: var(--green);
+}
+.badgeDraft {
+  background: var(--surface-tint);
+  color: var(--muted);
+}
+.slug {
+  font-size: 13px;
+  color: var(--muted);
+}
+.cardActions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.action,
+.actionDanger {
+  background: var(--surface-tint);
+  color: var(--petrol);
+  border: none;
+  border-radius: 999px;
+  padding: 7px 13px;
+  font-size: 13px;
+  font-weight: 600;
+  font-family: inherit;
+  text-decoration: none;
+  cursor: pointer;
+}
+.action:disabled,
+.actionDanger:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+.actionDanger {
+  background: transparent;
+  color: var(--marigold-deep);
+}
+.themeSelect {
+  background: var(--surface-tint);
+  color: var(--petrol);
+  border: none;
+  border-radius: 999px;
+  padding: 7px 10px;
+  font-size: 13px;
+  font-weight: 600;
+  font-family: inherit;
+  cursor: pointer;
+}
+.qrPanel {
+  flex-basis: 100%;
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid var(--line);
+}

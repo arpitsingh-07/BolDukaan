@@ -5,21 +5,18 @@ import {
   useEffect,
   useRef,
   useState,
+  type ReactNode,
   type PointerEvent as ReactPointerEvent,
 } from "react";
-import { createSpeechToText, type SttLang, type SttSession } from "@/lib/stt";
+import { useRouter } from "next/navigation";
+import { createSpeechToText, type SttSession } from "@/lib/stt";
 import type { Storefront } from "@/lib/storefront";
+import { UI_LANGS, uiToSttLang, t, LANG_COOKIE, type UiLang } from "@/lib/i18n";
 import { StorefrontCard } from "./StorefrontCard";
 import { ShareButton } from "./ShareButton";
 import styles from "@/app/voice.module.css";
 
 const BAR_COUNT = 5;
-
-const LANGS: { code: SttLang; label: string }[] = [
-  { code: "hi-IN", label: "हिंदी" },
-  { code: "pa-IN", label: "ਪੰਜਾਬੀ" },
-  { code: "en-IN", label: "English" },
-];
 
 type Status = "idle" | "recording" | "structuring" | "done" | "error";
 
@@ -30,11 +27,69 @@ interface StructureResponse {
   error?: string;
 }
 
-export function VoiceOnboarding() {
-  const [status, setStatus] = useState<Status>("idle");
-  const [lang, setLang] = useState<SttLang>("hi-IN");
+/**
+ * Anonymous publishes are owned via an edit token. Persist it locally so the
+ * owner can come back later and still update their page (losing the token
+ * means losing edit access until they sign in and claim the shop in M2+).
+ */
+const STORAGE_KEY = "boldukaan.published.v1";
+const LANG_STORAGE_KEY = "boldukaan.lang.v1";
+
+interface StoredPublish {
+  slug: string;
+  editToken: string;
+  storefront: Storefront;
+}
+
+/** Persist the language for BOTH worlds: localStorage (client) + cookie (server components). */
+function persistLang(lang: UiLang) {
+  try {
+    localStorage.setItem(LANG_STORAGE_KEY, lang);
+  } catch {
+    /* ignore */
+  }
+  document.cookie = `${LANG_COOKIE}=${lang}; path=/; max-age=31536000; samesite=lax`;
+}
+
+function loadStoredPublish(): StoredPublish | null {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (!raw) return null;
+    const data = JSON.parse(raw) as Partial<StoredPublish>;
+    if (
+      typeof data.slug === "string" &&
+      typeof data.editToken === "string" &&
+      data.storefront &&
+      typeof data.storefront === "object"
+    ) {
+      return data as StoredPublish;
+    }
+  } catch {
+    /* corrupted or unavailable storage — ignore */
+  }
+  return null;
+}
+
+export function VoiceOnboarding({
+  initialStorefront = null,
+  initialSlug = null,
+  nav = null,
+}: {
+  /** Seed the editor with an existing storefront (dashboard "Edit" flow). */
+  initialStorefront?: Storefront | null;
+  /** When set, editing updates this shop via logged-in ownership. */
+  initialSlug?: string | null;
+  /** Account controls, rendered inside the petrol hero (server component slot). */
+  nav?: ReactNode;
+} = {}) {
+  const [status, setStatus] = useState<Status>(
+    initialStorefront ? "done" : "idle",
+  );
+  const [uiLang, setUiLang] = useState<UiLang>("hi");
   const [liveTranscript, setLiveTranscript] = useState("");
-  const [storefront, setStorefront] = useState<Storefront | null>(null);
+  const [storefront, setStorefront] = useState<Storefront | null>(
+    initialStorefront,
+  );
   const [partial, setPartial] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [levels, setLevels] = useState<number[]>(() =>
@@ -52,6 +107,9 @@ export function VoiceOnboarding() {
   const mergeRef = useRef(false);
   const storefrontRef = useRef<Storefront | null>(null);
   const reducedMotionRef = useRef(false);
+  // Callbacks below are memoized with empty deps; a ref keeps the language
+  // they read current (same stale-closure fix as storefrontRef).
+  const uiLangRef = useRef<UiLang>("hi");
 
   const streamRef = useRef<MediaStream | null>(null);
   const audioCtxRef = useRef<AudioContext | null>(null);
@@ -61,11 +119,56 @@ export function VoiceOnboarding() {
   const publishedSlugRef = useRef<string | null>(null);
   const publishedTokenRef = useRef<string | null>(null);
 
+  const router = useRouter();
+  const tr = t(uiLang);
+
   useEffect(() => {
     setSttSupported(sttRef.current.isSupported());
     reducedMotionRef.current = window.matchMedia(
       "(prefers-reduced-motion: reduce)",
     ).matches;
+    // Restore the user's app language (and sync the server cookie).
+    try {
+      const stored = localStorage.getItem(LANG_STORAGE_KEY);
+      if (stored === "en" || stored === "hi" || stored === "pa") {
+        setUiLang(stored);
+        uiLangRef.current = stored;
+        persistLang(stored);
+      }
+    } catch {
+      /* ignore */
+    }
+  }, []);
+
+  const changeLang = (lang: UiLang) => {
+    setUiLang(lang);
+    uiLangRef.current = lang;
+    persistLang(lang);
+    // Re-render server components (nav slot etc.) with the new cookie.
+    router.refresh();
+  };
+
+  // Edit mode: remember which shop we're editing so publish() updates it
+  // (via logged-in ownership — no edit token) rather than creating a new one.
+  useEffect(() => {
+    if (initialSlug) {
+      publishedSlugRef.current = initialSlug;
+      setPublicUrl(`${window.location.origin}/s/${initialSlug}`);
+    }
+  }, [initialSlug]);
+
+  // Fresh visit to the home page: restore a previously published shop from
+  // localStorage so the owner can keep editing it (token-based ownership).
+  useEffect(() => {
+    if (initialStorefront || initialSlug) return;
+    const stored = loadStoredPublish();
+    if (!stored) return;
+    publishedSlugRef.current = stored.slug;
+    publishedTokenRef.current = stored.editToken;
+    setStorefront(stored.storefront);
+    setPublicUrl(`${window.location.origin}/s/${stored.slug}`);
+    setStatus("done");
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
@@ -82,7 +185,7 @@ export function VoiceOnboarding() {
       audioCtxRef.current = null;
     }
     if (streamRef.current) {
-      streamRef.current.getTracks().forEach((t) => t.stop());
+      streamRef.current.getTracks().forEach((track) => track.stop());
       streamRef.current = null;
     }
   }, []);
@@ -127,41 +230,41 @@ export function VoiceOnboarding() {
     }
   }, []);
 
-  const runStructuring = useCallback(
-    async (text: string, merge: boolean) => {
-      setStatus("structuring");
-      setError(null);
-      lastTranscriptRef.current = text;
-      try {
-        const res = await fetch("/api/structure", {
-          method: "POST",
-          headers: { "content-type": "application/json" },
-          body: JSON.stringify({
-            transcript: text,
-            existing: merge ? storefrontRef.current : null,
-          }),
-        });
-        const data = (await res.json()) as StructureResponse;
-        if (!res.ok || !data.storefront) {
-          setError(data.error ?? "Couldn't build the storefront. Try again.");
-          setStatus(storefrontRef.current ? "done" : "error");
-          return;
-        }
-        setStorefront(data.storefront);
-        setPartial(Boolean(data.partial));
-        setStatus("done");
-      } catch {
-        setError("Network error. Check your connection and try again.");
+  const runStructuring = useCallback(async (text: string, merge: boolean) => {
+    setStatus("structuring");
+    setError(null);
+    lastTranscriptRef.current = text;
+    const trNow = t(uiLangRef.current);
+    try {
+      const res = await fetch("/api/structure", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({
+          transcript: text,
+          existing: merge ? storefrontRef.current : null,
+          language: uiLangRef.current,
+        }),
+      });
+      const data = (await res.json()) as StructureResponse;
+      if (!res.ok || !data.storefront) {
+        setError(data.error ?? trNow.errBuild);
         setStatus(storefrontRef.current ? "done" : "error");
+        return;
       }
-    },
-    [],
-  );
+      setStorefront(data.storefront);
+      setPartial(Boolean(data.partial));
+      setStatus("done");
+    } catch {
+      setError(trNow.errNetwork);
+      setStatus(storefrontRef.current ? "done" : "error");
+    }
+  }, []);
 
   const publish = useCallback(async () => {
     if (!storefrontRef.current) return;
     setPublishing(true);
     setPublishError(null);
+    const trNow = t(uiLangRef.current);
     try {
       const res = await fetch("/api/publish", {
         method: "POST",
@@ -180,14 +283,31 @@ export function VoiceOnboarding() {
         error?: string;
       };
       if (!res.ok || !data.slug) {
-        setPublishError(data.error ?? "Couldn't publish. Try again.");
+        setPublishError(data.error ?? trNow.errPublish);
         return;
       }
       publishedSlugRef.current = data.slug;
       publishedTokenRef.current = data.editToken ?? null;
       setPublicUrl(`${window.location.origin}/s/${data.slug}`);
+
+      // Token-owned (anonymous) publishes: persist so a return visit can
+      // still edit. Owner-session publishes don't need this.
+      if (data.editToken && storefrontRef.current) {
+        try {
+          localStorage.setItem(
+            STORAGE_KEY,
+            JSON.stringify({
+              slug: data.slug,
+              editToken: data.editToken,
+              storefront: storefrontRef.current,
+            } satisfies StoredPublish),
+          );
+        } catch {
+          /* storage full/unavailable — non-fatal */
+        }
+      }
     } catch {
-      setPublishError("Network error while publishing.");
+      setPublishError(t(uiLangRef.current).errNetwork);
     } finally {
       setPublishing(false);
     }
@@ -208,7 +328,7 @@ export function VoiceOnboarding() {
       setLiveTranscript("");
       setStatus("recording");
       void startAnalyser();
-      sessionRef.current = sttRef.current.start(lang, {
+      sessionRef.current = sttRef.current.start(uiToSttLang(uiLang), {
         onPartial: (text) => setLiveTranscript(text),
         onFinal: (text) => {
           stopAnalyser();
@@ -219,22 +339,23 @@ export function VoiceOnboarding() {
             setStatus(storefrontRef.current ? "done" : "idle");
             setLiveTranscript("");
             if (!storefrontRef.current) {
-              setError("I didn't catch that — hold the button and speak.");
+              setError(t(uiLangRef.current).errNoSpeech);
             }
           }
         },
         onError: (message) => {
           stopAnalyser();
           setStatus(storefrontRef.current ? "done" : "error");
+          const trNow = t(uiLangRef.current);
           setError(
             message === "not-allowed" || message === "service-not-allowed"
-              ? "Microphone permission is needed. Allow mic access and try again."
-              : "Speech recognition had a problem. Try again or type instead.",
+              ? trNow.errMic
+              : trNow.errStt,
           );
         },
       });
     },
-    [lang, status, startAnalyser, stopAnalyser, runStructuring],
+    [uiLang, status, startAnalyser, stopAnalyser, runStructuring],
   );
 
   useEffect(() => {
@@ -273,54 +394,66 @@ export function VoiceOnboarding() {
     publishedSlugRef.current = null;
     publishedTokenRef.current = null;
     lastTranscriptRef.current = null;
+    if (!initialSlug) {
+      try {
+        localStorage.removeItem(STORAGE_KEY);
+      } catch {
+        /* ignore */
+      }
+    }
   };
 
   const recording = status === "recording";
   const structuring = status === "structuring";
   const showTyping = typing || !sttSupported;
 
-  const caption = storefrontRef.current
-    ? { en: "Hold to add more", native: "और बताने के लिए दबाएँ" }
-    : { en: "Hold and describe your shop", native: "दबाकर अपनी दुकान बताइए" };
+  const caption = storefrontRef.current ? tr.holdToAddMore : tr.holdToSpeak;
 
   return (
     <div className={styles.page}>
       <section className={styles.hero}>
         <div className={styles.inner}>
+          <div className={styles.topRow}>
+            <div className={styles.langRow} role="group" aria-label="Language">
+              {UI_LANGS.map((l) => (
+                <button
+                  key={l.code}
+                  type="button"
+                  className={
+                    uiLang === l.code ? styles.langChipActive : styles.langChip
+                  }
+                  aria-pressed={uiLang === l.code}
+                  onClick={() => changeLang(l.code)}
+                >
+                  {l.label}
+                </button>
+              ))}
+            </div>
+            {nav}
+          </div>
+
           <span className={styles.eyebrow}>
             <span className={styles.dot} />
             BolDukaan
           </span>
           <h1 className={styles.title}>
-            Bol, aur <span className={styles.amber}>dukaan</span> taiyaar.
+            {tr.titlePre}
+            <span className={styles.amber}>{tr.titleAccent}</span>
+            {tr.titlePost}
           </h1>
-          <p className={`${styles.subline} deva`}>
-            बोलो — दुकान अपने आप बन जाएगी
-          </p>
-
-          <div className={styles.langRow} role="group" aria-label="Input language">
-            {LANGS.map((l) => (
-              <button
-                key={l.code}
-                type="button"
-                className={lang === l.code ? styles.langChipActive : styles.langChip}
-                aria-pressed={lang === l.code}
-                onClick={() => setLang(l.code)}
-              >
-                {l.label}
-              </button>
-            ))}
-          </div>
+          <p className={styles.subline}>{tr.subline}</p>
 
           {!showTyping && (
             <>
-              <div className={`${styles.voiceWrap} ${recording ? styles.recording : ""}`}>
+              <div
+                className={`${styles.voiceWrap} ${recording ? styles.recording : ""}`}
+              >
                 <div className={`${styles.ring} ${styles.r1}`} />
                 <div className={`${styles.ring} ${styles.r2}`} />
                 <button
                   type="button"
                   className={styles.voiceBtn}
-                  aria-label={caption.en}
+                  aria-label={caption}
                   disabled={structuring}
                   onPointerDown={onPointerDown}
                   onPointerUp={onPointerUp}
@@ -345,15 +478,10 @@ export function VoiceOnboarding() {
               </div>
 
               <p className={styles.voiceCap}>
-                {structuring ? "Building your storefront…" : caption.en}
-                {!structuring && (
-                  <span className={`${styles.voiceCapDeva} deva`}>
-                    {caption.native}
-                  </span>
-                )}
+                {structuring ? tr.building : caption}
               </p>
 
-              <p className={`${styles.transcript} deva`} aria-live="polite">
+              <p className={styles.transcript} aria-live="polite">
                 {liveTranscript}
               </p>
 
@@ -362,7 +490,7 @@ export function VoiceOnboarding() {
                 className={styles.fallbackToggle}
                 onClick={() => setTyping(true)}
               >
-                Type instead
+                {tr.typeInstead}
               </button>
             </>
           )}
@@ -370,14 +498,11 @@ export function VoiceOnboarding() {
           {showTyping && (
             <div className={styles.fallback}>
               {!sttSupported && (
-                <p className={styles.statusNote}>
-                  Voice input isn&apos;t available in this browser — type a
-                  description instead.
-                </p>
+                <p className={styles.statusNote}>{tr.noVoiceInBrowser}</p>
               )}
               <textarea
-                className={`${styles.fallbackArea} deva`}
-                placeholder="Mera Sharma General Store hai, Moga mein, subah 9 se raat 9 baje tak khula, atta daal chawal bechte hain, phone 98xxxxxxxx"
+                className={styles.fallbackArea}
+                placeholder={tr.typedPlaceholder}
                 value={typedText}
                 onChange={(e) => setTypedText(e.target.value)}
                 rows={4}
@@ -388,7 +513,7 @@ export function VoiceOnboarding() {
                 onClick={handleTypedSubmit}
                 disabled={structuring || typedText.trim().length < 2}
               >
-                {structuring ? "Building…" : "Build my storefront"}
+                {structuring ? tr.building : tr.buildMyStorefront}
               </button>
               {sttSupported && (
                 <button
@@ -396,7 +521,7 @@ export function VoiceOnboarding() {
                   className={styles.fallbackToggle}
                   onClick={() => setTyping(false)}
                 >
-                  Use voice instead
+                  {tr.useVoiceInstead}
                 </button>
               )}
             </div>
@@ -413,21 +538,17 @@ export function VoiceOnboarding() {
           {storefront ? (
             <>
               <p className={styles.flow}>
-                your voice
+                {tr.yourVoice}
                 <span className={styles.arrow}>↓</span>
               </p>
               <div className={styles.reveal} key={JSON.stringify(storefront)}>
-                <StorefrontCard storefront={storefront} />
+                <StorefrontCard storefront={storefront} lang={uiLang} />
               </div>
-              {partial && (
-                <p className={styles.partialNote}>
-                  We saved what we heard — speak again to fill in the rest.
-                </p>
-              )}
+              {partial && <p className={styles.partialNote}>{tr.partialNote}</p>}
 
               {publicUrl ? (
                 <div className={styles.publishedBox}>
-                  <span className={styles.publishedLabel}>Live at</span>
+                  <span className={styles.publishedLabel}>{tr.liveAt}</span>
                   <a
                     className={styles.publishedLink}
                     href={publicUrl}
@@ -436,14 +557,19 @@ export function VoiceOnboarding() {
                   >
                     {publicUrl}
                   </a>
-                  <ShareButton name={storefront.name} url={publicUrl} />
+                  <ShareButton
+                    name={storefront.name}
+                    url={publicUrl}
+                    label={tr.shareOnWhatsApp}
+                    shareText={tr.shareText}
+                  />
                   <button
                     type="button"
                     className={styles.secondaryBtn}
                     onClick={publish}
                     disabled={publishing}
                   >
-                    {publishing ? "Updating…" : "Update published page"}
+                    {publishing ? tr.updating : tr.updateCta}
                   </button>
                 </div>
               ) : (
@@ -453,7 +579,7 @@ export function VoiceOnboarding() {
                   onClick={publish}
                   disabled={publishing}
                 >
-                  {publishing ? "Publishing…" : "Publish & get shareable link"}
+                  {publishing ? tr.publishing : tr.publishCta}
                 </button>
               )}
 
@@ -467,16 +593,13 @@ export function VoiceOnboarding() {
                   className={styles.linkBtn}
                   onClick={startOver}
                 >
-                  Start over
+                  {tr.startOver}
                 </button>
               </div>
             </>
           ) : (
             <div className={styles.placeholder}>
-              <p className={styles.placeholderTitle}>Your storefront preview</p>
-              <p className={`${styles.placeholderSub} deva`}>
-                यहाँ आपकी दुकान दिखेगी
-              </p>
+              <p className={styles.placeholderTitle}>{tr.previewTitle}</p>
             </div>
           )}
         </div>
