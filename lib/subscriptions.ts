@@ -53,6 +53,27 @@ export async function recordPendingSubscription(input: {
 }
 
 /**
+ * Grant Pro after a verified Standard Checkout payment. Succeeds only if a
+ * pending row for this owner AND this order exists (written when the order was
+ * created) — so a valid signature can't upgrade an account that didn't order.
+ */
+export async function activateProByOrder(input: {
+  ownerUserId: string;
+  orderId: string;
+  paymentId: string;
+}): Promise<boolean> {
+  const sql = getSql();
+  const rows = await sql`
+    UPDATE subscriptions
+    SET plan = 'pro', status = 'active',
+        provider_sub_id = ${input.paymentId}, updated_at = now()
+    WHERE owner_user_id = ${input.ownerUserId}
+      AND provider_sub_id = ${input.orderId}
+    RETURNING owner_user_id`;
+  return rows.length > 0;
+}
+
+/**
  * Apply a verified webhook event, keyed by the Razorpay subscription id.
  * Only `status` (and the period end) change — `plan` stays what the user
  * subscribed to; access is always gated on plan AND status (see isPro), so a
