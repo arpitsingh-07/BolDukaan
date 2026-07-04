@@ -181,6 +181,8 @@ export interface UiStrings {
   catAll: string;
   actCall: string;
   actDirections: string;
+  filterLabel: string;
+  clearFilters: string;
   // trust badges
   badgeLocalBiz: string;
   badgePhoneAvail: string;
@@ -369,6 +371,8 @@ const en: UiStrings = {
   catAll: "All",
   actCall: "Call",
   actDirections: "Directions",
+  filterLabel: "Filters",
+  clearFilters: "Clear all",
   badgeLocalBiz: "Local business",
   badgePhoneAvail: "Phone available",
   badgeOnWhatsApp: "On WhatsApp",
@@ -537,6 +541,8 @@ const hi: UiStrings = {
   catAll: "सभी",
   actCall: "कॉल",
   actDirections: "रास्ता",
+  filterLabel: "फ़िल्टर",
+  clearFilters: "सब हटाएँ",
   badgeLocalBiz: "लोकल दुकान",
   badgePhoneAvail: "फ़ोन उपलब्ध",
   badgeOnWhatsApp: "WhatsApp पर",
@@ -705,6 +711,8 @@ const pa: UiStrings = {
   catAll: "ਸਾਰੀਆਂ",
   actCall: "ਕਾਲ",
   actDirections: "ਰਸਤਾ",
+  filterLabel: "ਫਿਲਟਰ",
+  clearFilters: "ਸਭ ਹਟਾਓ",
   badgeLocalBiz: "ਲੋਕਲ ਦੁਕਾਨ",
   badgePhoneAvail: "ਫ਼ੋਨ ਉਪਲਬਧ",
   badgeOnWhatsApp: "WhatsApp 'ਤੇ",

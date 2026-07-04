@@ -69,11 +69,106 @@
   flex-direction: column;
   gap: 12px;
 }
+.filterRow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 12px;
+}
+.filterBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  border: 1px solid var(--line);
+  background: #fff;
+  color: var(--petrol);
+  border-radius: var(--radius-control);
+  padding: 9px 15px;
+  font-size: 14px;
+  font-weight: 600;
+  font-family: inherit;
+  cursor: pointer;
+}
+.filterBtnActive {
+  composes: filterBtn;
+  background: var(--petrol);
+  color: var(--paper);
+  border-color: var(--petrol);
+}
+.filterCount {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 19px;
+  height: 19px;
+  padding: 0 5px;
+  border-radius: 999px;
+  background: var(--marigold);
+  color: var(--petrol-deep);
+  font-size: 12px;
+  font-weight: 700;
+}
+.chevron {
+  font-size: 11px;
+  transition: transform 0.18s ease;
+}
+.chevronUp {
+  composes: chevron;
+  transform: rotate(180deg);
+}
+.clearBtn {
+  background: none;
+  border: none;
+  padding: 8px 0;
+  color: var(--muted);
+  font-size: 13px;
+  font-weight: 600;
+  font-family: inherit;
+  cursor: pointer;
+}
+.clearBtn:hover {
+  color: var(--ink);
+}
+
+@keyframes bd-panel-in {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+.filterPanel {
+  margin-top: 10px;
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-card);
+  padding: 14px 16px;
+  box-shadow: var(--shadow-card);
+  animation: bd-panel-in 0.22s ease both;
+}
+.panelDivider {
+  height: 1px;
+  background: var(--line);
+  margin: 12px 0;
+}
+.openChipActive {
+  border: 1px solid rgba(46, 158, 91, 0.4);
+  background: rgba(46, 158, 91, 0.14);
+  color: var(--green);
+  border-radius: 999px;
+  padding: 7px 14px;
+  font-size: 13px;
+  font-weight: 600;
+  font-family: inherit;
+  cursor: pointer;
+}
 .catRow {
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
-  margin-top: 12px;
 }
 .catChip {
   border: 1px solid var(--line);

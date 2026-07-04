@@ -30,7 +30,9 @@ export function NearbyBrowser({ lang }: { lang: UiLang }) {
   const [state, setState] = useState<State>("idle");
   const [shops, setShops] = useState<NearbyShop[]>([]);
   const [query, setQuery] = useState("");
-  const [category, setCategory] = useState<string | null>(null);
+  const [filterOpen, setFilterOpen] = useState(false);
+  const [categories, setCategories] = useState<string[]>([]);
+  const [openNowOnly, setOpenNowOnly] = useState(false);
 
   const find = useCallback(() => {
     if (!("geolocation" in navigator)) {
@@ -61,19 +63,37 @@ export function NearbyBrowser({ lang }: { lang: UiLang }) {
 
   const showCta = state === "idle" || state === "denied" || state === "error";
 
-  // "Show me what I need" — free-text search plus category chips, both matched
-  // against the shop's name / category / address / products text.
+  // "Show me what I need" — free-text search plus the filter panel (multi-
+  // select categories OR-ed together, optional open-now), all matched against
+  // the shop's name / category / address / products text.
   const q = query.trim().toLowerCase();
-  const activeCategory = SHOP_CATEGORIES.find((c) => c.id === category) ?? null;
+  const activeCategories = SHOP_CATEGORIES.filter((c) =>
+    categories.includes(c.id),
+  );
+  const activeFilterCount = activeCategories.length + (openNowOnly ? 1 : 0);
   const filtered = shops.filter((s) => {
     const haystack = [s.name, s.category, s.address, ...s.products]
       .filter(Boolean)
       .join(" ");
-    if (activeCategory && !matchesCategory(activeCategory, haystack)) {
+    if (
+      activeCategories.length > 0 &&
+      !activeCategories.some((c) => matchesCategory(c, haystack))
+    ) {
       return false;
     }
+    if (openNowOnly && getOpenState(s.hours).status !== "open") return false;
     return q === "" || haystack.toLowerCase().includes(q);
   });
+
+  const toggleCategory = (id: string) =>
+    setCategories((prev) =>
+      prev.includes(id) ? prev.filter((c) => c !== id) : [...prev, id],
+    );
+
+  const clearFilters = () => {
+    setCategories([]);
+    setOpenNowOnly(false);
+  };
 
   return (
     <div>
@@ -100,29 +120,72 @@ export function NearbyBrowser({ lang }: { lang: UiLang }) {
             value={query}
             onChange={(e) => setQuery(e.target.value)}
           />
-          <div className={styles.catRow} role="group" aria-label="Category">
+
+          <div className={styles.filterRow}>
             <button
               type="button"
-              className={category === null ? styles.catChipActive : styles.catChip}
-              aria-pressed={category === null}
-              onClick={() => setCategory(null)}
+              className={
+                filterOpen || activeFilterCount > 0
+                  ? styles.filterBtnActive
+                  : styles.filterBtn
+              }
+              aria-expanded={filterOpen}
+              onClick={() => setFilterOpen((v) => !v)}
             >
-              {tr.catAll}
+              {tr.filterLabel}
+              {activeFilterCount > 0 && (
+                <span className={styles.filterCount}>{activeFilterCount}</span>
+              )}
+              <span
+                className={filterOpen ? styles.chevronUp : styles.chevron}
+                aria-hidden
+              >
+                ▾
+              </span>
             </button>
-            {SHOP_CATEGORIES.map((c) => (
+            {activeFilterCount > 0 && (
               <button
-                key={c.id}
+                type="button"
+                className={styles.clearBtn}
+                onClick={clearFilters}
+              >
+                {tr.clearFilters}
+              </button>
+            )}
+          </div>
+
+          {filterOpen && (
+            <div className={styles.filterPanel}>
+              <button
                 type="button"
                 className={
-                  category === c.id ? styles.catChipActive : styles.catChip
+                  openNowOnly ? styles.openChipActive : styles.catChip
                 }
-                aria-pressed={category === c.id}
-                onClick={() => setCategory(category === c.id ? null : c.id)}
+                aria-pressed={openNowOnly}
+                onClick={() => setOpenNowOnly((v) => !v)}
               >
-                {c.labels[lang]}
+                🟢 {tr.openNow}
               </button>
-            ))}
-          </div>
+              <div className={styles.panelDivider} />
+              <div className={styles.catRow} role="group" aria-label="Category">
+                {SHOP_CATEGORIES.map((c) => (
+                  <button
+                    key={c.id}
+                    type="button"
+                    className={
+                      categories.includes(c.id)
+                        ? styles.catChipActive
+                        : styles.catChip
+                    }
+                    aria-pressed={categories.includes(c.id)}
+                    onClick={() => toggleCategory(c.id)}
+                  >
+                    {c.labels[lang]}
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
         </>
       )}
 
