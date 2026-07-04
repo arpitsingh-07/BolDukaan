@@ -76,6 +76,24 @@ body {
   font-family: var(--font-gurmukhi-stack);
 }
 
+/* Smooth every interactive state change (hover, focus, active).
+   Entrance keyframes live per-module: Turbopack CSS Modules scope the
+   animation-name, so a shared global keyframe wouldn't match. */
+a,
+button,
+input,
+select,
+textarea,
+label {
+  transition:
+    background-color 0.18s ease,
+    color 0.18s ease,
+    border-color 0.18s ease,
+    box-shadow 0.18s ease,
+    opacity 0.18s ease,
+    transform 0.14s ease;
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,

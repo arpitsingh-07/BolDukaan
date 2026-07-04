@@ -85,6 +85,36 @@
   text-decoration: underline;
 }
 
+/* ---- staggered hero entrance ---- */
+@keyframes bd-fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+.eyebrow {
+  animation: bd-fade-up 0.5s ease both 0.04s;
+}
+.title {
+  animation: bd-fade-up 0.5s ease both 0.1s;
+}
+.subline {
+  animation: bd-fade-up 0.5s ease both 0.16s;
+}
+.nearbyLink {
+  animation: bd-fade-up 0.5s ease both 0.22s;
+}
+.voiceWrap {
+  animation: bd-fade-up 0.55s ease both 0.28s;
+}
+.voiceCap {
+  animation: bd-fade-up 0.5s ease both 0.34s;
+}
+
 /* ---------- top bar: language switcher + account controls ---------- */
 .topRow {
   display: flex;
