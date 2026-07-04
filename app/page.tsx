@@ -4,6 +4,7 @@ import { auth, signIn } from "@/auth";
 import { authConfigured } from "@/components/AccountNav";
 import { LangSwitcher } from "@/components/LangSwitcher";
 import { LandingDemo } from "@/components/LandingDemo";
+import { BrandMark } from "@/components/BrandMark";
 import { t } from "@/lib/i18n";
 import { viewerLang } from "@/lib/server-lang";
 import styles from "./landing.module.css";
@@ -65,7 +66,7 @@ export default async function LandingPage() {
         <div className={styles.heroInner}>
           <header className={styles.nav}>
             <span className={styles.brand}>
-              <span className={styles.brandDot} />
+              <BrandMark size={30} />
               BolDukaan
             </span>
             <nav className={styles.navLinks} aria-label="Main">

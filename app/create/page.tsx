@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import { auth, signIn } from "@/auth";
 import { AccountNav, authConfigured } from "@/components/AccountNav";
 import { VoiceOnboarding } from "@/components/VoiceOnboarding";
+import { BrandMark } from "@/components/BrandMark";
 import { t } from "@/lib/i18n";
 import { viewerLang } from "@/lib/server-lang";
 import gate from "@/app/dashboard/dashboard.module.css";
@@ -25,7 +26,7 @@ export default async function CreatePage() {
       <main className={gate.gate}>
         <div className={gate.gateInner}>
           <p className={gate.brand}>
-            <span className={gate.brandDot} />
+            <BrandMark size={34} />
             BolDukaan
           </p>
           <h1 className={gate.gateTitle}>{tr.createGateTitle}</h1>

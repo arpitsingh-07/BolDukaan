@@ -16,6 +16,7 @@ import { StorefrontCard } from "./StorefrontCard";
 import { ShareButton } from "./ShareButton";
 import { QrCode } from "./QrCode";
 import { PosterButtons } from "./PosterButton";
+import { BrandMark } from "./BrandMark";
 import styles from "@/app/voice.module.css";
 
 const BAR_COUNT = 5;
@@ -533,7 +534,7 @@ export function VoiceOnboarding({
           </div>
 
           <span className={styles.eyebrow}>
-            <span className={styles.dot} />
+            <BrandMark size={24} />
             BolDukaan
           </span>
           <h1 className={styles.title}>

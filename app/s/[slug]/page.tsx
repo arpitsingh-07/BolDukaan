@@ -5,6 +5,7 @@ import { headers } from "next/headers";
 import { auth } from "@/auth";
 import { StorefrontCard } from "@/components/StorefrontCard";
 import { ShareButton } from "@/components/ShareButton";
+import { BrandMark } from "@/components/BrandMark";
 import { getPublicShopBySlug, recordView } from "@/lib/shops";
 import { normalizeLang, t } from "@/lib/i18n";
 import { localBusinessJsonLd, jsonLdScript } from "@/lib/seo";
@@ -90,7 +91,7 @@ export default async function PublicStorefrontPage({ params }: Params) {
           </div>
         )}
         <p className={styles.brand}>
-          <span className={styles.brandDot} />
+          <BrandMark size={24} />
           BolDukaan
         </p>
 
@@ -110,9 +111,9 @@ export default async function PublicStorefrontPage({ params }: Params) {
 
         {showBranding && (
           <footer className={styles.footer}>
-            <a href="/" className={styles.footerLink}>
+            <Link href="/" className={styles.footerLink}>
               {tr.madeWith}
-            </a>
+            </Link>
           </footer>
         )}
       </div>

@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { t } from "@/lib/i18n";
 import { viewerLang } from "@/lib/server-lang";
 import { NearbyBrowser } from "@/components/NearbyBrowser";
+import { BrandMark } from "@/components/BrandMark";
 import styles from "./nearby.module.css";
 
 export const dynamic = "force-dynamic";
@@ -15,7 +16,7 @@ export default async function NearbyPage() {
     <main className={styles.page}>
       <div className={styles.wrap}>
         <p className={styles.brand}>
-          <span className={styles.brandDot} />
+          <BrandMark size={26} />
           BolDukaan
         </p>
         <h1 className={styles.title}>{tr.nearbyTitle}</h1>

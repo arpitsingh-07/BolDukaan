@@ -1,0 +1,7 @@
+/* The mark PNG sits on a white ground; rounded corners turn it into a clean
+   chip that reads well on both petrol and paper surfaces. */
+.mark {
+  display: block;
+  border-radius: 7px;
+  flex-shrink: 0;
+}
