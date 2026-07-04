@@ -84,7 +84,9 @@ export default async function LandingPage() {
                 {tr.navAbout}
               </a>
             </nav>
-            <LangSwitcher current={lang} />
+            <div className={styles.langSlot}>
+              <LangSwitcher current={lang} />
+            </div>
           </header>
 
           <h1 className={styles.title}>

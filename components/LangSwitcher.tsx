@@ -18,11 +18,16 @@ function persistLang(lang: UiLang) {
 }
 
 /**
- * Compact language chips for server-rendered pages (landing). Persists the
- * choice, then re-renders the page in the new language.
+ * Language selector for server-rendered pages (landing): a segmented switch
+ * whose paper key slides to the chosen language, then re-renders the page in
+ * that language.
  */
 export function LangSwitcher({ current }: { current: UiLang }) {
   const router = useRouter();
+  const index = Math.max(
+    0,
+    UI_LANGS.findIndex((l) => l.code === current),
+  );
 
   const change = (lang: UiLang) => {
     persistLang(lang);
@@ -30,12 +35,17 @@ export function LangSwitcher({ current }: { current: UiLang }) {
   };
 
   return (
-    <div className={styles.row} role="group" aria-label="Language">
+    <div className={styles.track} role="group" aria-label="Language">
+      <span
+        className={styles.thumb}
+        style={{ transform: `translateX(${index * 100}%)` }}
+        aria-hidden
+      />
       {UI_LANGS.map((l) => (
         <button
           key={l.code}
           type="button"
-          className={current === l.code ? styles.chipActive : styles.chip}
+          className={current === l.code ? styles.segActive : styles.seg}
           aria-pressed={current === l.code}
           onClick={() => change(l.code)}
         >
