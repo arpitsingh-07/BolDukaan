@@ -12,19 +12,13 @@
 .brand {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
-  font-size: 12px;
-  font-weight: 600;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
+  gap: 9px;
+  font-family: var(--font-display-stack);
+  font-size: 16px;
+  font-weight: 800;
+  letter-spacing: -0.01em;
   color: var(--petrol);
   margin: 0;
-}
-.brandDot {
-  width: 7px;
-  height: 7px;
-  border-radius: 50%;
-  background: var(--marigold);
 }
 .title {
   font-family: var(--font-display-stack);

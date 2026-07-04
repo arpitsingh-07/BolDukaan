@@ -5,3 +5,11 @@
   border-radius: 7px;
   flex-shrink: 0;
 }
+
+/* Two-tone wordmark ("Bol" inherits, "Dukaan" in marigold like the logo). */
+.dukaanDark {
+  color: var(--marigold);
+}
+.dukaanLight {
+  color: var(--marigold-deep);
+}

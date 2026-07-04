@@ -10,6 +10,7 @@ import { viewerLang } from "@/lib/server-lang";
 import { AccountNav, authConfigured } from "@/components/AccountNav";
 import { DashboardShops } from "@/components/DashboardShops";
 import { BrandMark } from "@/components/BrandMark";
+import { BrandName } from "@/components/BrandName";
 import styles from "./dashboard.module.css";
 
 export const dynamic = "force-dynamic";
@@ -26,7 +27,7 @@ export default async function DashboardPage() {
         <div className={styles.gateInner}>
           <p className={styles.brand}>
             <BrandMark size={34} />
-            BolDukaan
+            <BrandName tone="dark" />
           </p>
           <h1 className={styles.gateTitle}>{tr.gateTitle}</h1>
           <p className={styles.gateSub}>{tr.gateSub}</p>
@@ -77,7 +78,7 @@ export default async function DashboardPage() {
         <div className={styles.headerInner}>
           <p className={styles.brand}>
             <BrandMark size={26} />
-            BolDukaan
+            <BrandName tone="dark" />
           </p>
           <AccountNav />
         </div>

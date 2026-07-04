@@ -5,6 +5,7 @@ import { authConfigured } from "@/components/AccountNav";
 import { LangSwitcher } from "@/components/LangSwitcher";
 import { LandingDemo } from "@/components/LandingDemo";
 import { BrandMark } from "@/components/BrandMark";
+import { BrandName } from "@/components/BrandName";
 import { t } from "@/lib/i18n";
 import { viewerLang } from "@/lib/server-lang";
 import styles from "./landing.module.css";
@@ -67,7 +68,7 @@ export default async function LandingPage() {
           <header className={styles.nav}>
             <span className={styles.brand}>
               <BrandMark size={30} />
-              BolDukaan
+              <BrandName tone="dark" />
             </span>
             <nav className={styles.navLinks} aria-label="Main">
               <Link href="/nearby" className={styles.navLink}>
