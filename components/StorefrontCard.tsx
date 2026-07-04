@@ -4,6 +4,7 @@ import {
   type Storefront,
 } from "@/lib/storefront";
 import { normalizeLang, t, type UiLang } from "@/lib/i18n";
+import { mapsDirectionsUrl } from "@/lib/seo";
 import styles from "./storefront-card.module.css";
 
 function telHref(num: string): string {
@@ -48,6 +49,21 @@ export function StorefrontCard({
 
   return (
     <div className={styles.card} data-theme={theme}>
+      {storefront.images.length > 0 && (
+        <div className={styles.gallery}>
+          {storefront.images.slice(0, 4).map((src, i) => (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img
+              key={i}
+              src={src}
+              alt={storefront.name ?? "Shop photo"}
+              className={styles.galleryImg}
+              loading="lazy"
+            />
+          ))}
+        </div>
+      )}
+
       {storefront.category && (
         <div className={styles.eyebrow}>{storefront.category}</div>
       )}
@@ -88,6 +104,14 @@ export function StorefrontCard({
         <div className={styles.meta}>
           <span className={styles.label}>{tr.address}</span>
           <span>{storefront.address}</span>
+          <a
+            className={styles.mapLink}
+            href={mapsDirectionsUrl(storefront.name, storefront.address)}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            {tr.getDirections} →
+          </a>
         </div>
       )}
 

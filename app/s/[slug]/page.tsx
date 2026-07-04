@@ -1,11 +1,13 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { headers } from "next/headers";
 import { auth } from "@/auth";
 import { StorefrontCard } from "@/components/StorefrontCard";
 import { ShareButton } from "@/components/ShareButton";
 import { getPublicShopBySlug, recordView } from "@/lib/shops";
 import { normalizeLang, t } from "@/lib/i18n";
+import { localBusinessJsonLd, jsonLdScript } from "@/lib/seo";
 import { viewerLang } from "@/lib/server-lang";
 import styles from "./public.module.css";
 
@@ -63,8 +65,20 @@ export default async function PublicStorefrontPage({ params }: Params) {
   const lang = (await viewerLang()) ?? normalizeLang(shop.storefront.language);
   const tr = t(lang);
 
+  // Absolute URL for structured data (works behind Vercel's proxy too).
+  const h = await headers();
+  const host = h.get("host") ?? "";
+  const proto = h.get("x-forwarded-proto") ?? "http";
+  const pageUrl = host ? `${proto}://${host}/s/${slug}` : `/s/${slug}`;
+
   return (
     <main className={styles.page}>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: jsonLdScript(localBusinessJsonLd(shop.storefront, pageUrl)),
+        }}
+      />
       <div className={styles.wrap}>
         {isOwner && (
           <div className={styles.ownerBar}>

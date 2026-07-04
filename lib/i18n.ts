@@ -80,10 +80,25 @@ export interface UiStrings {
   closedWord: string;
   dayLabels: Record<DayKey, string>;
   emptyCard: string;
+  getDirections: string;
   // public page
   shareOnWhatsApp: string;
   shareText: string;
   madeWith: string;
+  // location + nearby discovery
+  setLocation: string;
+  locationSet: string;
+  locationError: string;
+  nearbyTitle: string;
+  nearbyIntro: string;
+  nearbyUseLocation: string;
+  nearbyLoading: string;
+  nearbyEmpty: string;
+  nearbyDenied: string;
+  kmAway: (km: string) => string;
+  browseNearby: string;
+  addPhotos: string;
+  searchPlaceholder: string;
   // account nav
   navDashboard: string;
   navSignIn: string;
@@ -172,9 +187,24 @@ const en: UiStrings = {
   },
   emptyCard:
     "We couldn't pick out shop details yet. Try again and describe your shop's name, what you sell, your hours, and a phone number.",
+  getDirections: "Get directions",
   shareOnWhatsApp: "Share on WhatsApp",
   shareText: "check out my shop",
   madeWith: "Made with BolDukaan — speak your shop into existence",
+  setLocation: "📍 Set shop location",
+  locationSet: "Shop location set ✓",
+  locationError:
+    "Couldn't get your location. Allow location access and try again.",
+  nearbyTitle: "Shops near you",
+  nearbyIntro: "Find local shops around you.",
+  nearbyUseLocation: "Use my location",
+  nearbyLoading: "Finding shops nearby…",
+  nearbyEmpty: "No shops found nearby yet. Be the first — create yours!",
+  nearbyDenied: "Location access is needed to find nearby shops.",
+  kmAway: (km) => `${km} km away`,
+  browseNearby: "Shops near you",
+  addPhotos: "Add photos",
+  searchPlaceholder: "What do you need? (e.g. atta)",
   navDashboard: "Dashboard",
   navSignIn: "Sign in",
   navSignOut: "Sign out",
@@ -269,9 +299,23 @@ const hi: UiStrings = {
   },
   emptyCard:
     "अभी दुकान की जानकारी नहीं मिल पाई। फिर बोलें — नाम, क्या बेचते हैं, समय और फ़ोन नंबर बताइए।",
+  getDirections: "रास्ता देखें",
   shareOnWhatsApp: "WhatsApp पर शेयर करें",
   shareText: "देखो मेरी दुकान",
   madeWith: "BolDukaan से बनी — बोलो, दुकान तैयार",
+  setLocation: "📍 दुकान की लोकेशन सेट करें",
+  locationSet: "दुकान की लोकेशन सेट हो गई ✓",
+  locationError: "लोकेशन नहीं मिली। लोकेशन की अनुमति देकर फिर कोशिश करें।",
+  nearbyTitle: "आपके पास की दुकानें",
+  nearbyIntro: "अपने आस-पास की दुकानें ढूँढें।",
+  nearbyUseLocation: "मेरी लोकेशन इस्तेमाल करें",
+  nearbyLoading: "पास की दुकानें ढूँढ रहे हैं…",
+  nearbyEmpty: "पास में अभी कोई दुकान नहीं मिली। पहली दुकान आप बनाइए!",
+  nearbyDenied: "पास की दुकानें ढूँढने के लिए लोकेशन की अनुमति चाहिए।",
+  kmAway: (km) => `${km} किमी दूर`,
+  browseNearby: "आपके पास की दुकानें",
+  addPhotos: "फ़ोटो जोड़ें",
+  searchPlaceholder: "आपको क्या चाहिए? (जैसे आटा)",
   navDashboard: "डैशबोर्ड",
   navSignIn: "साइन इन",
   navSignOut: "साइन आउट",
@@ -362,9 +406,23 @@ const pa: UiStrings = {
   },
   emptyCard:
     "ਹਾਲੇ ਦੁਕਾਨ ਦੀ ਜਾਣਕਾਰੀ ਨਹੀਂ ਮਿਲੀ। ਮੁੜ ਬੋਲੋ — ਨਾਮ, ਕੀ ਵੇਚਦੇ ਹੋ, ਸਮਾਂ ਅਤੇ ਫ਼ੋਨ ਨੰਬਰ ਦੱਸੋ।",
+  getDirections: "ਰਸਤਾ ਵੇਖੋ",
   shareOnWhatsApp: "WhatsApp 'ਤੇ ਸ਼ੇਅਰ ਕਰੋ",
   shareText: "ਵੇਖੋ ਮੇਰੀ ਦੁਕਾਨ",
   madeWith: "BolDukaan ਨਾਲ ਬਣੀ — ਬੋਲੋ, ਦੁਕਾਨ ਤਿਆਰ",
+  setLocation: "📍 ਦੁਕਾਨ ਦੀ ਲੋਕੇਸ਼ਨ ਸੈੱਟ ਕਰੋ",
+  locationSet: "ਦੁਕਾਨ ਦੀ ਲੋਕੇਸ਼ਨ ਸੈੱਟ ਹੋ ਗਈ ✓",
+  locationError: "ਲੋਕੇਸ਼ਨ ਨਹੀਂ ਮਿਲੀ। ਲੋਕੇਸ਼ਨ ਦੀ ਇਜਾਜ਼ਤ ਦੇ ਕੇ ਮੁੜ ਕੋਸ਼ਿਸ਼ ਕਰੋ।",
+  nearbyTitle: "ਤੁਹਾਡੇ ਨੇੜੇ ਦੀਆਂ ਦੁਕਾਨਾਂ",
+  nearbyIntro: "ਆਪਣੇ ਨੇੜੇ ਦੀਆਂ ਦੁਕਾਨਾਂ ਲੱਭੋ।",
+  nearbyUseLocation: "ਮੇਰੀ ਲੋਕੇਸ਼ਨ ਵਰਤੋ",
+  nearbyLoading: "ਨੇੜੇ ਦੀਆਂ ਦੁਕਾਨਾਂ ਲੱਭ ਰਹੇ ਹਾਂ…",
+  nearbyEmpty: "ਨੇੜੇ ਹਾਲੇ ਕੋਈ ਦੁਕਾਨ ਨਹੀਂ ਮਿਲੀ। ਪਹਿਲੀ ਦੁਕਾਨ ਤੁਸੀਂ ਬਣਾਓ!",
+  nearbyDenied: "ਨੇੜੇ ਦੀਆਂ ਦੁਕਾਨਾਂ ਲੱਭਣ ਲਈ ਲੋਕੇਸ਼ਨ ਦੀ ਇਜਾਜ਼ਤ ਚਾਹੀਦੀ ਹੈ।",
+  kmAway: (km) => `${km} ਕਿਮੀ ਦੂਰ`,
+  browseNearby: "ਤੁਹਾਡੇ ਨੇੜੇ ਦੀਆਂ ਦੁਕਾਨਾਂ",
+  addPhotos: "ਫ਼ੋਟੋ ਸ਼ਾਮਲ ਕਰੋ",
+  searchPlaceholder: "ਤੁਹਾਨੂੰ ਕੀ ਚਾਹੀਦਾ ਹੈ? (ਜਿਵੇਂ ਆਟਾ)",
   navDashboard: "ਡੈਸ਼ਬੋਰਡ",
   navSignIn: "ਸਾਈਨ ਇਨ",
   navSignOut: "ਸਾਈਨ ਆਊਟ",

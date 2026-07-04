@@ -72,6 +72,8 @@ export const storefrontSchema = z.object({
   address: z.string().nullable().default(null),
   hours: hoursSchema,
   products: z.array(productSchema).default([]),
+  /** Owner-uploaded photos (compressed data URLs, or later blob URLs). */
+  images: z.array(z.string()).default([]),
   /** ISO-639 hint for the dominant input language: "hi" | "pa" | "en". */
   language: z.string().nullable().default(null),
 });
@@ -92,6 +94,7 @@ export function emptyStorefront(): Storefront {
     address: null,
     hours: null,
     products: [],
+    images: [],
     language: null,
   };
 }

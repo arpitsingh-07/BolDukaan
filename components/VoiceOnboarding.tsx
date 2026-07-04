@@ -70,6 +70,28 @@ function loadStoredPublish(): StoredPublish | null {
   return null;
 }
 
+const MAX_IMAGES = 4;
+
+/** Downscale + re-encode a photo to a small JPEG data URL, entirely in-browser. */
+async function compressImage(
+  file: File,
+  maxDim = 1000,
+  quality = 0.7,
+): Promise<string> {
+  const bitmap = await createImageBitmap(file);
+  const scale = Math.min(1, maxDim / Math.max(bitmap.width, bitmap.height));
+  const w = Math.max(1, Math.round(bitmap.width * scale));
+  const h = Math.max(1, Math.round(bitmap.height * scale));
+  const canvas = document.createElement("canvas");
+  canvas.width = w;
+  canvas.height = h;
+  const ctx = canvas.getContext("2d");
+  if (!ctx) throw new Error("Canvas unavailable");
+  ctx.drawImage(bitmap, 0, 0, w, h);
+  bitmap.close?.();
+  return canvas.toDataURL("image/jpeg", quality);
+}
+
 export function VoiceOnboarding({
   initialStorefront = null,
   initialSlug = null,
@@ -101,6 +123,9 @@ export function VoiceOnboarding({
   const [publicUrl, setPublicUrl] = useState<string | null>(null);
   const [publishing, setPublishing] = useState(false);
   const [publishError, setPublishError] = useState<string | null>(null);
+  const [locationSet, setLocationSet] = useState(false);
+  const [locationError, setLocationError] = useState<string | null>(null);
+  const [images, setImages] = useState<string[]>(initialStorefront?.images ?? []);
 
   const sttRef = useRef(createSpeechToText());
   const sessionRef = useRef<SttSession | null>(null);
@@ -118,6 +143,8 @@ export function VoiceOnboarding({
   const lastTranscriptRef = useRef<string | null>(null);
   const publishedSlugRef = useRef<string | null>(null);
   const publishedTokenRef = useRef<string | null>(null);
+  const locationRef = useRef<{ lat: number; lng: number } | null>(null);
+  const imagesRef = useRef<string[]>(initialStorefront?.images ?? []);
 
   const router = useRouter();
   const tr = t(uiLang);
@@ -174,6 +201,10 @@ export function VoiceOnboarding({
   useEffect(() => {
     storefrontRef.current = storefront;
   }, [storefront]);
+
+  useEffect(() => {
+    imagesRef.current = images;
+  }, [images]);
 
   const stopAnalyser = useCallback(() => {
     if (rafRef.current !== null) {
@@ -270,11 +301,13 @@ export function VoiceOnboarding({
         method: "POST",
         headers: { "content-type": "application/json" },
         body: JSON.stringify({
-          storefront: storefrontRef.current,
+          storefront: { ...storefrontRef.current, images: imagesRef.current },
           transcript: lastTranscriptRef.current,
           // Present on re-publish → server updates the same shop (token-gated).
           slug: publishedSlugRef.current,
           editToken: publishedTokenRef.current,
+          lat: locationRef.current?.lat ?? null,
+          lng: locationRef.current?.lng ?? null,
         }),
       });
       const data = (await res.json()) as {
@@ -381,6 +414,45 @@ export function VoiceOnboarding({
     void runStructuring(text, false);
   };
 
+  const addImages = async (files: FileList | null) => {
+    if (!files) return;
+    const room = MAX_IMAGES - images.length;
+    const picked = Array.from(files).slice(0, Math.max(0, room));
+    const compressed: string[] = [];
+    for (const f of picked) {
+      try {
+        compressed.push(await compressImage(f));
+      } catch {
+        /* skip an image that fails to decode */
+      }
+    }
+    if (compressed.length) {
+      setImages((prev) => [...prev, ...compressed].slice(0, MAX_IMAGES));
+    }
+  };
+
+  const removeImage = (idx: number) =>
+    setImages((prev) => prev.filter((_, i) => i !== idx));
+
+  const captureLocation = () => {
+    setLocationError(null);
+    if (!("geolocation" in navigator)) {
+      setLocationError(t(uiLangRef.current).locationError);
+      return;
+    }
+    navigator.geolocation.getCurrentPosition(
+      (pos) => {
+        locationRef.current = {
+          lat: pos.coords.latitude,
+          lng: pos.coords.longitude,
+        };
+        setLocationSet(true);
+      },
+      () => setLocationError(t(uiLangRef.current).locationError),
+      { enableHighAccuracy: true, timeout: 10000 },
+    );
+  };
+
   const startOver = () => {
     setStorefront(null);
     storefrontRef.current = null;
@@ -394,6 +466,10 @@ export function VoiceOnboarding({
     publishedSlugRef.current = null;
     publishedTokenRef.current = null;
     lastTranscriptRef.current = null;
+    locationRef.current = null;
+    setLocationSet(false);
+    setLocationError(null);
+    setImages([]);
     if (!initialSlug) {
       try {
         localStorage.removeItem(STORAGE_KEY);
@@ -442,6 +518,9 @@ export function VoiceOnboarding({
             {tr.titlePost}
           </h1>
           <p className={styles.subline}>{tr.subline}</p>
+          <a href="/nearby" className={styles.nearbyLink}>
+            {tr.browseNearby} →
+          </a>
 
           {!showTyping && (
             <>
@@ -542,9 +621,61 @@ export function VoiceOnboarding({
                 <span className={styles.arrow}>↓</span>
               </p>
               <div className={styles.reveal} key={JSON.stringify(storefront)}>
-                <StorefrontCard storefront={storefront} lang={uiLang} />
+                <StorefrontCard
+                  storefront={{ ...storefront, images }}
+                  lang={uiLang}
+                />
               </div>
               {partial && <p className={styles.partialNote}>{tr.partialNote}</p>}
+
+              <div className={styles.photoRow}>
+                {images.map((src, i) => (
+                  <span key={i} className={styles.thumb}>
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img src={src} alt="" className={styles.thumbImg} />
+                    <button
+                      type="button"
+                      className={styles.thumbRemove}
+                      onClick={() => removeImage(i)}
+                      aria-label="Remove photo"
+                    >
+                      ×
+                    </button>
+                  </span>
+                ))}
+                {images.length < MAX_IMAGES && (
+                  <label className={styles.photoAdd}>
+                    {tr.addPhotos}
+                    <input
+                      type="file"
+                      accept="image/*"
+                      multiple
+                      hidden
+                      onChange={(e) => {
+                        void addImages(e.target.files);
+                        e.target.value = "";
+                      }}
+                    />
+                  </label>
+                )}
+              </div>
+
+              <div className={styles.locationRow}>
+                {locationSet ? (
+                  <span className={styles.locationSet}>{tr.locationSet}</span>
+                ) : (
+                  <button
+                    type="button"
+                    className={styles.locationBtn}
+                    onClick={captureLocation}
+                  >
+                    {tr.setLocation}
+                  </button>
+                )}
+              </div>
+              {locationError && (
+                <p className={styles.publishErrorNote}>{locationError}</p>
+              )}
 
               {publicUrl ? (
                 <div className={styles.publishedBox}>

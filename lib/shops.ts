@@ -23,6 +23,7 @@ function rowToStorefront(row: Record<string, unknown>): Storefront {
   const products = Array.isArray(row.products)
     ? (row.products as Product[])
     : [];
+  const images = Array.isArray(row.images) ? (row.images as string[]) : [];
   const candidate = {
     name: (row.name as string) ?? null,
     tagline: (row.tagline as string) ?? null,
@@ -33,19 +34,26 @@ function rowToStorefront(row: Record<string, unknown>): Storefront {
     address: (row.address as string) ?? null,
     hours: (row.hours as Storefront["hours"]) ?? null,
     products,
+    images,
     language: (row.language as string) ?? null,
   };
   // Re-validate on the way out too — DB data is trusted, but this keeps the
   // public renderer safe if a row was ever written by another path.
   const parsed = storefrontSchema.safeParse(candidate);
-  return parsed.success ? parsed.data : { ...candidate, products };
+  return parsed.success ? parsed.data : { ...candidate, products, images };
 }
 
 /** Create a new shop + storefront (status 'active'). Returns slug + edit token. */
+export interface LatLng {
+  lat: number;
+  lng: number;
+}
+
 export async function publishNewStorefront(input: {
   storefront: Storefront;
   transcript: string | null;
   ownerUserId?: string | null;
+  location?: LatLng | null;
 }): Promise<PublishResult> {
   const sql = getSql();
   const id = randomUUID();
@@ -53,15 +61,17 @@ export async function publishNewStorefront(input: {
   const token = editToken();
   const sf = input.storefront;
   const owner = input.ownerUserId ?? null;
+  const lat = input.location?.lat ?? null;
+  const lng = input.location?.lng ?? null;
 
   await sql.transaction([
-    sql`INSERT INTO shops (id, slug, edit_token, status, category, owner_user_id)
-        VALUES (${id}, ${slug}, ${token}, 'active', ${sf.category}, ${owner})`,
+    sql`INSERT INTO shops (id, slug, edit_token, status, category, owner_user_id, lat, lng)
+        VALUES (${id}, ${slug}, ${token}, 'active', ${sf.category}, ${owner}, ${lat}, ${lng})`,
     sql`INSERT INTO storefronts
-          (shop_id, name, tagline, about, phone, whatsapp, address, hours, products, language, raw_transcript)
+          (shop_id, name, tagline, about, phone, whatsapp, address, hours, products, images, language, raw_transcript)
         VALUES
           (${id}, ${sf.name}, ${sf.tagline}, ${sf.about}, ${sf.phone}, ${sf.whatsapp}, ${sf.address},
-           ${jsonb(sf.hours)}::jsonb, ${jsonb(sf.products)}::jsonb, ${sf.language}, ${input.transcript})`,
+           ${jsonb(sf.hours)}::jsonb, ${jsonb(sf.products)}::jsonb, ${jsonb(sf.images)}::jsonb, ${sf.language}, ${input.transcript})`,
   ]);
 
   return { slug, editToken: token };
@@ -77,6 +87,7 @@ export async function updateStorefrontByToken(input: {
   token: string;
   storefront: Storefront;
   transcript: string | null;
+  location?: LatLng | null;
 }): Promise<boolean> {
   const sql = getSql();
   const rows = await sql`
@@ -85,13 +96,18 @@ export async function updateStorefrontByToken(input: {
 
   const shopId = rows[0].id as string;
   const sf = input.storefront;
+  const lat = input.location?.lat ?? null;
+  const lng = input.location?.lng ?? null;
 
   await sql.transaction([
-    sql`UPDATE shops SET category = ${sf.category}, updated_at = now() WHERE id = ${shopId}`,
+    sql`UPDATE shops SET category = ${sf.category},
+          lat = COALESCE(${lat}, lat), lng = COALESCE(${lng}, lng),
+          updated_at = now() WHERE id = ${shopId}`,
     sql`UPDATE storefronts SET
           name = ${sf.name}, tagline = ${sf.tagline}, about = ${sf.about},
           phone = ${sf.phone}, whatsapp = ${sf.whatsapp}, address = ${sf.address},
           hours = ${jsonb(sf.hours)}::jsonb, products = ${jsonb(sf.products)}::jsonb,
+          images = ${jsonb(sf.images)}::jsonb,
           language = ${sf.language},
           raw_transcript = COALESCE(${input.transcript}, raw_transcript)
         WHERE shop_id = ${shopId}`,
@@ -120,7 +136,7 @@ export const getPublicShopBySlug = cache(
     const rows = await sql`
       SELECT s.owner_user_id, s.category,
              f.name, f.tagline, f.about, f.phone, f.whatsapp, f.address,
-             f.hours, f.products, f.language, f.theme,
+             f.hours, f.products, f.images, f.language, f.theme,
              (sub.plan = 'pro' AND sub.status = 'active') AS owner_is_pro
       FROM shops s
       JOIN storefronts f ON f.shop_id = s.id
@@ -204,7 +220,7 @@ export async function getShopForOwner(
   const rows = await sql`
     SELECT s.category, s.status,
            f.name, f.tagline, f.about, f.phone, f.whatsapp, f.address,
-           f.hours, f.products, f.language
+           f.hours, f.products, f.images, f.language
     FROM shops s
     JOIN storefronts f ON f.shop_id = s.id
     WHERE s.slug = ${slug} AND s.owner_user_id = ${ownerUserId}
@@ -218,6 +234,7 @@ export async function updateStorefrontByOwner(input: {
   ownerUserId: string;
   storefront: Storefront;
   transcript: string | null;
+  location?: LatLng | null;
 }): Promise<boolean> {
   const sql = getSql();
   const rows = await sql`
@@ -226,12 +243,17 @@ export async function updateStorefrontByOwner(input: {
 
   const shopId = rows[0].id as string;
   const sf = input.storefront;
+  const lat = input.location?.lat ?? null;
+  const lng = input.location?.lng ?? null;
   await sql.transaction([
-    sql`UPDATE shops SET category = ${sf.category}, updated_at = now() WHERE id = ${shopId}`,
+    sql`UPDATE shops SET category = ${sf.category},
+          lat = COALESCE(${lat}, lat), lng = COALESCE(${lng}, lng),
+          updated_at = now() WHERE id = ${shopId}`,
     sql`UPDATE storefronts SET
           name = ${sf.name}, tagline = ${sf.tagline}, about = ${sf.about},
           phone = ${sf.phone}, whatsapp = ${sf.whatsapp}, address = ${sf.address},
           hours = ${jsonb(sf.hours)}::jsonb, products = ${jsonb(sf.products)}::jsonb,
+          images = ${jsonb(sf.images)}::jsonb,
           language = ${sf.language},
           raw_transcript = COALESCE(${input.transcript}, raw_transcript)
         WHERE shop_id = ${shopId}`,
@@ -277,4 +299,86 @@ export async function claimShopByToken(input: {
     WHERE slug = ${input.slug} AND edit_token = ${input.token} AND owner_user_id IS NULL
     RETURNING slug`;
   return rows.length > 0;
+}
+
+/* ---------------------------------------------------------------------------
+ * Nearby discovery — visitor location in, active shops sorted by distance out.
+ * ------------------------------------------------------------------------- */
+
+export interface NearbyShop {
+  slug: string;
+  name: string | null;
+  category: string | null;
+  address: string | null;
+  language: string | null;
+  hours: Storefront["hours"];
+  products: string[];
+  distanceKm: number;
+}
+
+/** Great-circle distance in km between two lat/lng points. */
+function haversineKm(
+  lat1: number,
+  lng1: number,
+  lat2: number,
+  lng2: number,
+): number {
+  const R = 6371;
+  const toRad = (d: number) => (d * Math.PI) / 180;
+  const dLat = toRad(lat2 - lat1);
+  const dLng = toRad(lng2 - lng1);
+  const a =
+    Math.sin(dLat / 2) ** 2 +
+    Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) * Math.sin(dLng / 2) ** 2;
+  return 2 * R * Math.asin(Math.sqrt(a));
+}
+
+/**
+ * Active, located shops within `radiusKm` of (lat,lng), nearest first.
+ * A cheap bounding-box filter runs in SQL (index-assisted); exact Haversine
+ * distance is computed on the small result set in JS.
+ */
+export async function findNearbyShops(input: {
+  lat: number;
+  lng: number;
+  radiusKm: number;
+  limit?: number;
+}): Promise<NearbyShop[]> {
+  const sql = getSql();
+  const { lat, lng, radiusKm } = input;
+  const limit = input.limit ?? 50;
+
+  // Degrees of lat/lng that cover the radius (lng shrinks toward the poles).
+  const dLat = radiusKm / 111;
+  const dLng = radiusKm / (111 * Math.max(Math.cos((lat * Math.PI) / 180), 0.01));
+
+  const rows = await sql`
+    SELECT s.slug, s.category, s.lat, s.lng,
+           f.name, f.address, f.hours, f.language, f.products
+    FROM shops s
+    JOIN storefronts f ON f.shop_id = s.id
+    WHERE s.status = 'active'
+      AND s.lat IS NOT NULL AND s.lng IS NOT NULL
+      AND s.lat BETWEEN ${lat - dLat} AND ${lat + dLat}
+      AND s.lng BETWEEN ${lng - dLng} AND ${lng + dLng}
+    LIMIT 500`;
+
+  return rows
+    .map((r) => ({
+      slug: r.slug as string,
+      name: (r.name as string) ?? null,
+      category: (r.category as string) ?? null,
+      address: (r.address as string) ?? null,
+      language: (r.language as string) ?? null,
+      hours: (r.hours as Storefront["hours"]) ?? null,
+      products: Array.isArray(r.products)
+        ? (r.products as { name?: string }[])
+            .map((p) => p.name)
+            .filter((n): n is string => Boolean(n))
+        : [],
+      distanceKm: haversineKm(lat, lng, Number(r.lat), Number(r.lng)),
+    }))
+    .filter((s) => s.distanceKm <= radiusKm)
+    .sort((a, b) => a.distanceKm - b.distanceKm)
+    .slice(0, limit);
 }

@@ -11,15 +11,20 @@ CREATE TABLE IF NOT EXISTS shops (
   status        TEXT NOT NULL DEFAULT 'draft',   -- draft | active | unpublished
   category      TEXT,
   views         INTEGER NOT NULL DEFAULT 0,      -- M4: basic page-view analytics
+  lat           DOUBLE PRECISION,                -- shop location (optional; for "nearby")
+  lng           DOUBLE PRECISION,
   created_at    TIMESTAMPTZ NOT NULL DEFAULT now(),
   updated_at    TIMESTAMPTZ NOT NULL DEFAULT now()
 );
 
--- Idempotent add for databases created before M4.
+-- Idempotent adds for databases created before these columns existed.
 ALTER TABLE shops ADD COLUMN IF NOT EXISTS views INTEGER NOT NULL DEFAULT 0;
+ALTER TABLE shops ADD COLUMN IF NOT EXISTS lat DOUBLE PRECISION;
+ALTER TABLE shops ADD COLUMN IF NOT EXISTS lng DOUBLE PRECISION;
 
 CREATE INDEX IF NOT EXISTS shops_owner_user_id_idx ON shops (owner_user_id);
 CREATE INDEX IF NOT EXISTS shops_slug_idx ON shops (slug);
+CREATE INDEX IF NOT EXISTS shops_geo_idx ON shops (lat, lng);
 
 CREATE TABLE IF NOT EXISTS storefronts (
   shop_id        UUID PRIMARY KEY REFERENCES shops (id) ON DELETE CASCADE,

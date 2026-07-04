@@ -19,6 +19,27 @@ interface PublishRequest {
   transcript?: unknown;
   slug?: unknown;
   editToken?: unknown;
+  lat?: unknown;
+  lng?: unknown;
+}
+
+function parseLocation(
+  lat: unknown,
+  lng: unknown,
+): { lat: number; lng: number } | null {
+  if (
+    typeof lat === "number" &&
+    typeof lng === "number" &&
+    Number.isFinite(lat) &&
+    Number.isFinite(lng) &&
+    lat >= -90 &&
+    lat <= 90 &&
+    lng >= -180 &&
+    lng <= 180
+  ) {
+    return { lat, lng };
+  }
+  return null;
 }
 
 export async function POST(request: Request) {
@@ -60,6 +81,7 @@ export async function POST(request: Request) {
 
   const slug = typeof body.slug === "string" ? body.slug : null;
   const token = typeof body.editToken === "string" ? body.editToken : null;
+  const location = parseLocation(body.lat, body.lng);
 
   // Owner identity is derived from the server session ONLY — never the client.
   const session = await auth();
@@ -73,6 +95,7 @@ export async function POST(request: Request) {
         token,
         storefront,
         transcript,
+        location,
       });
       if (!ok) {
         return NextResponse.json(
@@ -90,6 +113,7 @@ export async function POST(request: Request) {
         ownerUserId,
         storefront,
         transcript,
+        location,
       });
       if (!ok) {
         return NextResponse.json(
@@ -135,6 +159,7 @@ export async function POST(request: Request) {
       storefront,
       transcript,
       ownerUserId,
+      location,
     });
     return NextResponse.json({ ...result, updated: false });
   } catch (err) {
