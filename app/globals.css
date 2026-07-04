@@ -94,6 +94,21 @@ label {
     transform 0.14s ease;
 }
 
+/* Route-transition entrance — applied by app/template.tsx on every navigation. */
+@keyframes bd-page-enter {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+.page-enter {
+  animation: bd-page-enter 0.3s ease both;
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,

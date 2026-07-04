@@ -403,11 +403,33 @@
   text-align: center;
 }
 
+.photoProgress {
+  margin: 16px 0 0;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
 .photoRow {
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
-  margin-top: 16px;
+  margin-top: 8px;
+}
+.qrBox {
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-card);
+  padding: 14px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.qrTitle {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--ink);
 }
 .thumb {
   position: relative;

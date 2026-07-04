@@ -9,7 +9,7 @@
   padding: 20px 24px 28px;
 }
 .headerInner {
-  max-width: 640px;
+  max-width: 760px;
   margin: 0 auto;
   display: flex;
   align-items: center;
@@ -22,61 +22,169 @@
   font-weight: 600;
   text-decoration: none;
 }
+.back:hover {
+  color: var(--paper);
+}
 .title {
-  max-width: 640px;
+  max-width: 760px;
   margin: 16px auto 0;
   font-family: var(--font-display-stack);
   font-weight: 800;
-  font-size: 30px;
+  font-size: 32px;
   letter-spacing: -0.02em;
 }
 .main {
-  max-width: 640px;
+  max-width: 760px;
   margin: 0 auto;
-  padding: 24px;
-  display: flex;
-  flex-direction: column;
+  padding: 28px 24px 48px;
+}
+
+/* Plans sit side by side, not stacked (single column only on small phones). */
+.grid {
+  display: grid;
+  grid-template-columns: 1fr;
   gap: 16px;
+  align-items: stretch;
+}
+@media (min-width: 600px) {
+  .grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@keyframes bd-fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
 }
 .planCard {
   background: #fff;
   border: 1px solid var(--line);
   border-radius: var(--radius-card);
-  padding: 20px;
+  padding: 24px;
   box-shadow: var(--shadow-card);
+  display: flex;
+  flex-direction: column;
+  animation: bd-fade-up 0.45s ease both;
+}
+.planCard:nth-child(2) {
+  animation-delay: 0.08s;
+}
+.currentCard {
+  border: 1.5px solid var(--petrol);
+}
+
+.planTop {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
 }
 .planName {
   font-family: var(--font-display-stack);
-  font-weight: 700;
-  font-size: 20px;
+  font-weight: 800;
+  font-size: 24px;
+  letter-spacing: -0.01em;
   color: var(--ink);
 }
-.features {
-  margin: 12px 0 0;
-  padding-left: 18px;
+.currentBadge {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--petrol);
+  background: var(--surface-tint);
+  border-radius: 999px;
+  padding: 4px 11px;
+  white-space: nowrap;
+}
+
+.price {
+  margin-top: 14px;
+  font-family: var(--font-display-stack);
+  font-weight: 800;
+  font-size: 36px;
+  letter-spacing: -0.02em;
   color: var(--ink);
+  line-height: 1;
+}
+.per {
+  font-family: var(--font-body-stack);
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--muted);
+  margin-left: 4px;
+}
+
+.planDesc {
+  margin: 10px 0 0;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--muted);
+}
+
+.features {
+  list-style: none;
+  margin: 18px 0 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  flex: 1;
+}
+.feature {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--ink);
+}
+.tick {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: rgba(46, 158, 91, 0.14);
+  color: var(--green);
+  font-size: 12px;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.currentNote {
+  margin: 20px 0 0;
   font-size: 14px;
-  line-height: 1.7;
+  font-weight: 600;
+  color: var(--muted);
 }
 .upgradeBtn {
-  margin-top: 16px;
+  margin-top: 20px;
   width: 100%;
   background: var(--ink);
   color: var(--paper);
   border: none;
   border-radius: var(--radius-control);
-  padding: 13px 0;
-  font-weight: 600;
+  padding: 14px 0;
+  font-weight: 700;
   font-size: 15px;
   font-family: inherit;
   cursor: pointer;
+}
+.upgradeBtn:hover {
+  transform: translateY(-1px);
 }
 .upgradeBtn:disabled {
   opacity: 0.6;
   cursor: default;
 }
 .note {
-  margin-top: 14px;
+  margin-top: 16px;
   font-size: 13px;
   color: var(--muted);
 }

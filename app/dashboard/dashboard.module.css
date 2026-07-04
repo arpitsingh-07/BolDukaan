@@ -104,10 +104,35 @@
 .planLink:hover {
   text-decoration: underline;
 }
+.headerActions {
+  max-width: 760px;
+  margin: 16px auto 0;
+}
+.createBtn {
+  display: inline-block;
+  background: var(--paper);
+  color: var(--petrol);
+  border-radius: var(--radius-control);
+  padding: 11px 18px;
+  font-weight: 700;
+  font-size: 15px;
+  text-decoration: none;
+}
+.createBtn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 20px rgba(7, 39, 36, 0.35);
+}
 .main {
   max-width: 760px;
   margin: 0 auto;
   padding: 24px;
+}
+.sectionTitle {
+  font-family: var(--font-display-stack);
+  font-weight: 700;
+  font-size: 18px;
+  color: var(--ink);
+  margin: 0 0 14px;
 }
 .notice {
   font-size: 14px;

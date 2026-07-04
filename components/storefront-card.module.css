@@ -112,6 +112,25 @@
   background: var(--muted);
 }
 
+.trustRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+  margin-top: 12px;
+}
+.trustBadge {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--petrol);
+  background: var(--surface-tint);
+  border-radius: 999px;
+  padding: 4px 10px;
+}
+.card[data-theme="petrol"] .trustBadge {
+  background: rgba(244, 243, 239, 0.12);
+  color: var(--paper);
+}
+
 .meta {
   margin-top: 14px;
   font-size: 14px;

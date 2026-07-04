@@ -40,40 +40,79 @@ export default async function BillingPage() {
       </header>
 
       <main className={styles.main}>
-        <section className={styles.planCard}>
-          <div className={styles.planName}>
-            {pro ? tr.billCurrentPro : tr.billCurrentFree}
-          </div>
-          <ul className={styles.features}>
-            {(pro ? tr.billFeaturesPro : tr.billFeaturesFree).map((f) => (
-              <li key={f}>{f}</li>
-            ))}
-          </ul>
-        </section>
-
-        {!pro && (
-          <section className={styles.planCard}>
-            <div className={styles.planName}>
-              {tr.billUpgradeTitle(PRO_PRICE_INR)}
+        <div className={styles.grid}>
+          <section
+            className={`${styles.planCard} ${!pro ? styles.currentCard : ""}`}
+          >
+            <div className={styles.planTop}>
+              <span className={styles.planName}>{tr.billFreeName}</span>
+              {!pro && (
+                <span className={styles.currentBadge}>
+                  {tr.billCurrentBadge}
+                </span>
+              )}
             </div>
+            <div className={styles.price}>
+              {tr.billFreePrice}
+              <span className={styles.per}>{tr.billPerMonth}</span>
+            </div>
+            <p className={styles.planDesc}>{tr.billFreeDesc}</p>
             <ul className={styles.features}>
-              {tr.billFeaturesPro.map((f) => (
-                <li key={f}>{f}</li>
+              {tr.billFeaturesFree.map((f) => (
+                <li key={f} className={styles.feature}>
+                  <span className={styles.tick} aria-hidden>
+                    ✓
+                  </span>
+                  {f}
+                </li>
               ))}
             </ul>
-            {billingReady ? (
+            {!pro && (
+              <p className={styles.currentNote}>{tr.billCurrentCta}</p>
+            )}
+          </section>
+
+          <section
+            className={`${styles.planCard} ${pro ? styles.currentCard : ""}`}
+          >
+            <div className={styles.planTop}>
+              <span className={styles.planName}>{tr.billProName}</span>
+              {pro && (
+                <span className={styles.currentBadge}>
+                  {tr.billCurrentBadge}
+                </span>
+              )}
+            </div>
+            <div className={styles.price}>
+              ₹{PRO_PRICE_INR}
+              <span className={styles.per}>{tr.billPerMonth}</span>
+            </div>
+            <p className={styles.planDesc}>{tr.billProDesc}</p>
+            <ul className={styles.features}>
+              {tr.billFeaturesPro.map((f) => (
+                <li key={f} className={styles.feature}>
+                  <span className={styles.tick} aria-hidden>
+                    ✓
+                  </span>
+                  {f}
+                </li>
+              ))}
+            </ul>
+            {pro ? (
+              <p className={styles.currentNote}>{tr.billCurrentCta}</p>
+            ) : billingReady ? (
               <UpgradeButton
                 label={tr.billUpgradeCta}
                 busyLabel={tr.billStarting}
               />
             ) : (
               <p className={styles.note}>
-                Billing isn&apos;t configured yet — set the RAZORPAY_* env vars to
-                enable checkout.
+                Billing isn&apos;t configured yet — set the RAZORPAY_* env vars
+                to enable checkout.
               </p>
             )}
           </section>
-        )}
+        </div>
       </main>
     </div>
   );

@@ -75,6 +75,29 @@
   flex-direction: column;
   gap: 12px;
 }
+.catRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 12px;
+}
+.catChip {
+  border: 1px solid var(--line);
+  background: #fff;
+  color: var(--petrol);
+  border-radius: 999px;
+  padding: 7px 14px;
+  font-size: 13px;
+  font-weight: 600;
+  font-family: inherit;
+  cursor: pointer;
+}
+.catChipActive {
+  composes: catChip;
+  background: var(--petrol);
+  color: var(--paper);
+  border-color: var(--petrol);
+}
 .card {
   display: block;
   background: #fff;
@@ -82,6 +105,14 @@
   border-radius: var(--radius-card);
   padding: 16px 18px;
   box-shadow: var(--shadow-card);
+  text-decoration: none;
+  color: var(--ink);
+  transition:
+    transform 0.18s ease,
+    box-shadow 0.18s ease;
+}
+.cardLink {
+  display: block;
   text-decoration: none;
   color: var(--ink);
 }
@@ -161,4 +192,25 @@
   margin-top: 6px;
   font-size: 14px;
   color: var(--ink);
+}
+.cardActions {
+  display: flex;
+  gap: 8px;
+  margin-top: 12px;
+}
+.actionBtn {
+  flex: 1;
+  text-align: center;
+  background: var(--ink);
+  color: var(--paper);
+  border-radius: var(--radius-control);
+  padding: 9px 0;
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: none;
+}
+.actionBtnAlt {
+  composes: actionBtn;
+  background: var(--surface-tint);
+  color: var(--petrol);
 }

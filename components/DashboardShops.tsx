@@ -105,6 +105,18 @@ export function DashboardShops({
               >
                 {tr.actEdit}
               </Link>
+              {shop.status === "active" && origin && (
+                <a
+                  className={styles.action}
+                  href={`https://wa.me/?text=${encodeURIComponent(
+                    `${shop.name ?? "—"} — ${tr.shareText}: ${origin}/s/${shop.slug}`,
+                  )}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  {tr.actShare}
+                </a>
+              )}
               <select
                 className={styles.themeSelect}
                 value={shop.theme}

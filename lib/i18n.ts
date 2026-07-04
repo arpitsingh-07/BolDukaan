@@ -134,6 +134,74 @@ export interface UiStrings {
   billFeaturesPro: string[];
   billUpgradeCta: string;
   billStarting: string;
+  billFreeName: string;
+  billProName: string;
+  billFreeDesc: string;
+  billProDesc: string;
+  billCurrentBadge: string;
+  billCurrentCta: string;
+  billFreePrice: string;
+  billPerMonth: string;
+  // landing
+  navFind: string;
+  navRegister: string;
+  navAbout: string;
+  landingSub: string;
+  findShopsCta: string;
+  findShopsSub: string;
+  registerShopCta: string;
+  registerShopSub: string;
+  trustItems: string[];
+  demoTitle: string;
+  demoYouSpeak: string;
+  demoTranscript: string;
+  demoSteps: string[];
+  aboutTitle: string;
+  aboutBody: string;
+  // create gate
+  createGateTitle: string;
+  createGateSub: string;
+  // builder extras
+  photosProgress: (n: number, max: number) => string;
+  qrScanTitle: string;
+  posterDownload: string;
+  posterPrint: string;
+  posterScan: string;
+  waShareMessage: (args: {
+    name: string | null;
+    address: string | null;
+    products: string[];
+    url: string;
+  }) => string;
+  // dashboard extras
+  dashWelcome: string;
+  dashCreateNew: string;
+  actShare: string;
+  // nearby extras
+  catAll: string;
+  actCall: string;
+  actDirections: string;
+  // trust badges
+  badgeLocalBiz: string;
+  badgePhoneAvail: string;
+  badgeOnWhatsApp: string;
+}
+
+/** Assemble the post-publish WhatsApp message from localized scaffolding. */
+function waMessage(
+  parts: { hello: string; visit: string },
+  args: { name: string | null; address: string | null; products: string[]; url: string },
+): string {
+  const lines: string[] = [parts.hello, ""];
+  if (args.name) lines.push(`🏪 ${args.name}`);
+  if (args.address) lines.push(`📍 ${args.address}`);
+  const products = args.products.filter(Boolean).slice(0, 4);
+  if (products.length > 0) {
+    lines.push("");
+    for (const p of products) lines.push(`✓ ${p}`);
+  }
+  lines.push("", `${parts.visit}: ${args.url}`);
+  return lines.join("\n");
 }
 
 const en: UiStrings = {
@@ -154,7 +222,7 @@ const en: UiStrings = {
   yourVoice: "your voice",
   previewTitle: "Your storefront preview",
   partialNote: "We saved what we heard — speak again to fill in the rest.",
-  publishCta: "Publish & get shareable link",
+  publishCta: "Create my digital shop",
   publishing: "Publishing…",
   updateCta: "Update published page",
   updating: "Updating…",
@@ -246,6 +314,64 @@ const en: UiStrings = {
   ],
   billUpgradeCta: "Upgrade to Pro",
   billStarting: "Starting checkout…",
+  billFreeName: "Free",
+  billProName: "Pro",
+  billFreeDesc: "Get your shop online",
+  billProDesc: "For shops that want more",
+  billCurrentBadge: "Current plan",
+  billCurrentCta: "Your current plan",
+  billFreePrice: "₹0",
+  billPerMonth: "/month",
+  navFind: "Find shops",
+  navRegister: "Register shop",
+  navAbout: "About",
+  landingSub:
+    "Speak once. Get your digital visiting card, catalogue, QR code and online shop ready in under a minute.",
+  findShopsCta: "Find shops near you",
+  findShopsSub: "Browse local shops around you",
+  registerShopCta: "Register your shop",
+  registerShopSub: "Speak once — your page, QR and catalogue are ready",
+  trustItems: [
+    "Hindi",
+    "Punjabi",
+    "English",
+    "QR code",
+    "Digital catalogue",
+    "Shareable shop link",
+  ],
+  demoTitle: "From voice to shop in under a minute",
+  demoYouSpeak: "You speak",
+  demoTranscript:
+    "“My name is Singh Electronics. We repair phones and sell accessories in Mohali. We have covers, chargers and screen guards.”",
+  demoSteps: [
+    "Shop created",
+    "QR generated",
+    "Catalogue created",
+    "Visiting card generated",
+    "Shareable link created",
+  ],
+  aboutTitle: "About BolDukaan",
+  aboutBody:
+    "BolDukaan puts small Indian shops online using only voice. Describe your shop in Hindi, Punjabi, or English — we build your page, catalogue, QR code and shareable link. No typing, no apps, no computer needed.",
+  createGateTitle: "Sign in to create your shop",
+  createGateSub:
+    "Your shop stays saved with your account — edit it anytime, from any phone.",
+  photosProgress: (n, max) => `${n}/${max} photos added`,
+  qrScanTitle: "Your shop QR — print it, stick it on the counter",
+  posterDownload: "Download poster (PNG)",
+  posterPrint: "Print poster / save as PDF",
+  posterScan: "Scan to visit",
+  waShareMessage: (args) =>
+    waMessage({ hello: "Hello! Our shop is now online.", visit: "Visit" }, args),
+  dashWelcome: "Welcome back.",
+  dashCreateNew: "+ Create new shop",
+  actShare: "Share",
+  catAll: "All",
+  actCall: "Call",
+  actDirections: "Directions",
+  badgeLocalBiz: "Local business",
+  badgePhoneAvail: "Phone available",
+  badgeOnWhatsApp: "On WhatsApp",
 };
 
 const hi: UiStrings = {
@@ -266,7 +392,7 @@ const hi: UiStrings = {
   yourVoice: "आपकी आवाज़",
   previewTitle: "यहाँ आपकी दुकान दिखेगी",
   partialNote: "जो सुना वह सेव कर लिया — बाक़ी के लिए फिर बोलें।",
-  publishCta: "पब्लिश करें और लिंक पाएँ",
+  publishCta: "मेरी डिजिटल दुकान बनाओ",
   publishing: "पब्लिश हो रहा है…",
   updateCta: "पेज अपडेट करें",
   updating: "अपडेट हो रहा है…",
@@ -353,6 +479,67 @@ const hi: UiStrings = {
   ],
   billUpgradeCta: "Pro में अपग्रेड करें",
   billStarting: "चेकआउट शुरू हो रहा है…",
+  billFreeName: "Free",
+  billProName: "Pro",
+  billFreeDesc: "अपनी दुकान ऑनलाइन लाएँ",
+  billProDesc: "जो दुकानें और चाहती हैं",
+  billCurrentBadge: "मौजूदा प्लान",
+  billCurrentCta: "आपका मौजूदा प्लान",
+  billFreePrice: "₹0",
+  billPerMonth: "/महीना",
+  navFind: "दुकानें ढूँढें",
+  navRegister: "दुकान रजिस्टर करें",
+  navAbout: "हमारे बारे में",
+  landingSub:
+    "एक बार बोलिए — डिजिटल विज़िटिंग कार्ड, कैटलॉग, QR कोड और ऑनलाइन दुकान, सब एक मिनट से कम में तैयार।",
+  findShopsCta: "अपने पास की दुकानें ढूँढें",
+  findShopsSub: "आस-पास की लोकल दुकानें देखें",
+  registerShopCta: "अपनी दुकान रजिस्टर करें",
+  registerShopSub: "एक बार बोलिए — पेज, QR और कैटलॉग तैयार",
+  trustItems: [
+    "हिंदी",
+    "पंजाबी",
+    "English",
+    "QR कोड",
+    "डिजिटल कैटलॉग",
+    "शेयर करने लायक लिंक",
+  ],
+  demoTitle: "आवाज़ से दुकान — एक मिनट से कम में",
+  demoYouSpeak: "आप बोलते हैं",
+  demoTranscript:
+    "“मेरी दुकान सिंह इलेक्ट्रॉनिक्स है। मोहाली में फ़ोन रिपेयर करते हैं और एक्सेसरीज़ बेचते हैं। कवर, चार्जर और स्क्रीन गार्ड मिलते हैं।”",
+  demoSteps: [
+    "दुकान बन गई",
+    "QR बन गया",
+    "कैटलॉग बन गया",
+    "विज़िटिंग कार्ड बन गया",
+    "शेयर लिंक तैयार",
+  ],
+  aboutTitle: "BolDukaan के बारे में",
+  aboutBody:
+    "BolDukaan छोटी दुकानों को सिर्फ़ आवाज़ से ऑनलाइन लाता है। हिंदी, पंजाबी या English में अपनी दुकान के बारे में बोलिए — पेज, कैटलॉग, QR कोड और शेयर लिंक हम बना देंगे। न टाइपिंग, न ऐप, न कंप्यूटर।",
+  createGateTitle: "दुकान बनाने के लिए साइन इन करें",
+  createGateSub:
+    "आपकी दुकान आपके अकाउंट से सेव रहती है — कभी भी, किसी भी फ़ोन से एडिट करें।",
+  photosProgress: (n, max) => `${n}/${max} फ़ोटो जुड़ीं`,
+  qrScanTitle: "आपकी दुकान का QR — प्रिंट करके काउंटर पर लगाएँ",
+  posterDownload: "पोस्टर डाउनलोड करें (PNG)",
+  posterPrint: "पोस्टर प्रिंट करें / PDF सेव करें",
+  posterScan: "स्कैन करें और देखें",
+  waShareMessage: (args) =>
+    waMessage(
+      { hello: "नमस्ते! हमारी दुकान अब ऑनलाइन है।", visit: "देखें" },
+      args,
+    ),
+  dashWelcome: "वापसी पर स्वागत है।",
+  dashCreateNew: "+ नई दुकान बनाएँ",
+  actShare: "शेयर",
+  catAll: "सभी",
+  actCall: "कॉल",
+  actDirections: "रास्ता",
+  badgeLocalBiz: "लोकल दुकान",
+  badgePhoneAvail: "फ़ोन उपलब्ध",
+  badgeOnWhatsApp: "WhatsApp पर",
 };
 
 const pa: UiStrings = {
@@ -373,7 +560,7 @@ const pa: UiStrings = {
   yourVoice: "ਤੁਹਾਡੀ ਆਵਾਜ਼",
   previewTitle: "ਇੱਥੇ ਤੁਹਾਡੀ ਦੁਕਾਨ ਦਿਖੇਗੀ",
   partialNote: "ਜੋ ਸੁਣਿਆ ਉਹ ਸੇਵ ਕਰ ਲਿਆ — ਬਾਕੀ ਲਈ ਮੁੜ ਬੋਲੋ।",
-  publishCta: "ਪਬਲਿਸ਼ ਕਰੋ ਅਤੇ ਲਿੰਕ ਲਵੋ",
+  publishCta: "ਮੇਰੀ ਡਿਜੀਟਲ ਦੁਕਾਨ ਬਣਾਓ",
   publishing: "ਪਬਲਿਸ਼ ਹੋ ਰਿਹਾ ਹੈ…",
   updateCta: "ਪੇਜ ਅੱਪਡੇਟ ਕਰੋ",
   updating: "ਅੱਪਡੇਟ ਹੋ ਰਿਹਾ ਹੈ…",
@@ -460,6 +647,67 @@ const pa: UiStrings = {
   ],
   billUpgradeCta: "Pro ਵਿੱਚ ਅੱਪਗ੍ਰੇਡ ਕਰੋ",
   billStarting: "ਚੈੱਕਆਊਟ ਸ਼ੁਰੂ ਹੋ ਰਿਹਾ ਹੈ…",
+  billFreeName: "Free",
+  billProName: "Pro",
+  billFreeDesc: "ਆਪਣੀ ਦੁਕਾਨ ਆਨਲਾਈਨ ਲਿਆਓ",
+  billProDesc: "ਜੋ ਦੁਕਾਨਾਂ ਹੋਰ ਚਾਹੁੰਦੀਆਂ ਹਨ",
+  billCurrentBadge: "ਮੌਜੂਦਾ ਪਲਾਨ",
+  billCurrentCta: "ਤੁਹਾਡਾ ਮੌਜੂਦਾ ਪਲਾਨ",
+  billFreePrice: "₹0",
+  billPerMonth: "/ਮਹੀਨਾ",
+  navFind: "ਦੁਕਾਨਾਂ ਲੱਭੋ",
+  navRegister: "ਦੁਕਾਨ ਰਜਿਸਟਰ ਕਰੋ",
+  navAbout: "ਸਾਡੇ ਬਾਰੇ",
+  landingSub:
+    "ਇੱਕ ਵਾਰ ਬੋਲੋ — ਡਿਜੀਟਲ ਵਿਜ਼ਿਟਿੰਗ ਕਾਰਡ, ਕੈਟਾਲਾਗ, QR ਕੋਡ ਅਤੇ ਆਨਲਾਈਨ ਦੁਕਾਨ, ਸਭ ਇੱਕ ਮਿੰਟ ਤੋਂ ਘੱਟ ਵਿੱਚ ਤਿਆਰ।",
+  findShopsCta: "ਆਪਣੇ ਨੇੜੇ ਦੀਆਂ ਦੁਕਾਨਾਂ ਲੱਭੋ",
+  findShopsSub: "ਆਲੇ-ਦੁਆਲੇ ਦੀਆਂ ਲੋਕਲ ਦੁਕਾਨਾਂ ਵੇਖੋ",
+  registerShopCta: "ਆਪਣੀ ਦੁਕਾਨ ਰਜਿਸਟਰ ਕਰੋ",
+  registerShopSub: "ਇੱਕ ਵਾਰ ਬੋਲੋ — ਪੇਜ, QR ਅਤੇ ਕੈਟਾਲਾਗ ਤਿਆਰ",
+  trustItems: [
+    "ਹਿੰਦੀ",
+    "ਪੰਜਾਬੀ",
+    "English",
+    "QR ਕੋਡ",
+    "ਡਿਜੀਟਲ ਕੈਟਾਲਾਗ",
+    "ਸ਼ੇਅਰ ਕਰਨ ਯੋਗ ਲਿੰਕ",
+  ],
+  demoTitle: "ਆਵਾਜ਼ ਤੋਂ ਦੁਕਾਨ — ਇੱਕ ਮਿੰਟ ਤੋਂ ਘੱਟ ਵਿੱਚ",
+  demoYouSpeak: "ਤੁਸੀਂ ਬੋਲਦੇ ਹੋ",
+  demoTranscript:
+    "“ਮੇਰੀ ਦੁਕਾਨ ਸਿੰਘ ਇਲੈਕਟ੍ਰਾਨਿਕਸ ਹੈ। ਮੋਹਾਲੀ ਵਿੱਚ ਫ਼ੋਨ ਰਿਪੇਅਰ ਕਰਦੇ ਹਾਂ ਅਤੇ ਐਕਸੈਸਰੀਜ਼ ਵੇਚਦੇ ਹਾਂ। ਕਵਰ, ਚਾਰਜਰ ਅਤੇ ਸਕ੍ਰੀਨ ਗਾਰਡ ਮਿਲਦੇ ਹਨ।”",
+  demoSteps: [
+    "ਦੁਕਾਨ ਬਣ ਗਈ",
+    "QR ਬਣ ਗਿਆ",
+    "ਕੈਟਾਲਾਗ ਬਣ ਗਿਆ",
+    "ਵਿਜ਼ਿਟਿੰਗ ਕਾਰਡ ਬਣ ਗਿਆ",
+    "ਸ਼ੇਅਰ ਲਿੰਕ ਤਿਆਰ",
+  ],
+  aboutTitle: "BolDukaan ਬਾਰੇ",
+  aboutBody:
+    "BolDukaan ਛੋਟੀਆਂ ਦੁਕਾਨਾਂ ਨੂੰ ਸਿਰਫ਼ ਆਵਾਜ਼ ਨਾਲ ਆਨਲਾਈਨ ਲਿਆਉਂਦਾ ਹੈ। ਹਿੰਦੀ, ਪੰਜਾਬੀ ਜਾਂ English ਵਿੱਚ ਆਪਣੀ ਦੁਕਾਨ ਬਾਰੇ ਬੋਲੋ — ਪੇਜ, ਕੈਟਾਲਾਗ, QR ਕੋਡ ਅਤੇ ਸ਼ੇਅਰ ਲਿੰਕ ਅਸੀਂ ਬਣਾ ਦਿਆਂਗੇ। ਨਾ ਟਾਈਪਿੰਗ, ਨਾ ਐਪ, ਨਾ ਕੰਪਿਊਟਰ।",
+  createGateTitle: "ਦੁਕਾਨ ਬਣਾਉਣ ਲਈ ਸਾਈਨ ਇਨ ਕਰੋ",
+  createGateSub:
+    "ਤੁਹਾਡੀ ਦੁਕਾਨ ਤੁਹਾਡੇ ਅਕਾਊਂਟ ਨਾਲ ਸੇਵ ਰਹਿੰਦੀ ਹੈ — ਕਦੇ ਵੀ, ਕਿਸੇ ਵੀ ਫ਼ੋਨ ਤੋਂ ਐਡਿਟ ਕਰੋ।",
+  photosProgress: (n, max) => `${n}/${max} ਫ਼ੋਟੋ ਸ਼ਾਮਲ`,
+  qrScanTitle: "ਤੁਹਾਡੀ ਦੁਕਾਨ ਦਾ QR — ਪ੍ਰਿੰਟ ਕਰਕੇ ਕਾਊਂਟਰ 'ਤੇ ਲਾਓ",
+  posterDownload: "ਪੋਸਟਰ ਡਾਊਨਲੋਡ ਕਰੋ (PNG)",
+  posterPrint: "ਪੋਸਟਰ ਪ੍ਰਿੰਟ ਕਰੋ / PDF ਸੇਵ ਕਰੋ",
+  posterScan: "ਸਕੈਨ ਕਰੋ ਅਤੇ ਵੇਖੋ",
+  waShareMessage: (args) =>
+    waMessage(
+      { hello: "ਸਤ ਸ੍ਰੀ ਅਕਾਲ! ਸਾਡੀ ਦੁਕਾਨ ਹੁਣ ਆਨਲਾਈਨ ਹੈ।", visit: "ਵੇਖੋ" },
+      args,
+    ),
+  dashWelcome: "ਵਾਪਸੀ 'ਤੇ ਸੁਆਗਤ ਹੈ।",
+  dashCreateNew: "+ ਨਵੀਂ ਦੁਕਾਨ ਬਣਾਓ",
+  actShare: "ਸ਼ੇਅਰ",
+  catAll: "ਸਾਰੀਆਂ",
+  actCall: "ਕਾਲ",
+  actDirections: "ਰਸਤਾ",
+  badgeLocalBiz: "ਲੋਕਲ ਦੁਕਾਨ",
+  badgePhoneAvail: "ਫ਼ੋਨ ਉਪਲਬਧ",
+  badgeOnWhatsApp: "WhatsApp 'ਤੇ",
 };
 
 const STRINGS: Record<UiLang, UiStrings> = { en, hi, pa };

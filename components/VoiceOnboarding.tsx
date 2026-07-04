@@ -14,6 +14,8 @@ import type { Storefront } from "@/lib/storefront";
 import { UI_LANGS, uiToSttLang, t, LANG_COOKIE, type UiLang } from "@/lib/i18n";
 import { StorefrontCard } from "./StorefrontCard";
 import { ShareButton } from "./ShareButton";
+import { QrCode } from "./QrCode";
+import { PosterButtons } from "./PosterButton";
 import styles from "@/app/voice.module.css";
 
 const BAR_COUNT = 5;
@@ -70,7 +72,7 @@ function loadStoredPublish(): StoredPublish | null {
   return null;
 }
 
-const MAX_IMAGES = 4;
+const MAX_IMAGES = 5;
 
 /** Downscale + re-encode a photo to a small JPEG data URL, entirely in-browser. */
 async function compressImage(
@@ -223,6 +225,28 @@ export function VoiceOnboarding({
 
   const startAnalyser = useCallback(async () => {
     if (reducedMotionRef.current) return;
+    // On mobile, a getUserMedia stream competes with SpeechRecognition for the
+    // one mic (Android Chrome starves recognition entirely — no results ever
+    // arrive). Fake the equalizer there; only desktop gets the real analyser.
+    if (/Android|iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+      const started = performance.now();
+      const tick = (now: number) => {
+        const p = (now - started) / 1000;
+        setLevels(
+          Array.from({ length: BAR_COUNT }, (_, i) =>
+            Math.min(
+              1,
+              0.45 +
+                0.3 * Math.sin(p * 5.1 + i * 1.7) * Math.sin(p * 2.3 + i) +
+                0.12 * Math.sin(p * 9.7 + i * 2.9),
+            ),
+          ),
+        );
+        rafRef.current = requestAnimationFrame(tick);
+      };
+      rafRef.current = requestAnimationFrame(tick);
+      return;
+    }
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
       streamRef.current = stream;
@@ -628,6 +652,9 @@ export function VoiceOnboarding({
               </div>
               {partial && <p className={styles.partialNote}>{tr.partialNote}</p>}
 
+              <p className={styles.photoProgress}>
+                {tr.photosProgress(images.length, MAX_IMAGES)}
+              </p>
               <div className={styles.photoRow}>
                 {images.map((src, i) => (
                   <span key={i} className={styles.thumb}>
@@ -688,11 +715,35 @@ export function VoiceOnboarding({
                   >
                     {publicUrl}
                   </a>
+
+                  <div className={styles.qrBox}>
+                    <span className={styles.qrTitle}>{tr.qrScanTitle}</span>
+                    <QrCode
+                      url={publicUrl}
+                      downloadName={
+                        publicUrl.split("/").pop() || "storefront-qr"
+                      }
+                    />
+                  </div>
+
+                  <PosterButtons
+                    storefront={{ ...storefront, images }}
+                    url={publicUrl}
+                    scanLabel={tr.posterScan}
+                    downloadLabel={tr.posterDownload}
+                    printLabel={tr.posterPrint}
+                  />
+
                   <ShareButton
                     name={storefront.name}
                     url={publicUrl}
                     label={tr.shareOnWhatsApp}
-                    shareText={tr.shareText}
+                    fullText={tr.waShareMessage({
+                      name: storefront.name,
+                      address: storefront.address,
+                      products: storefront.products.map((p) => p.name),
+                      url: publicUrl,
+                    })}
                   />
                   <button
                     type="button"

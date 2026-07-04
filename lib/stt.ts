@@ -86,6 +86,9 @@ class WebSpeechToText implements SpeechToText {
     recognition.maxAlternatives = 1;
 
     let finalText = "";
+    // The engine can end a session while text is still interim (common on
+    // Android). Keep the latest interim so a premature end doesn't drop it.
+    let lastInterim = "";
     let stopped = false;
 
     recognition.onresult = (event) => {
@@ -99,6 +102,7 @@ class WebSpeechToText implements SpeechToText {
           interim += chunk;
         }
       }
+      lastInterim = interim;
       callbacks.onPartial?.((finalText + interim).trim());
     };
 
@@ -109,8 +113,32 @@ class WebSpeechToText implements SpeechToText {
       }
     };
 
+    // Un-finalised speech is still real speech — fold it in before ending or
+    // restarting a session, since a new session resets the result list.
+    const absorbInterim = () => {
+      if (lastInterim.trim()) {
+        finalText = `${finalText} ${lastInterim}`.trim() + " ";
+      }
+      lastInterim = "";
+    };
+
     recognition.onend = () => {
-      if (stopped) callbacks.onFinal?.(finalText.trim());
+      absorbInterim();
+      if (stopped) {
+        callbacks.onFinal?.(finalText.trim());
+        return;
+      }
+      // Mobile engines (notably Android Chrome) end recognition on their own
+      // after a short pause even with continuous=true. The user is still
+      // holding the button, so restart and keep accumulating into finalText.
+      try {
+        recognition.start();
+      } catch {
+        // Engine refused to restart — deliver what we have rather than
+        // silently dropping the speech.
+        stopped = true;
+        callbacks.onFinal?.(finalText.trim());
+      }
     };
 
     try {

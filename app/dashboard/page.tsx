@@ -80,16 +80,22 @@ export default async function DashboardPage() {
           </p>
           <AccountNav />
         </div>
-        <h1 className={styles.title}>{tr.dashTitle}</h1>
+        <h1 className={styles.title}>{tr.dashWelcome}</h1>
         <p className={styles.subtitle}>
           {tr.dashSignedInAs} {session.user.email ?? session.user.name ?? "—"} ·{" "}
           <Link href="/dashboard/billing" className={styles.planLink}>
             {tr.dashManagePlan}
           </Link>
         </p>
+        <div className={styles.headerActions}>
+          <Link href="/create" className={styles.createBtn}>
+            {tr.dashCreateNew}
+          </Link>
+        </div>
       </header>
 
       <main className={styles.main}>
+        <h2 className={styles.sectionTitle}>{tr.dashTitle}</h2>
         {dbError ? (
           <p className={styles.notice}>
             Database isn&apos;t configured. Set DATABASE_URL and run{" "}
@@ -98,7 +104,7 @@ export default async function DashboardPage() {
         ) : shops.length === 0 ? (
           <div className={styles.empty}>
             <p className={styles.emptyText}>{tr.dashEmpty}</p>
-            <Link href="/" className={styles.emptyCta}>
+            <Link href="/create" className={styles.emptyCta}>
               {tr.dashEmptyCta}
             </Link>
           </div>

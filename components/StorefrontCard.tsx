@@ -89,6 +89,16 @@ export function StorefrontCard({
         </span>
       )}
 
+      <div className={styles.trustRow}>
+        <span className={styles.trustBadge}>✓ {tr.badgeLocalBiz}</span>
+        {storefront.phone && (
+          <span className={styles.trustBadge}>✓ {tr.badgePhoneAvail}</span>
+        )}
+        {(storefront.whatsapp || storefront.phone) && (
+          <span className={styles.trustBadge}>✓ {tr.badgeOnWhatsApp}</span>
+        )}
+      </div>
+
       {hoursLines.length > 0 && (
         <div className={styles.meta}>
           <span className={styles.label}>{tr.hours}</span>
@@ -140,17 +150,19 @@ export function StorefrontCard({
               className={`${styles.btn} ${styles.call}`}
               href={telHref(storefront.phone)}
             >
-              {tr.callShop}
+              📞 {tr.callShop}
             </a>
           )}
-          {storefront.whatsapp && (
+          {/* Most owners give one number for both — fall back to phone so the
+              WhatsApp action (the primary channel here) is always offered. */}
+          {(storefront.whatsapp || storefront.phone) && (
             <a
               className={`${styles.btn} ${styles.wa}`}
-              href={waHref(storefront.whatsapp)}
+              href={waHref(storefront.whatsapp ?? storefront.phone!)}
               target="_blank"
               rel="noopener noreferrer"
             >
-              WhatsApp
+              💬 WhatsApp
             </a>
           )}
         </div>

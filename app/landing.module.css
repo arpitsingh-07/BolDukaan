@@ -1,0 +1,333 @@
+.page {
+  min-height: 100svh;
+  background: var(--paper);
+}
+
+/* ---------- hero (petrol ground, the full Signboard brand) ---------- */
+.hero {
+  background: var(--petrol);
+  color: var(--paper);
+  padding: 22px 24px 52px;
+  position: relative;
+  overflow: hidden;
+}
+.hero::after {
+  /* faint enamel signboard frame — used once per screen */
+  content: "";
+  position: absolute;
+  inset: 12px;
+  border: 1.5px solid rgba(245, 158, 27, 0.22);
+  border-radius: 20px;
+  pointer-events: none;
+}
+.heroInner {
+  max-width: 880px;
+  margin: 0 auto;
+  position: relative;
+  z-index: 1;
+}
+
+/* ---------- navbar ---------- */
+.nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px 18px;
+  flex-wrap: wrap;
+  margin-bottom: 40px;
+}
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--marigold);
+}
+.brandDot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--marigold);
+  animation: ping 2.4s ease-out infinite;
+}
+@keyframes ping {
+  0% {
+    box-shadow: 0 0 0 0 rgba(245, 158, 27, 0.5);
+  }
+  70%,
+  100% {
+    box-shadow: 0 0 0 9px rgba(245, 158, 27, 0);
+  }
+}
+.navLinks {
+  display: flex;
+  align-items: center;
+  gap: 4px 18px;
+  flex-wrap: wrap;
+}
+.navLink {
+  background: none;
+  border: none;
+  padding: 0;
+  color: rgba(244, 243, 239, 0.78);
+  font-size: 14px;
+  font-weight: 600;
+  font-family: inherit;
+  text-decoration: none;
+  cursor: pointer;
+}
+.navLink:hover {
+  color: var(--paper);
+}
+
+/* ---------- hero copy ---------- */
+.title {
+  font-family: var(--font-display-stack);
+  font-weight: 800;
+  font-size: 44px;
+  line-height: 0.98;
+  letter-spacing: -0.02em;
+  margin: 0 0 14px;
+  max-width: 15ch;
+}
+.amber {
+  color: var(--marigold);
+}
+.subline {
+  font-weight: 500;
+  font-size: 17px;
+  line-height: 1.55;
+  color: rgba(244, 243, 239, 0.72);
+  margin: 0 0 30px;
+  max-width: 52ch;
+}
+
+/* ---------- the two primary CTA cards ---------- */
+.ctaRow {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 14px;
+  margin: 0 0 26px;
+}
+@media (min-width: 640px) {
+  .ctaRow {
+    grid-template-columns: 1fr 1fr;
+    max-width: 720px;
+  }
+}
+.ctaForm {
+  display: contents;
+}
+.ctaCard {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  text-align: left;
+  background: var(--paper);
+  color: var(--ink);
+  border: 1px solid var(--paper);
+  border-radius: var(--radius-card);
+  padding: 18px 20px;
+  text-decoration: none;
+  font-family: inherit;
+  cursor: pointer;
+  box-shadow: var(--shadow-card);
+  width: 100%;
+}
+.ctaCard:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 24px rgba(7, 39, 36, 0.35);
+}
+.ctaCard:active {
+  transform: translateY(0);
+}
+.ctaRegister {
+  /* the one marigold signal moment on this screen */
+  border: 1.5px solid var(--marigold);
+}
+.ctaIcon {
+  font-size: 28px;
+  line-height: 1;
+}
+.ctaTitle {
+  display: block;
+  font-family: var(--font-display-stack);
+  font-weight: 800;
+  font-size: 18px;
+  letter-spacing: -0.01em;
+  line-height: 1.15;
+}
+.ctaSub {
+  display: block;
+  margin-top: 3px;
+  font-size: 13px;
+  color: var(--muted);
+  line-height: 1.4;
+}
+
+/* ---------- trust indicators ---------- */
+.trustRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.trustChip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  border: 1px solid rgba(244, 243, 239, 0.2);
+  border-radius: 999px;
+  padding: 6px 13px;
+  font-size: 13px;
+  font-weight: 600;
+  color: rgba(244, 243, 239, 0.85);
+}
+.trustTick {
+  color: var(--marigold);
+  font-weight: 700;
+}
+
+/* ---- staggered hero entrance (transform/opacity only) ---- */
+@keyframes bd-fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+.nav {
+  animation: bd-fade-up 0.5s ease both 0.02s;
+}
+.title {
+  animation: bd-fade-up 0.5s ease both 0.08s;
+}
+.subline {
+  animation: bd-fade-up 0.5s ease both 0.14s;
+}
+.ctaRow {
+  animation: bd-fade-up 0.55s ease both 0.2s;
+}
+.trustRow {
+  animation: bd-fade-up 0.5s ease both 0.28s;
+}
+
+/* ---------- demo section (paper) ---------- */
+.section {
+  padding: 44px 24px;
+}
+.sectionInner {
+  max-width: 880px;
+  margin: 0 auto;
+}
+.sectionTitle {
+  font-family: var(--font-display-stack);
+  font-weight: 800;
+  font-size: 26px;
+  letter-spacing: -0.02em;
+  margin: 0 0 18px;
+  color: var(--ink);
+}
+.demoCard {
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-card);
+  padding: 22px;
+  box-shadow: var(--shadow-card);
+  max-width: 560px;
+}
+.demoInput {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+}
+.demoMic {
+  font-size: 22px;
+  line-height: 1.3;
+}
+.demoLabel {
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.demoTranscript {
+  margin: 6px 0 0;
+  font-size: 15px;
+  line-height: 1.55;
+  color: var(--ink);
+}
+.demoArrow {
+  text-align: center;
+  color: var(--marigold-deep);
+  font-size: 18px;
+  margin: 10px 0;
+}
+.demoSteps {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.demoStep {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--ink);
+  opacity: 0;
+  transform: translateY(6px);
+  transition:
+    opacity 0.4s ease,
+    transform 0.4s ease;
+}
+.demoStepOn {
+  opacity: 1;
+  transform: none;
+}
+.demoCheck {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: rgba(46, 158, 91, 0.14);
+  color: var(--green);
+  font-size: 12px;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+/* ---------- about ---------- */
+.about {
+  padding: 8px 24px 56px;
+}
+.aboutBody {
+  margin: 0;
+  font-size: 15px;
+  line-height: 1.6;
+  color: var(--ink);
+  max-width: 62ch;
+}
+
+/* ---------- footer ---------- */
+.footer {
+  border-top: 1px solid var(--line);
+  padding: 20px 24px 28px;
+}
+.footerInner {
+  max-width: 880px;
+  margin: 0 auto;
+  font-size: 13px;
+  color: var(--muted);
+}

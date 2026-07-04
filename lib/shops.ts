@@ -310,6 +310,7 @@ export interface NearbyShop {
   name: string | null;
   category: string | null;
   address: string | null;
+  phone: string | null;
   language: string | null;
   hours: Storefront["hours"];
   products: string[];
@@ -354,7 +355,7 @@ export async function findNearbyShops(input: {
 
   const rows = await sql`
     SELECT s.slug, s.category, s.lat, s.lng,
-           f.name, f.address, f.hours, f.language, f.products
+           f.name, f.address, f.phone, f.hours, f.language, f.products
     FROM shops s
     JOIN storefronts f ON f.shop_id = s.id
     WHERE s.status = 'active'
@@ -369,6 +370,7 @@ export async function findNearbyShops(input: {
       name: (r.name as string) ?? null,
       category: (r.category as string) ?? null,
       address: (r.address as string) ?? null,
+      phone: (r.phone as string) ?? null,
       language: (r.language as string) ?? null,
       hours: (r.hours as Storefront["hours"]) ?? null,
       products: Array.isArray(r.products)

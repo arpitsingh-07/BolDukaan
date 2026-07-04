@@ -1,0 +1,22 @@
+/* Language chips on a petrol ground (landing navbar). */
+.row {
+  display: flex;
+  gap: 6px;
+}
+.chip {
+  border: 1px solid rgba(244, 243, 239, 0.22);
+  background: transparent;
+  color: rgba(244, 243, 239, 0.78);
+  border-radius: 999px;
+  padding: 6px 12px;
+  font-size: 12px;
+  font-weight: 600;
+  font-family: inherit;
+  cursor: pointer;
+}
+.chipActive {
+  composes: chip;
+  background: var(--paper);
+  color: var(--petrol);
+  border-color: var(--paper);
+}

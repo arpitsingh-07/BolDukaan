@@ -13,21 +13,24 @@ export function ShareButton({
   url,
   label = "Share on WhatsApp",
   shareText = "check out my shop",
+  fullText,
 }: {
   name: string | null;
   /** URL to share. Defaults to the current page (used on the public page). */
   url?: string;
   label?: string;
   shareText?: string;
+  /** Complete pre-built message (incl. URL) — overrides name/shareText/url. */
+  fullText?: string;
 }) {
   const [href, setHref] = useState<string>("#");
 
   useEffect(() => {
     const target = url ?? window.location.href;
     const prefix = name ? `${name} — ` : "";
-    const text = `${prefix}${shareText}: ${target}`;
+    const text = fullText ?? `${prefix}${shareText}: ${target}`;
     setHref(`https://wa.me/?text=${encodeURIComponent(text)}`);
-  }, [name, url, shareText]);
+  }, [name, url, shareText, fullText]);
 
   return (
     <a
