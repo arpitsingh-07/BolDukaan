@@ -6,6 +6,7 @@ import { auth } from "@/auth";
 import { StorefrontCard } from "@/components/StorefrontCard";
 import { ShareButton } from "@/components/ShareButton";
 import { BrandMark } from "@/components/BrandMark";
+import { BrandName } from "@/components/BrandName";
 import { getPublicShopBySlug, recordView } from "@/lib/shops";
 import { normalizeLang, t } from "@/lib/i18n";
 import { localBusinessJsonLd, jsonLdScript } from "@/lib/seo";
@@ -92,7 +93,7 @@ export default async function PublicStorefrontPage({ params }: Params) {
         )}
         <p className={styles.brand}>
           <BrandMark size={24} />
-          BolDukaan
+          <BrandName tone="light" />
         </p>
 
         <StorefrontCard

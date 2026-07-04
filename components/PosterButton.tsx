@@ -95,9 +95,17 @@ async function drawPoster(
   ctx.fillStyle = PETROL;
   ctx.fillRect(0, 0, W, headerH);
 
+  // two-tone wordmark, like the logo: "Bol" paper, "Dukaan" marigold
+  ctx.font = `800 40px ${display}`;
+  const bolW = ctx.measureText("Bol").width;
+  const dukaanW = ctx.measureText("Dukaan").width;
+  ctx.textAlign = "left";
+  const wmX = (W - bolW - dukaanW) / 2;
+  ctx.fillStyle = PAPER;
+  ctx.fillText("Bol", wmX, 100);
   ctx.fillStyle = MARIGOLD;
-  ctx.font = `700 26px ${body}`;
-  ctx.fillText("B O L D U K A A N", W / 2, 96);
+  ctx.fillText("Dukaan", wmX + bolW, 100);
+  ctx.textAlign = "center";
 
   ctx.fillStyle = PAPER;
   ctx.font = `800 84px ${display}`;
