@@ -163,23 +163,53 @@
   text-decoration: underline;
 }
 
-.chips {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 7px;
+/* Catalogue grid — one card per product, each with a per-item WhatsApp ask. */
+.catalogue {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(148px, 1fr));
+  gap: 10px;
   margin-top: 8px;
 }
-.chip {
-  font-size: 13px;
-  font-weight: 500;
-  color: var(--petrol);
+.item {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
   background: var(--surface-tint);
-  border-radius: 999px;
-  padding: 6px 12px;
+  border-radius: 12px;
+  padding: 12px;
 }
-.chipPrice {
+.itemName {
+  font-weight: 700;
+  font-size: 14px;
+  line-height: 1.25;
+  color: var(--ink);
+}
+.itemPrice {
+  font-weight: 700;
+  font-size: 14px;
   color: var(--marigold-deep);
+}
+.itemNote {
+  font-size: 12px;
+  line-height: 1.35;
+  color: var(--muted);
+}
+.itemAsk {
+  margin-top: 8px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  background: #25d366;
+  color: #fff;
+  border-radius: 9px;
+  padding: 8px 0;
+  font-size: 12px;
   font-weight: 600;
+  text-decoration: none;
+}
+.itemAsk:hover {
+  background: #1fb958;
 }
 
 .about {
@@ -247,8 +277,10 @@
 .card[data-theme="petrol"] .about {
   color: var(--paper);
 }
-.card[data-theme="petrol"] .chip {
-  background: rgba(244, 243, 239, 0.12);
+.card[data-theme="petrol"] .item {
+  background: rgba(244, 243, 239, 0.1);
+}
+.card[data-theme="petrol"] .itemName {
   color: var(--paper);
 }
 .card[data-theme="petrol"] .call {
@@ -265,7 +297,6 @@
 .card[data-theme="warm"] .shopname {
   color: var(--marigold-deep);
 }
-.card[data-theme="warm"] .chip {
+.card[data-theme="warm"] .item {
   background: #f5ead6;
-  color: var(--marigold-deep);
 }

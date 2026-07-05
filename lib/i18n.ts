@@ -73,6 +73,8 @@ export interface UiStrings {
   sells: string;
   address: string;
   callShop: string;
+  askOnWhatsApp: string;
+  itemAskText: (item: string) => string;
   openNow: string;
   closedNow: string;
   closes: (time: string) => string;
@@ -279,6 +281,8 @@ const en: UiStrings = {
   sells: "Sells",
   address: "Address",
   callShop: "Call shop",
+  askOnWhatsApp: "Ask on WhatsApp",
+  itemAskText: (item) => `Hi, is "${item}" available?`,
   openNow: "Open now",
   closedNow: "Closed",
   closes: (time) => `closes ${time}`,
@@ -488,6 +492,8 @@ const hi: UiStrings = {
   sells: "सामान",
   address: "पता",
   callShop: "कॉल करें",
+  askOnWhatsApp: "WhatsApp पर पूछें",
+  itemAskText: (item) => `नमस्ते, क्या "${item}" उपलब्ध है?`,
   openNow: "अभी खुला है",
   closedNow: "अभी बंद है",
   closes: (time) => `बंद होगा ${time}`,
@@ -694,6 +700,8 @@ const pa: UiStrings = {
   sells: "ਸਮਾਨ",
   address: "ਪਤਾ",
   callShop: "ਕਾਲ ਕਰੋ",
+  askOnWhatsApp: "WhatsApp 'ਤੇ ਪੁੱਛੋ",
+  itemAskText: (item) => `ਸਤ ਸ੍ਰੀ ਅਕਾਲ, ਕੀ "${item}" ਉਪਲਬਧ ਹੈ?`,
   openNow: "ਹੁਣ ਖੁੱਲ੍ਹਾ ਹੈ",
   closedNow: "ਹੁਣ ਬੰਦ ਹੈ",
   closes: (time) => `ਬੰਦ ਹੋਵੇਗਾ ${time}`,

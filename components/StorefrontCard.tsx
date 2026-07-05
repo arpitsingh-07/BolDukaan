@@ -13,12 +13,13 @@ function telHref(num: string): string {
   return `tel:${num.replace(/[^\d+]/g, "")}`;
 }
 
-function waHref(num: string): string {
+function waHref(num: string, text?: string): string {
   // wa.me requires the international format. Owners speak local 10-digit
   // numbers (often with a leading 0), so normalise to 91XXXXXXXXXX.
   let digits = num.replace(/[^\d]/g, "").replace(/^0+/, "");
   if (digits.length === 10) digits = `91${digits}`;
-  return `https://wa.me/${digits}`;
+  const base = `https://wa.me/${digits}`;
+  return text ? `${base}?text=${encodeURIComponent(text)}` : base;
 }
 
 export function StorefrontCard({
@@ -44,6 +45,9 @@ export function StorefrontCard({
     dayLabels: tr.dayLabels,
     closedWord: tr.closedWord,
   });
+  // Most owners give one number for both calling and WhatsApp — fall back to
+  // phone so per-item and shop-level WhatsApp actions are always available.
+  const waNumber = storefront.whatsapp ?? storefront.phone;
   const hasContent =
     storefront.name ||
     storefront.products.length > 0 ||
@@ -148,15 +152,37 @@ export function StorefrontCard({
       {storefront.products.length > 0 && (
         <div className={styles.meta}>
           <span className={styles.label}>{tr.sells}</span>
-          <div className={styles.chips}>
-            {storefront.products.map((product, i) => (
-              <span key={`${product.name}-${i}`} className={styles.chip}>
-                {product.name}
-                {product.price && (
-                  <span className={styles.chipPrice}> · {product.price}</span>
-                )}
-              </span>
-            ))}
+          {/* Catalogue grid: each item can be asked about on WhatsApp. A future
+              Pro plan will cap the free item count here — for now everyone gets
+              the full grid (see catalogue gating note). */}
+          <div className={styles.catalogue}>
+            {storefront.products.map((product, i) => {
+              const label = product.price
+                ? `${product.name} (${product.price})`
+                : product.name;
+              return (
+                <div key={`${product.name}-${i}`} className={styles.item}>
+                  <span className={styles.itemName}>{product.name}</span>
+                  {product.price && (
+                    <span className={styles.itemPrice}>{product.price}</span>
+                  )}
+                  {product.note && (
+                    <span className={styles.itemNote}>{product.note}</span>
+                  )}
+                  {waNumber && (
+                    <a
+                      className={styles.itemAsk}
+                      href={waHref(waNumber, tr.itemAskText(label))}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      <WhatsAppIcon size={13} />
+                      {tr.askOnWhatsApp}
+                    </a>
+                  )}
+                </div>
+              );
+            })}
           </div>
         </div>
       )}
@@ -173,12 +199,10 @@ export function StorefrontCard({
               <PhoneIcon size={15} /> {tr.callShop}
             </a>
           )}
-          {/* Most owners give one number for both — fall back to phone so the
-              WhatsApp action (the primary channel here) is always offered. */}
-          {(storefront.whatsapp || storefront.phone) && (
+          {waNumber && (
             <a
               className={`${styles.btn} ${styles.wa}`}
-              href={waHref(storefront.whatsapp ?? storefront.phone!)}
+              href={waHref(waNumber)}
               target="_blank"
               rel="noopener noreferrer"
             >
