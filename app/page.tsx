@@ -133,6 +133,12 @@ export default async function LandingPage() {
         <div className={styles.footerInner}>
           <span>{tr.madeWith}</span>
           <span className={styles.footerLinks}>
+            <Link href="/terms" className={styles.footerLink}>
+              {tr.terms}
+            </Link>
+            <Link href="/privacy" className={styles.footerLink}>
+              {tr.privacyPolicy}
+            </Link>
             <a
               href="https://instagram.com/boldukaan.in"
               target="_blank"
@@ -141,9 +147,6 @@ export default async function LandingPage() {
             >
               Instagram
             </a>
-            <Link href="/privacy" className={styles.footerLink}>
-              {tr.privacyPolicy}
-            </Link>
           </span>
         </div>
       </footer>

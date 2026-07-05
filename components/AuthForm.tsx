@@ -6,23 +6,41 @@ import { signIn } from "next-auth/react";
 import { t, type UiLang } from "@/lib/i18n";
 import styles from "./auth-form.module.css";
 
-/** Render a "…{link}…" template with the Privacy Policy link in place. */
-function withPrivacyLink(template: string, label: string): ReactNode {
-  const [before, after = ""] = template.split("{link}");
-  return (
-    <>
-      {before}
-      <Link
-        href="/privacy"
-        target="_blank"
-        rel="noopener noreferrer"
-        className={styles.policyLink}
-      >
-        {label}
-      </Link>
-      {after}
-    </>
-  );
+/** Render a template with {terms} and {privacy} tokens as policy links. */
+function withLegalLinks(
+  template: string,
+  termsLabel: string,
+  privacyLabel: string,
+): ReactNode {
+  return template.split(/(\{terms\}|\{privacy\})/).map((part, i) => {
+    if (part === "{terms}") {
+      return (
+        <Link
+          key={i}
+          href="/terms"
+          target="_blank"
+          rel="noopener noreferrer"
+          className={styles.policyLink}
+        >
+          {termsLabel}
+        </Link>
+      );
+    }
+    if (part === "{privacy}") {
+      return (
+        <Link
+          key={i}
+          href="/privacy"
+          target="_blank"
+          rel="noopener noreferrer"
+          className={styles.policyLink}
+        >
+          {privacyLabel}
+        </Link>
+      );
+    }
+    return <span key={i}>{part}</span>;
+  });
 }
 
 /**
@@ -72,7 +90,7 @@ export function AuthForm({
             email,
             password,
             name: name.trim() || undefined,
-            agreedToPrivacy: agreed,
+            agreedToTerms: agreed,
           }),
         });
         if (!res.ok) {
@@ -163,7 +181,9 @@ export function AuthForm({
                 checked={agreed}
                 onChange={(e) => setAgreed(e.target.checked)}
               />
-              <span>{withPrivacyLink(tr.authAgree, tr.privacyPolicy)}</span>
+              <span>
+                {withLegalLinks(tr.authAgree, tr.terms, tr.privacyPolicy)}
+              </span>
             </label>
           )}
 
@@ -208,7 +228,7 @@ export function AuthForm({
             {tr.gateSignInGoogle}
           </button>
           <p className={styles.consentNote}>
-            {withPrivacyLink(tr.authGoogleConsent, tr.privacyPolicy)}
+            {withLegalLinks(tr.authGoogleConsent, tr.terms, tr.privacyPolicy)}
           </p>
         </>
       )}

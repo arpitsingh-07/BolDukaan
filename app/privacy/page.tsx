@@ -4,7 +4,7 @@ import { BrandMark } from "@/components/BrandMark";
 import { BrandName } from "@/components/BrandName";
 import { t } from "@/lib/i18n";
 import { viewerLang } from "@/lib/server-lang";
-import styles from "./privacy.module.css";
+import styles from "../legal.module.css";
 
 export const metadata: Metadata = {
   title: "Privacy Policy · BolDukaan",

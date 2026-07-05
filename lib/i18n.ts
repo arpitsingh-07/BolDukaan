@@ -121,8 +121,9 @@ export interface UiStrings {
   authGeneric: string;
   authBusy: string;
   privacyPolicy: string;
-  authAgree: string; // contains "{link}" where the Privacy Policy link goes
-  authGoogleConsent: string; // contains "{link}"
+  terms: string;
+  authAgree: string; // contains "{terms}" and "{privacy}" tokens for the links
+  authGoogleConsent: string; // contains "{terms}" and "{privacy}"
   authMustAgree: string;
   // dashboard
   dashTitle: string;
@@ -315,9 +316,11 @@ const en: UiStrings = {
   authGeneric: "Something went wrong. Please try again.",
   authBusy: "Please wait…",
   privacyPolicy: "Privacy Policy",
-  authAgree: "I have read and agree to the {link}.",
-  authGoogleConsent: "By continuing, you agree to our {link}.",
-  authMustAgree: "Please accept the Privacy Policy to create an account.",
+  terms: "Terms & Conditions",
+  authAgree: "I have read and agree to the {terms} and {privacy}.",
+  authGoogleConsent: "By continuing, you agree to our {terms} and {privacy}.",
+  authMustAgree:
+    "Please accept the Terms and Privacy Policy to create an account.",
   dashTitle: "Your shops",
   dashSignedInAs: "Signed in as",
   dashManagePlan: "Manage plan",
@@ -504,9 +507,10 @@ const hi: UiStrings = {
   authGeneric: "कुछ गड़बड़ हुई। फिर कोशिश करें।",
   authBusy: "कृपया रुकें…",
   privacyPolicy: "प्राइवेसी पॉलिसी",
-  authAgree: "मैंने {link} पढ़ ली है और उससे सहमत हूँ।",
-  authGoogleConsent: "जारी रखने पर आप हमारी {link} से सहमत होते हैं।",
-  authMustAgree: "खाता बनाने के लिए प्राइवेसी पॉलिसी स्वीकार करें।",
+  terms: "नियम व शर्तें",
+  authAgree: "मैंने {terms} और {privacy} पढ़ ली हैं और उनसे सहमत हूँ।",
+  authGoogleConsent: "जारी रखने पर आप हमारी {terms} और {privacy} से सहमत होते हैं।",
+  authMustAgree: "खाता बनाने के लिए नियम व शर्तें और प्राइवेसी पॉलिसी स्वीकार करें।",
   dashTitle: "आपकी दुकानें",
   dashSignedInAs: "साइन इन:",
   dashManagePlan: "प्लान देखें",
@@ -692,9 +696,10 @@ const pa: UiStrings = {
   authGeneric: "ਕੁਝ ਗੜਬੜ ਹੋਈ। ਮੁੜ ਕੋਸ਼ਿਸ਼ ਕਰੋ।",
   authBusy: "ਕਿਰਪਾ ਕਰਕੇ ਰੁਕੋ…",
   privacyPolicy: "ਪ੍ਰਾਈਵੇਸੀ ਪਾਲਿਸੀ",
-  authAgree: "ਮੈਂ {link} ਪੜ੍ਹੀ ਹੈ ਅਤੇ ਇਸ ਨਾਲ ਸਹਿਮਤ ਹਾਂ।",
-  authGoogleConsent: "ਜਾਰੀ ਰੱਖਣ 'ਤੇ ਤੁਸੀਂ ਸਾਡੀ {link} ਨਾਲ ਸਹਿਮਤ ਹੁੰਦੇ ਹੋ।",
-  authMustAgree: "ਖਾਤਾ ਬਣਾਉਣ ਲਈ ਪ੍ਰਾਈਵੇਸੀ ਪਾਲਿਸੀ ਸਵੀਕਾਰ ਕਰੋ।",
+  terms: "ਨਿਯਮ ਤੇ ਸ਼ਰਤਾਂ",
+  authAgree: "ਮੈਂ {terms} ਅਤੇ {privacy} ਪੜ੍ਹੀਆਂ ਹਨ ਅਤੇ ਇਨ੍ਹਾਂ ਨਾਲ ਸਹਿਮਤ ਹਾਂ।",
+  authGoogleConsent: "ਜਾਰੀ ਰੱਖਣ 'ਤੇ ਤੁਸੀਂ ਸਾਡੀਆਂ {terms} ਅਤੇ {privacy} ਨਾਲ ਸਹਿਮਤ ਹੁੰਦੇ ਹੋ।",
+  authMustAgree: "ਖਾਤਾ ਬਣਾਉਣ ਲਈ ਨਿਯਮ ਤੇ ਸ਼ਰਤਾਂ ਅਤੇ ਪ੍ਰਾਈਵੇਸੀ ਪਾਲਿਸੀ ਸਵੀਕਾਰ ਕਰੋ।",
   dashTitle: "ਤੁਹਾਡੀਆਂ ਦੁਕਾਨਾਂ",
   dashSignedInAs: "ਸਾਈਨ ਇਨ:",
   dashManagePlan: "ਪਲਾਨ ਵੇਖੋ",
