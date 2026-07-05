@@ -5,6 +5,7 @@ import {
 } from "@/lib/storefront";
 import { normalizeLang, t, type UiLang } from "@/lib/i18n";
 import { mapsDirectionsUrl } from "@/lib/seo";
+import { WhatsAppIcon } from "./WhatsAppIcon";
 import styles from "./storefront-card.module.css";
 
 function telHref(num: string): string {
@@ -174,7 +175,8 @@ export function StorefrontCard({
               target="_blank"
               rel="noopener noreferrer"
             >
-              💬 WhatsApp
+              <WhatsAppIcon />
+              WhatsApp
             </a>
           )}
         </div>

@@ -204,9 +204,18 @@
   background: var(--ink);
   color: var(--paper);
 }
+/* WhatsApp brand green — a recognised third-party affordance, exempt from
+   the site palette on purpose (it's what owners and customers expect). */
 .wa {
-  background: var(--surface-tint);
-  color: var(--petrol);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  background: #25d366;
+  color: #fff;
+}
+.wa:hover {
+  background: #1fb958;
 }
 
 .empty {
@@ -232,10 +241,6 @@
   color: var(--paper);
 }
 .card[data-theme="petrol"] .chip {
-  background: rgba(244, 243, 239, 0.12);
-  color: var(--paper);
-}
-.card[data-theme="petrol"] .wa {
   background: rgba(244, 243, 239, 0.12);
   color: var(--paper);
 }

@@ -1,3 +1,4 @@
+/* WhatsApp brand green — third-party affordance, intentionally off-palette. */
 .share {
   display: inline-flex;
   align-items: center;
@@ -9,8 +10,11 @@
   font-weight: 600;
   font-size: 15px;
   text-decoration: none;
-  background: var(--ink);
-  color: var(--paper);
+  background: #25d366;
+  color: #fff;
+}
+.share:hover {
+  background: #1fb958;
 }
 .icon {
   display: inline-flex;
