@@ -338,4 +338,17 @@
   margin: 0 auto;
   font-size: 13px;
   color: var(--muted);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.footerLink {
+  color: var(--petrol);
+  font-weight: 600;
+  text-decoration: none;
+}
+.footerLink:hover {
+  text-decoration: underline;
 }

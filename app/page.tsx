@@ -130,7 +130,12 @@ export default async function LandingPage() {
       </section>
 
       <footer className={styles.footer}>
-        <div className={styles.footerInner}>{tr.madeWith}</div>
+        <div className={styles.footerInner}>
+          <span>{tr.madeWith}</span>
+          <Link href="/privacy" className={styles.footerLink}>
+            {tr.privacyPolicy}
+          </Link>
+        </div>
       </footer>
     </div>
   );

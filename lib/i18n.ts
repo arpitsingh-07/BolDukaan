@@ -120,6 +120,10 @@ export interface UiStrings {
   authInvalid: string;
   authGeneric: string;
   authBusy: string;
+  privacyPolicy: string;
+  authAgree: string; // contains "{link}" where the Privacy Policy link goes
+  authGoogleConsent: string; // contains "{link}"
+  authMustAgree: string;
   // dashboard
   dashTitle: string;
   dashSignedInAs: string;
@@ -310,6 +314,10 @@ const en: UiStrings = {
   authInvalid: "Wrong email or password.",
   authGeneric: "Something went wrong. Please try again.",
   authBusy: "Please wait…",
+  privacyPolicy: "Privacy Policy",
+  authAgree: "I have read and agree to the {link}.",
+  authGoogleConsent: "By continuing, you agree to our {link}.",
+  authMustAgree: "Please accept the Privacy Policy to create an account.",
   dashTitle: "Your shops",
   dashSignedInAs: "Signed in as",
   dashManagePlan: "Manage plan",
@@ -495,6 +503,10 @@ const hi: UiStrings = {
   authInvalid: "ईमेल या पासवर्ड ग़लत है।",
   authGeneric: "कुछ गड़बड़ हुई। फिर कोशिश करें।",
   authBusy: "कृपया रुकें…",
+  privacyPolicy: "प्राइवेसी पॉलिसी",
+  authAgree: "मैंने {link} पढ़ ली है और उससे सहमत हूँ।",
+  authGoogleConsent: "जारी रखने पर आप हमारी {link} से सहमत होते हैं।",
+  authMustAgree: "खाता बनाने के लिए प्राइवेसी पॉलिसी स्वीकार करें।",
   dashTitle: "आपकी दुकानें",
   dashSignedInAs: "साइन इन:",
   dashManagePlan: "प्लान देखें",
@@ -679,6 +691,10 @@ const pa: UiStrings = {
   authInvalid: "ਈਮੇਲ ਜਾਂ ਪਾਸਵਰਡ ਗ਼ਲਤ ਹੈ।",
   authGeneric: "ਕੁਝ ਗੜਬੜ ਹੋਈ। ਮੁੜ ਕੋਸ਼ਿਸ਼ ਕਰੋ।",
   authBusy: "ਕਿਰਪਾ ਕਰਕੇ ਰੁਕੋ…",
+  privacyPolicy: "ਪ੍ਰਾਈਵੇਸੀ ਪਾਲਿਸੀ",
+  authAgree: "ਮੈਂ {link} ਪੜ੍ਹੀ ਹੈ ਅਤੇ ਇਸ ਨਾਲ ਸਹਿਮਤ ਹਾਂ।",
+  authGoogleConsent: "ਜਾਰੀ ਰੱਖਣ 'ਤੇ ਤੁਸੀਂ ਸਾਡੀ {link} ਨਾਲ ਸਹਿਮਤ ਹੁੰਦੇ ਹੋ।",
+  authMustAgree: "ਖਾਤਾ ਬਣਾਉਣ ਲਈ ਪ੍ਰਾਈਵੇਸੀ ਪਾਲਿਸੀ ਸਵੀਕਾਰ ਕਰੋ।",
   dashTitle: "ਤੁਹਾਡੀਆਂ ਦੁਕਾਨਾਂ",
   dashSignedInAs: "ਸਾਈਨ ਇਨ:",
   dashManagePlan: "ਪਲਾਨ ਵੇਖੋ",

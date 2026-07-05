@@ -15,6 +15,9 @@ const bodySchema = z.object({
   email: z.string().min(3).max(200),
   password: z.string().min(8).max(200),
   name: z.string().max(80).optional(),
+  // Consent to the Privacy Policy is required to create an account, and
+  // enforced here so a tampered client can't skip it.
+  agreedToPrivacy: z.literal(true),
 });
 
 export async function POST(request: Request) {
@@ -40,8 +43,15 @@ export async function POST(request: Request) {
 
   const parsed = bodySchema.safeParse(json);
   if (!parsed.success) {
+    const agreeIssue = parsed.error.issues.some((i) =>
+      i.path.includes("agreedToPrivacy"),
+    );
     return NextResponse.json(
-      { error: "Enter a valid email and a password of at least 8 characters." },
+      {
+        error: agreeIssue
+          ? "Please accept the Privacy Policy to create an account."
+          : "Enter a valid email and a password of at least 8 characters.",
+      },
       { status: 400 },
     );
   }

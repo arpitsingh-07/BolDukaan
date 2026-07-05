@@ -49,6 +49,39 @@
   cursor: default;
   transform: none;
 }
+.consent {
+  display: flex;
+  align-items: flex-start;
+  gap: 9px;
+  font-size: 13px;
+  line-height: 1.45;
+  color: rgba(244, 243, 239, 0.82);
+  cursor: pointer;
+  margin: 2px 0;
+}
+.checkbox {
+  margin-top: 2px;
+  width: 17px;
+  height: 17px;
+  flex-shrink: 0;
+  accent-color: var(--marigold);
+  cursor: pointer;
+}
+.policyLink {
+  color: var(--marigold);
+  font-weight: 600;
+  text-decoration: underline;
+}
+.policyLink:hover {
+  color: #ffd7a1;
+}
+.consentNote {
+  margin: 12px 0 0;
+  text-align: center;
+  font-size: 12px;
+  line-height: 1.5;
+  color: rgba(244, 243, 239, 0.55);
+}
 .error {
   font-size: 13px;
   font-weight: 600;

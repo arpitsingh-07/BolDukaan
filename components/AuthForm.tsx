@@ -1,9 +1,29 @@
 "use client";
 
-import { useState, type FormEvent } from "react";
+import { useState, type FormEvent, type ReactNode } from "react";
+import Link from "next/link";
 import { signIn } from "next-auth/react";
 import { t, type UiLang } from "@/lib/i18n";
 import styles from "./auth-form.module.css";
+
+/** Render a "…{link}…" template with the Privacy Policy link in place. */
+function withPrivacyLink(template: string, label: string): ReactNode {
+  const [before, after = ""] = template.split("{link}");
+  return (
+    <>
+      {before}
+      <Link
+        href="/privacy"
+        target="_blank"
+        rel="noopener noreferrer"
+        className={styles.policyLink}
+      >
+        {label}
+      </Link>
+      {after}
+    </>
+  );
+}
 
 /**
  * Email/password sign-in + registration, with the Google button as an
@@ -27,11 +47,18 @@ export function AuthForm({
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [agreed, setAgreed] = useState(false);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   async function onSubmit(e: FormEvent) {
     e.preventDefault();
+    // Account creation requires accepting the Privacy Policy (also enforced
+    // server-side in the register route).
+    if (mode === "create" && !agreed) {
+      setError(tr.authMustAgree);
+      return;
+    }
     setBusy(true);
     setError(null);
     try {
@@ -45,6 +72,7 @@ export function AuthForm({
             email,
             password,
             name: name.trim() || undefined,
+            agreedToPrivacy: agreed,
           }),
         });
         if (!res.ok) {
@@ -127,9 +155,25 @@ export function AuthForm({
             />
           </div>
 
+          {mode === "create" && (
+            <label className={styles.consent}>
+              <input
+                type="checkbox"
+                className={styles.checkbox}
+                checked={agreed}
+                onChange={(e) => setAgreed(e.target.checked)}
+              />
+              <span>{withPrivacyLink(tr.authAgree, tr.privacyPolicy)}</span>
+            </label>
+          )}
+
           {error && <p className={styles.error}>{error}</p>}
 
-          <button type="submit" className={styles.primary} disabled={busy}>
+          <button
+            type="submit"
+            className={styles.primary}
+            disabled={busy || (mode === "create" && !agreed)}
+          >
             {busy
               ? tr.authBusy
               : mode === "create"
@@ -163,6 +207,9 @@ export function AuthForm({
             </span>
             {tr.gateSignInGoogle}
           </button>
+          <p className={styles.consentNote}>
+            {withPrivacyLink(tr.authGoogleConsent, tr.privacyPolicy)}
+          </p>
         </>
       )}
     </div>
