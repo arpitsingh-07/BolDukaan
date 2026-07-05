@@ -5,6 +5,7 @@ import { getOpenState, type Storefront } from "@/lib/storefront";
 import { t, type UiLang } from "@/lib/i18n";
 import { SHOP_CATEGORIES, matchesCategory } from "@/lib/categories";
 import { mapsDirectionsUrl } from "@/lib/seo";
+import { PinIcon } from "./PinIcon";
 import styles from "@/app/nearby/nearby.module.css";
 
 interface NearbyShop {
@@ -228,7 +229,12 @@ export function NearbyBrowser({ lang }: { lang: UiLang }) {
                     )}
                   </div>
                   {shop.address && (
-                    <div className={styles.addr}>📍 {shop.address}</div>
+                    <div className={styles.addr}>
+                      <span className={styles.addrPin}>
+                        <PinIcon size={14} />
+                      </span>
+                      {shop.address}
+                    </div>
                   )}
                 </a>
                 {(shop.phone || shop.address) && (

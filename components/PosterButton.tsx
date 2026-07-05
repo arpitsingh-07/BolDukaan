@@ -3,6 +3,7 @@
 import { useState } from "react";
 import QRCode from "qrcode";
 import type { Storefront } from "@/lib/storefront";
+import { PIN_PATH_24 } from "./PinIcon";
 import styles from "./poster-button.module.css";
 
 /**
@@ -142,14 +143,30 @@ async function drawPoster(
     y += 62;
   }
 
-  // ---- address ----
+  // ---- address (map-pin glyph drawn as a path, centered with line one) ----
   if (storefront.address) {
     ctx.fillStyle = MUTED;
     ctx.font = `500 30px ${body}`;
     y += storefront.products.length > 0 ? 18 : 0;
-    for (const line of wrapText(ctx, `📍 ${storefront.address}`, 860).slice(0, 2)) {
+    const addrLines = wrapText(ctx, storefront.address, 820).slice(0, 2);
+    const pin = new Path2D(PIN_PATH_24);
+    const pinSize = 30;
+    for (let i = 0; i < addrLines.length; i++) {
       if (y > contentLimit) break;
-      ctx.fillText(line, W / 2, y, 880);
+      if (i === 0) {
+        const lineW = ctx.measureText(addrLines[i]).width;
+        const startX = (W - (pinSize + 8 + lineW)) / 2;
+        ctx.save();
+        ctx.translate(startX, y - 25);
+        ctx.scale(pinSize / 24, pinSize / 24);
+        ctx.fill(pin);
+        ctx.restore();
+        ctx.textAlign = "left";
+        ctx.fillText(addrLines[i], startX + pinSize + 8, y, 880);
+        ctx.textAlign = "center";
+      } else {
+        ctx.fillText(addrLines[i], W / 2, y, 880);
+      }
       y += 46;
     }
   }

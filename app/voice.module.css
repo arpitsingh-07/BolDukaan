@@ -463,6 +463,9 @@
   text-align: center;
 }
 .locationBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
   background: var(--surface-tint);
   color: var(--petrol);
   border: none;

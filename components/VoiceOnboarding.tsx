@@ -18,6 +18,7 @@ import { QrCode } from "./QrCode";
 import { PosterButtons } from "./PosterButton";
 import { BrandMark } from "./BrandMark";
 import { BrandName } from "./BrandName";
+import { PinIcon } from "./PinIcon";
 import styles from "@/app/voice.module.css";
 
 const BAR_COUNT = 5;
@@ -181,11 +182,14 @@ export function VoiceOnboarding({
 
   // Edit mode: remember which shop we're editing so publish() updates it
   // (via logged-in ownership — no edit token) rather than creating a new one.
+  // rAF keeps the state writes out of the effect bodies (no cascading render).
   useEffect(() => {
-    if (initialSlug) {
-      publishedSlugRef.current = initialSlug;
+    if (!initialSlug) return;
+    publishedSlugRef.current = initialSlug;
+    const raf = requestAnimationFrame(() => {
       setPublicUrl(`${window.location.origin}/s/${initialSlug}`);
-    }
+    });
+    return () => cancelAnimationFrame(raf);
   }, [initialSlug]);
 
   // Fresh visit to the home page: restore a previously published shop from
@@ -196,9 +200,12 @@ export function VoiceOnboarding({
     if (!stored) return;
     publishedSlugRef.current = stored.slug;
     publishedTokenRef.current = stored.editToken;
-    setStorefront(stored.storefront);
-    setPublicUrl(`${window.location.origin}/s/${stored.slug}`);
-    setStatus("done");
+    const raf = requestAnimationFrame(() => {
+      setStorefront(stored.storefront);
+      setPublicUrl(`${window.location.origin}/s/${stored.slug}`);
+      setStatus("done");
+    });
+    return () => cancelAnimationFrame(raf);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -509,7 +516,8 @@ export function VoiceOnboarding({
   const structuring = status === "structuring";
   const showTyping = typing || !sttSupported;
 
-  const caption = storefrontRef.current ? tr.holdToAddMore : tr.holdToSpeak;
+  // Render from state (the ref mirrors it for stable callbacks only).
+  const caption = storefront ? tr.holdToAddMore : tr.holdToSpeak;
 
   return (
     <div className={styles.page}>
@@ -698,6 +706,7 @@ export function VoiceOnboarding({
                     className={styles.locationBtn}
                     onClick={captureLocation}
                   >
+                    <PinIcon size={15} />
                     {tr.setLocation}
                   </button>
                 )}

@@ -278,9 +278,18 @@
   color: var(--muted);
 }
 .addr {
+  display: flex;
+  align-items: baseline;
+  gap: 5px;
   margin-top: 6px;
   font-size: 14px;
   color: var(--ink);
+}
+.addrPin {
+  color: var(--petrol);
+  align-self: center;
+  display: inline-flex;
+  flex-shrink: 0;
 }
 .cardActions {
   display: flex;
