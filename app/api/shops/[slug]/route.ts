@@ -1,7 +1,12 @@
 import { NextResponse } from "next/server";
 import { auth } from "@/auth";
 import { isDbConfigured } from "@/lib/db";
-import { setShopStatus, setShopTheme, deleteShopByOwner } from "@/lib/shops";
+import {
+  setShopStatus,
+  setShopTheme,
+  setManuallyClosed,
+  deleteShopByOwner,
+} from "@/lib/shops";
 import { planForOwner } from "@/lib/subscriptions";
 import { THEMES, FREE_THEMES } from "@/lib/plans";
 
@@ -13,6 +18,7 @@ type Ctx = { params: Promise<{ slug: string }> };
  * PATCH — update a shop the caller owns.
  *   { status: "active" | "unpublished" }  → publish/unpublish
  *   { theme: "<theme id>" }               → change theme (Pro for non-classic)
+ *   { manuallyClosed: boolean }           → "stepped out" override for open state
  */
 export async function PATCH(request: Request, { params }: Ctx) {
   if (!isDbConfigured()) {
@@ -26,11 +32,26 @@ export async function PATCH(request: Request, { params }: Ctx) {
   }
 
   const { slug } = await params;
-  let body: { status?: unknown; theme?: unknown };
+  let body: { status?: unknown; theme?: unknown; manuallyClosed?: unknown };
   try {
-    body = (await request.json()) as { status?: unknown; theme?: unknown };
+    body = (await request.json()) as {
+      status?: unknown;
+      theme?: unknown;
+      manuallyClosed?: unknown;
+    };
   } catch {
     return NextResponse.json({ error: "Invalid body." }, { status: 400 });
+  }
+
+  // "Stepped out" toggle — closed now, regardless of scheduled hours.
+  if (typeof body.manuallyClosed === "boolean") {
+    const ok = await setManuallyClosed({
+      slug,
+      ownerUserId,
+      closed: body.manuallyClosed,
+    });
+    if (!ok) return NextResponse.json({ error: "Not found." }, { status: 404 });
+    return NextResponse.json({ slug, manuallyClosed: body.manuallyClosed });
   }
 
   // Theme change

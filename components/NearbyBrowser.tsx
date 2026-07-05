@@ -16,6 +16,7 @@ interface NearbyShop {
   language: string | null;
   hours: Storefront["hours"];
   products: string[];
+  manuallyClosed: boolean;
   distanceKm: number;
 }
 
@@ -81,7 +82,12 @@ export function NearbyBrowser({ lang }: { lang: UiLang }) {
     ) {
       return false;
     }
-    if (openNowOnly && getOpenState(s.hours).status !== "open") return false;
+    if (
+      openNowOnly &&
+      (s.manuallyClosed || getOpenState(s.hours).status !== "open")
+    ) {
+      return false;
+    }
     return q === "" || haystack.toLowerCase().includes(q);
   });
 
@@ -196,7 +202,9 @@ export function NearbyBrowser({ lang }: { lang: UiLang }) {
       {state === "done" && filtered.length > 0 && (
         <ul className={styles.list}>
           {filtered.map((shop) => {
-            const open = getOpenState(shop.hours);
+            const open: ReturnType<typeof getOpenState> = shop.manuallyClosed
+              ? { status: "closed", opensAt: null }
+              : getOpenState(shop.hours);
             return (
               <li key={shop.slug} className={styles.card}>
                 <a className={styles.cardLink} href={`/s/${shop.slug}`}>
@@ -214,7 +222,9 @@ export function NearbyBrowser({ lang }: { lang: UiLang }) {
                       <span className={styles.open}>🟢 {tr.openNow}</span>
                     )}
                     {open.status === "closed" && (
-                      <span className={styles.closed}>{tr.closedNow}</span>
+                      <span className={styles.closed}>
+                        {shop.manuallyClosed ? tr.closedTemporarily : tr.closedNow}
+                      </span>
                     )}
                   </div>
                   {shop.address && (

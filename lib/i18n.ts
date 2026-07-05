@@ -187,6 +187,10 @@ export interface UiStrings {
   badgeLocalBiz: string;
   badgePhoneAvail: string;
   badgeOnWhatsApp: string;
+  // "stepped out" owner override
+  actMarkClosed: string;
+  actReopen: string;
+  closedTemporarily: string;
 }
 
 /** Assemble the post-publish WhatsApp message from localized scaffolding. */
@@ -376,6 +380,9 @@ const en: UiStrings = {
   badgeLocalBiz: "Local business",
   badgePhoneAvail: "Phone available",
   badgeOnWhatsApp: "On WhatsApp",
+  actMarkClosed: "Close temporarily",
+  actReopen: "Reopen",
+  closedTemporarily: "Temporarily closed",
 };
 
 const hi: UiStrings = {
@@ -546,6 +553,9 @@ const hi: UiStrings = {
   badgeLocalBiz: "लोकल दुकान",
   badgePhoneAvail: "फ़ोन उपलब्ध",
   badgeOnWhatsApp: "WhatsApp पर",
+  actMarkClosed: "थोड़ी देर के लिए बंद करें",
+  actReopen: "फिर से खोलें",
+  closedTemporarily: "थोड़ी देर के लिए बंद है",
 };
 
 const pa: UiStrings = {
@@ -716,6 +726,9 @@ const pa: UiStrings = {
   badgeLocalBiz: "ਲੋਕਲ ਦੁਕਾਨ",
   badgePhoneAvail: "ਫ਼ੋਨ ਉਪਲਬਧ",
   badgeOnWhatsApp: "WhatsApp 'ਤੇ",
+  actMarkClosed: "ਥੋੜ੍ਹੀ ਦੇਰ ਲਈ ਬੰਦ ਕਰੋ",
+  actReopen: "ਮੁੜ ਖੋਲ੍ਹੋ",
+  closedTemporarily: "ਥੋੜ੍ਹੀ ਦੇਰ ਲਈ ਬੰਦ ਹੈ",
 };
 
 const STRINGS: Record<UiLang, UiStrings> = { en, hi, pa };

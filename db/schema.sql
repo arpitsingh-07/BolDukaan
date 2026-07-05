@@ -11,6 +11,7 @@ CREATE TABLE IF NOT EXISTS shops (
   status        TEXT NOT NULL DEFAULT 'draft',   -- draft | active | unpublished
   category      TEXT,
   views         INTEGER NOT NULL DEFAULT 0,      -- M4: basic page-view analytics
+  manually_closed BOOLEAN NOT NULL DEFAULT FALSE, -- owner override: "closed right now"
   lat           DOUBLE PRECISION,                -- shop location (optional; for "nearby")
   lng           DOUBLE PRECISION,
   created_at    TIMESTAMPTZ NOT NULL DEFAULT now(),
@@ -21,6 +22,7 @@ CREATE TABLE IF NOT EXISTS shops (
 ALTER TABLE shops ADD COLUMN IF NOT EXISTS views INTEGER NOT NULL DEFAULT 0;
 ALTER TABLE shops ADD COLUMN IF NOT EXISTS lat DOUBLE PRECISION;
 ALTER TABLE shops ADD COLUMN IF NOT EXISTS lng DOUBLE PRECISION;
+ALTER TABLE shops ADD COLUMN IF NOT EXISTS manually_closed BOOLEAN NOT NULL DEFAULT FALSE;
 
 CREATE INDEX IF NOT EXISTS shops_owner_user_id_idx ON shops (owner_user_id);
 CREATE INDEX IF NOT EXISTS shops_slug_idx ON shops (slug);

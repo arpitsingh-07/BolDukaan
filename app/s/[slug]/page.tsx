@@ -100,6 +100,7 @@ export default async function PublicStorefrontPage({ params }: Params) {
           storefront={shop.storefront}
           theme={shop.theme}
           lang={lang}
+          forceClosed={shop.manuallyClosed}
         />
 
         <div className={styles.shareRow}>

@@ -26,7 +26,11 @@ export function DashboardShops({
 
   const tr = t(lang);
 
-  useEffect(() => setOrigin(window.location.origin), []);
+  useEffect(() => {
+    // rAF keeps the state write out of the effect body (no cascading render).
+    const raf = requestAnimationFrame(() => setOrigin(window.location.origin));
+    return () => cancelAnimationFrame(raf);
+  }, []);
 
   async function toggleStatus(slug: string, status: string) {
     setBusy(slug);
@@ -35,6 +39,18 @@ export function DashboardShops({
       method: "PATCH",
       headers: { "content-type": "application/json" },
       body: JSON.stringify({ status: next }),
+    });
+    setBusy(null);
+    router.refresh();
+  }
+
+  // "Stepped out" — page shows closed until the owner reopens.
+  async function toggleClosed(slug: string, manuallyClosed: boolean) {
+    setBusy(slug);
+    await fetch(`/api/shops/${slug}`, {
+      method: "PATCH",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({ manuallyClosed: !manuallyClosed }),
     });
     setBusy(null);
     router.refresh();
@@ -84,6 +100,11 @@ export function DashboardShops({
                 >
                   {shop.status === "active" ? tr.badgeLive : tr.badgeUnpublished}
                 </span>
+                {shop.manuallyClosed && (
+                  <span className={styles.badgeClosed}>
+                    {tr.closedTemporarily}
+                  </span>
+                )}
                 <span className={styles.slug}>/s/{shop.slug}</span>
                 <span className={styles.slug}>{tr.viewsLabel(shop.views)}</span>
               </div>
@@ -140,6 +161,18 @@ export function DashboardShops({
               >
                 QR
               </button>
+              {shop.status === "active" && (
+                <button
+                  type="button"
+                  className={
+                    shop.manuallyClosed ? styles.actionClosed : styles.action
+                  }
+                  onClick={() => toggleClosed(shop.slug, shop.manuallyClosed)}
+                  disabled={busy === shop.slug}
+                >
+                  {shop.manuallyClosed ? tr.actReopen : tr.actMarkClosed}
+                </button>
+              )}
               <button
                 type="button"
                 className={styles.action}

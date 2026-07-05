@@ -23,11 +23,14 @@ export function StorefrontCard({
   storefront,
   theme = "classic",
   lang,
+  forceClosed = false,
 }: {
   storefront: Storefront;
   theme?: string;
   /** Viewer's language override; falls back to the shop's own language. */
   lang?: UiLang;
+  /** Owner's "stepped out" override — closed regardless of scheduled hours. */
+  forceClosed?: boolean;
 }) {
   // Labels follow the VIEWER's chosen language when known, otherwise the
   // shop's language (first-time visitors clicking a shared link). Content
@@ -74,19 +77,28 @@ export function StorefrontCard({
         <p className={styles.tagline}>{storefront.tagline}</p>
       )}
 
-      {open.status === "open" && (
-        <span className={styles.open}>
-          <span className={styles.gdot} />
-          {tr.openNow} · {tr.closes(open.closesAt)}
-        </span>
-      )}
-      {open.status === "closed" && (
+      {forceClosed ? (
         <span className={styles.closed}>
           <span className={styles.rdot} />
-          {open.opensAt
-            ? `${tr.closedNow} · ${tr.opens(open.opensAt)}`
-            : tr.closedNow}
+          {tr.closedTemporarily}
         </span>
+      ) : (
+        <>
+          {open.status === "open" && (
+            <span className={styles.open}>
+              <span className={styles.gdot} />
+              {tr.openNow} · {tr.closes(open.closesAt)}
+            </span>
+          )}
+          {open.status === "closed" && (
+            <span className={styles.closed}>
+              <span className={styles.rdot} />
+              {open.opensAt
+                ? `${tr.closedNow} · ${tr.opens(open.opensAt)}`
+                : tr.closedNow}
+            </span>
+          )}
+        </>
       )}
 
       <div className={styles.trustRow}>

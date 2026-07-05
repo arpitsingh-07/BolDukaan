@@ -122,6 +122,8 @@ export interface PublicShop {
   theme: string;
   /** Owner has an active Pro subscription (drives branding removal). */
   ownerIsPro: boolean;
+  /** Owner stepped out — show closed regardless of scheduled hours. */
+  manuallyClosed: boolean;
 }
 
 /**
@@ -134,7 +136,7 @@ export const getPublicShopBySlug = cache(
   async (slug: string): Promise<PublicShop | null> => {
     const sql = getSql();
     const rows = await sql`
-      SELECT s.owner_user_id, s.category,
+      SELECT s.owner_user_id, s.category, s.manually_closed,
              f.name, f.tagline, f.about, f.phone, f.whatsapp, f.address,
              f.hours, f.products, f.images, f.language, f.theme,
              (sub.plan = 'pro' AND sub.status = 'active') AS owner_is_pro
@@ -149,6 +151,7 @@ export const getPublicShopBySlug = cache(
       ownerUserId: (rows[0].owner_user_id as string) ?? null,
       theme: (rows[0].theme as string) ?? "classic",
       ownerIsPro: Boolean(rows[0].owner_is_pro),
+      manuallyClosed: Boolean(rows[0].manually_closed),
     };
   },
 );
@@ -165,6 +168,7 @@ export interface ShopSummary {
   category: string | null;
   theme: string;
   views: number;
+  manuallyClosed: boolean;
   updatedAt: string;
 }
 
@@ -173,7 +177,7 @@ export async function listShopsByOwner(
 ): Promise<ShopSummary[]> {
   const sql = getSql();
   const rows = await sql`
-    SELECT s.slug, s.status, s.category, s.views, s.updated_at,
+    SELECT s.slug, s.status, s.category, s.views, s.manually_closed, s.updated_at,
            f.name, f.theme
     FROM shops s
     JOIN storefronts f ON f.shop_id = s.id
@@ -186,6 +190,7 @@ export async function listShopsByOwner(
     category: (r.category as string) ?? null,
     theme: (r.theme as string) ?? "classic",
     views: Number(r.views ?? 0),
+    manuallyClosed: Boolean(r.manually_closed),
     updatedAt: String(r.updated_at),
   }));
 }
@@ -261,6 +266,23 @@ export async function updateStorefrontByOwner(input: {
   return true;
 }
 
+/**
+ * Owner override: mark the shop closed right now (stepped out / away) or
+ * reopen it. While set, the public page shows closed regardless of hours.
+ */
+export async function setManuallyClosed(input: {
+  slug: string;
+  ownerUserId: string;
+  closed: boolean;
+}): Promise<boolean> {
+  const sql = getSql();
+  const rows = await sql`
+    UPDATE shops SET manually_closed = ${input.closed}, updated_at = now()
+    WHERE slug = ${input.slug} AND owner_user_id = ${input.ownerUserId}
+    RETURNING slug`;
+  return rows.length > 0;
+}
+
 /** Toggle publish state. Returns false if the owner doesn't own that slug. */
 export async function setShopStatus(input: {
   slug: string;
@@ -314,6 +336,7 @@ export interface NearbyShop {
   language: string | null;
   hours: Storefront["hours"];
   products: string[];
+  manuallyClosed: boolean;
   distanceKm: number;
 }
 
@@ -354,7 +377,7 @@ export async function findNearbyShops(input: {
   const dLng = radiusKm / (111 * Math.max(Math.cos((lat * Math.PI) / 180), 0.01));
 
   const rows = await sql`
-    SELECT s.slug, s.category, s.lat, s.lng,
+    SELECT s.slug, s.category, s.lat, s.lng, s.manually_closed,
            f.name, f.address, f.phone, f.hours, f.language, f.products
     FROM shops s
     JOIN storefronts f ON f.shop_id = s.id
@@ -378,6 +401,7 @@ export async function findNearbyShops(input: {
             .map((p) => p.name)
             .filter((n): n is string => Boolean(n))
         : [],
+      manuallyClosed: Boolean(r.manually_closed),
       distanceKm: haversineKm(lat, lng, Number(r.lat), Number(r.lng)),
     }))
     .filter((s) => s.distanceKm <= radiusKm)
