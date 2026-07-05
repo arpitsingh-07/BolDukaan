@@ -7,7 +7,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "db:init": "node --env-file=.env.local scripts/init-db.mjs"
+    "db:init": "node --env-file=.env.local scripts/init-db.mjs",
+    "grant-pro": "node --env-file=.env.local scripts/grant-pro.mjs"
   },
   "dependencies": {
     "@google/genai": "^2.10.0",
