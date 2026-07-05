@@ -108,6 +108,18 @@ export interface UiStrings {
   gateSub: string;
   gateSignInGoogle: string;
   gateBack: string;
+  // email/password auth
+  authEmail: string;
+  authPassword: string;
+  authName: string;
+  authSignInCta: string;
+  authCreateCta: string;
+  authToCreate: string;
+  authToSignIn: string;
+  authOr: string;
+  authInvalid: string;
+  authGeneric: string;
+  authBusy: string;
   // dashboard
   dashTitle: string;
   dashSignedInAs: string;
@@ -287,6 +299,17 @@ const en: UiStrings = {
     "Your storefronts, all in one place — publish, unpublish, and edit by voice.",
   gateSignInGoogle: "Sign in with Google",
   gateBack: "← Back to home",
+  authEmail: "Email",
+  authPassword: "Password",
+  authName: "Your name (optional)",
+  authSignInCta: "Sign in",
+  authCreateCta: "Create account",
+  authToCreate: "New here? Create an account",
+  authToSignIn: "Already have an account? Sign in",
+  authOr: "or",
+  authInvalid: "Wrong email or password.",
+  authGeneric: "Something went wrong. Please try again.",
+  authBusy: "Please wait…",
   dashTitle: "Your shops",
   dashSignedInAs: "Signed in as",
   dashManagePlan: "Manage plan",
@@ -461,6 +484,17 @@ const hi: UiStrings = {
     "आपकी सभी दुकानें एक जगह — पब्लिश, अनपब्लिश और आवाज़ से एडिट करें।",
   gateSignInGoogle: "Google से साइन इन करें",
   gateBack: "← होम पर वापस",
+  authEmail: "ईमेल",
+  authPassword: "पासवर्ड",
+  authName: "आपका नाम (वैकल्पिक)",
+  authSignInCta: "साइन इन करें",
+  authCreateCta: "खाता बनाएँ",
+  authToCreate: "नए हैं? खाता बनाएँ",
+  authToSignIn: "पहले से खाता है? साइन इन करें",
+  authOr: "या",
+  authInvalid: "ईमेल या पासवर्ड ग़लत है।",
+  authGeneric: "कुछ गड़बड़ हुई। फिर कोशिश करें।",
+  authBusy: "कृपया रुकें…",
   dashTitle: "आपकी दुकानें",
   dashSignedInAs: "साइन इन:",
   dashManagePlan: "प्लान देखें",
@@ -634,6 +668,17 @@ const pa: UiStrings = {
     "ਤੁਹਾਡੀਆਂ ਸਾਰੀਆਂ ਦੁਕਾਨਾਂ ਇੱਕੋ ਥਾਂ — ਪਬਲਿਸ਼, ਅਨਪਬਲਿਸ਼ ਅਤੇ ਆਵਾਜ਼ ਨਾਲ ਐਡਿਟ ਕਰੋ।",
   gateSignInGoogle: "Google ਨਾਲ ਸਾਈਨ ਇਨ ਕਰੋ",
   gateBack: "← ਹੋਮ 'ਤੇ ਵਾਪਸ",
+  authEmail: "ਈਮੇਲ",
+  authPassword: "ਪਾਸਵਰਡ",
+  authName: "ਤੁਹਾਡਾ ਨਾਮ (ਵਿਕਲਪਿਕ)",
+  authSignInCta: "ਸਾਈਨ ਇਨ ਕਰੋ",
+  authCreateCta: "ਖਾਤਾ ਬਣਾਓ",
+  authToCreate: "ਨਵੇਂ ਹੋ? ਖਾਤਾ ਬਣਾਓ",
+  authToSignIn: "ਪਹਿਲਾਂ ਤੋਂ ਖਾਤਾ ਹੈ? ਸਾਈਨ ਇਨ ਕਰੋ",
+  authOr: "ਜਾਂ",
+  authInvalid: "ਈਮੇਲ ਜਾਂ ਪਾਸਵਰਡ ਗ਼ਲਤ ਹੈ।",
+  authGeneric: "ਕੁਝ ਗੜਬੜ ਹੋਈ। ਮੁੜ ਕੋਸ਼ਿਸ਼ ਕਰੋ।",
+  authBusy: "ਕਿਰਪਾ ਕਰਕੇ ਰੁਕੋ…",
   dashTitle: "ਤੁਹਾਡੀਆਂ ਦੁਕਾਨਾਂ",
   dashSignedInAs: "ਸਾਈਨ ਇਨ:",
   dashManagePlan: "ਪਲਾਨ ਵੇਖੋ",

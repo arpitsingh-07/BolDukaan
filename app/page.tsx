@@ -1,7 +1,6 @@
 import Link from "next/link";
 import type { ReactNode } from "react";
-import { auth, signIn } from "@/auth";
-import { authConfigured } from "@/components/AccountNav";
+import { auth } from "@/auth";
 import { LangSwitcher } from "@/components/LangSwitcher";
 import { LandingDemo } from "@/components/LandingDemo";
 import { BrandMark } from "@/components/BrandMark";
@@ -12,54 +11,36 @@ import styles from "./landing.module.css";
 
 export const dynamic = "force-dynamic";
 
-/** "Register your shop" — a plain link when a target exists, else Google sign-in. */
+/** "Register your shop" — links to the sign-in gate (or dashboard if signed in). */
 function RegisterCta({
   target,
-  action,
   className,
   children,
 }: {
-  target: string | null;
-  action: () => Promise<void>;
+  target: string;
   className: string;
   children: ReactNode;
 }) {
-  return target ? (
+  return (
     <Link href={target} className={className}>
       {children}
     </Link>
-  ) : (
-    <form action={action} className={styles.ctaForm}>
-      <button type="submit" className={className}>
-        {children}
-      </button>
-    </form>
   );
 }
 
 /**
  * Public landing page — the entry point for both audiences: customers go to
- * nearby discovery, owners go through sign-in into the dashboard, and from
- * there into the voice builder (/create).
+ * nearby discovery, owners go through the sign-in gate (email/password or
+ * Google) into the voice builder.
  */
 export default async function LandingPage() {
   const session = await auth();
   const lang = (await viewerLang()) ?? "hi";
   const tr = t(lang);
 
-  // Where "Register your shop" leads: signed-in owners go straight to their
-  // dashboard; without OAuth configured (local dev) fall through to the
-  // builder; otherwise start Google sign-in.
-  const registerTarget = session?.user
-    ? "/dashboard"
-    : !authConfigured()
-      ? "/create"
-      : null;
-
-  async function registerWithGoogle() {
-    "use server";
-    await signIn("google", { redirectTo: "/dashboard" });
-  }
+  // Signed-in owners jump to their dashboard; everyone else hits the /create
+  // gate, which offers email/password + Google before the builder.
+  const registerTarget = session?.user ? "/dashboard" : "/create";
 
   return (
     <div className={styles.page}>
@@ -74,11 +55,7 @@ export default async function LandingPage() {
               <Link href="/nearby" className={styles.navLink}>
                 {tr.navFind}
               </Link>
-              <RegisterCta
-                target={registerTarget}
-                action={registerWithGoogle}
-                className={styles.navLink}
-              >
+              <RegisterCta target={registerTarget} className={styles.navLink}>
                 {tr.navRegister}
               </RegisterCta>
               <a href="#about" className={styles.navLink}>
@@ -109,7 +86,6 @@ export default async function LandingPage() {
             </Link>
             <RegisterCta
               target={registerTarget}
-              action={registerWithGoogle}
               className={`${styles.ctaCard} ${styles.ctaRegister}`}
             >
               <span className={styles.ctaIcon} aria-hidden>

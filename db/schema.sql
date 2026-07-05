@@ -44,6 +44,19 @@ CREATE TABLE IF NOT EXISTS storefronts (
   raw_transcript TEXT
 );
 
+-- Email/password accounts (alongside Google OAuth). A credential user's id
+-- becomes their owner_user_id — same tenant-scoping as a Google `sub`.
+-- Email is stored already-lowercased; the unique index enforces one account
+-- per address case-insensitively.
+CREATE TABLE IF NOT EXISTS users (
+  id            UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  email         TEXT NOT NULL,
+  password_hash TEXT NOT NULL,
+  name          TEXT,
+  created_at    TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+CREATE UNIQUE INDEX IF NOT EXISTS users_email_unique ON users (lower(email));
+
 -- M3: billing. One row per owner (free by default; flips to pro on payment).
 CREATE TABLE IF NOT EXISTS subscriptions (
   id                 UUID PRIMARY KEY DEFAULT gen_random_uuid(),

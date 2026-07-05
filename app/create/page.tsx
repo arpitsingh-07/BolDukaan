@@ -1,10 +1,12 @@
 import Link from "next/link";
 import type { Metadata } from "next";
-import { auth, signIn } from "@/auth";
+import { auth } from "@/auth";
+import { isDbConfigured } from "@/lib/db";
 import { AccountNav, authConfigured } from "@/components/AccountNav";
 import { VoiceOnboarding } from "@/components/VoiceOnboarding";
 import { BrandMark } from "@/components/BrandMark";
 import { BrandName } from "@/components/BrandName";
+import { AuthForm } from "@/components/AuthForm";
 import { t } from "@/lib/i18n";
 import { viewerLang } from "@/lib/server-lang";
 import gate from "@/app/dashboard/dashboard.module.css";
@@ -14,15 +16,17 @@ export const metadata: Metadata = { title: "Create your shop · BolDukaan" };
 
 /**
  * The voice builder. Owners arrive here from the dashboard ("+ create new
- * shop"). Requires sign-in when OAuth is configured, so every shop is owned
- * by an account; in local dev without OAuth env the anonymous token flow
- * still works.
+ * shop"). Requires sign-in when any auth method is configured (email/password
+ * via DB, or Google), so every shop is owned by an account; with nothing
+ * configured (bare local dev) the anonymous token flow still works.
  */
 export default async function CreatePage() {
+  const lang = (await viewerLang()) ?? "hi";
+  const tr = t(lang);
   const session = await auth();
-  const tr = t((await viewerLang()) ?? "hi");
+  const authAvailable = isDbConfigured() || authConfigured();
 
-  if (!session?.user && authConfigured()) {
+  if (!session?.user && authAvailable) {
     return (
       <main className={gate.gate}>
         <div className={gate.gateInner}>
@@ -32,16 +36,12 @@ export default async function CreatePage() {
           </p>
           <h1 className={gate.gateTitle}>{tr.createGateTitle}</h1>
           <p className={gate.gateSub}>{tr.createGateSub}</p>
-          <form
-            action={async () => {
-              "use server";
-              await signIn("google", { redirectTo: "/create" });
-            }}
-          >
-            <button type="submit" className={gate.gateBtn}>
-              {tr.gateSignInGoogle}
-            </button>
-          </form>
+          <AuthForm
+            redirectTo="/create"
+            credentialsEnabled={isDbConfigured()}
+            googleEnabled={authConfigured()}
+            lang={lang}
+          />
           <Link href="/" className={gate.gateLink}>
             {tr.gateBack}
           </Link>

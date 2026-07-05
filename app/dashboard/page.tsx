@@ -1,6 +1,6 @@
 import Link from "next/link";
 import type { Metadata } from "next";
-import { auth, signIn } from "@/auth";
+import { auth } from "@/auth";
 import { isDbConfigured } from "@/lib/db";
 import { listShopsByOwner, type ShopSummary } from "@/lib/shops";
 import { planForOwner } from "@/lib/subscriptions";
@@ -11,6 +11,7 @@ import { AccountNav, authConfigured } from "@/components/AccountNav";
 import { DashboardShops } from "@/components/DashboardShops";
 import { BrandMark } from "@/components/BrandMark";
 import { BrandName } from "@/components/BrandName";
+import { AuthForm } from "@/components/AuthForm";
 import styles from "./dashboard.module.css";
 
 export const dynamic = "force-dynamic";
@@ -31,21 +32,17 @@ export default async function DashboardPage() {
           </p>
           <h1 className={styles.gateTitle}>{tr.gateTitle}</h1>
           <p className={styles.gateSub}>{tr.gateSub}</p>
-          {authConfigured() ? (
-            <form
-              action={async () => {
-                "use server";
-                await signIn("google", { redirectTo: "/dashboard" });
-              }}
-            >
-              <button type="submit" className={styles.gateBtn}>
-                {tr.gateSignInGoogle}
-              </button>
-            </form>
+          {isDbConfigured() || authConfigured() ? (
+            <AuthForm
+              redirectTo="/dashboard"
+              credentialsEnabled={isDbConfigured()}
+              googleEnabled={authConfigured()}
+              lang={lang}
+            />
           ) : (
             <p className={styles.gateSub}>
-              Sign-in isn&apos;t configured yet — add AUTH_GOOGLE_ID and
-              AUTH_GOOGLE_SECRET to .env.local (see .env.example).
+              Sign-in isn&apos;t configured yet — set DATABASE_URL (email/password)
+              or AUTH_GOOGLE_ID/SECRET (Google) in .env.local.
             </p>
           )}
           <Link href="/" className={styles.gateLink}>

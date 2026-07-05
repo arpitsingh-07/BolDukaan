@@ -1,0 +1,116 @@
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  text-align: left;
+}
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+.label {
+  font-size: 12px;
+  font-weight: 600;
+  color: rgba(244, 243, 239, 0.72);
+}
+.input {
+  width: 100%;
+  background: var(--paper);
+  color: var(--ink);
+  border: 1px solid transparent;
+  border-radius: var(--radius-control);
+  padding: 12px 14px;
+  font-size: 15px;
+  font-family: inherit;
+}
+.input:focus {
+  outline: none;
+  border-color: var(--marigold);
+}
+.primary {
+  margin-top: 4px;
+  width: 100%;
+  background: var(--paper);
+  color: var(--petrol);
+  border: none;
+  border-radius: var(--radius-control);
+  padding: 13px 0;
+  font-weight: 700;
+  font-size: 15px;
+  font-family: inherit;
+  cursor: pointer;
+}
+.primary:hover {
+  transform: translateY(-1px);
+}
+.primary:disabled {
+  opacity: 0.6;
+  cursor: default;
+  transform: none;
+}
+.error {
+  font-size: 13px;
+  font-weight: 600;
+  color: #ffd7a1;
+  margin: 2px 0 0;
+}
+.toggle {
+  background: none;
+  border: none;
+  color: rgba(244, 243, 239, 0.82);
+  font-size: 13px;
+  font-weight: 600;
+  font-family: inherit;
+  cursor: pointer;
+  padding: 8px 0 0;
+  text-align: center;
+}
+.toggle:hover {
+  color: var(--paper);
+  text-decoration: underline;
+}
+
+/* "or" divider between the credential form and the Google button */
+.divider {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 16px 0 4px;
+  color: rgba(244, 243, 239, 0.5);
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+.divider::before,
+.divider::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: rgba(244, 243, 239, 0.18);
+}
+.google {
+  width: 100%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  background: transparent;
+  color: var(--paper);
+  border: 1px solid rgba(244, 243, 239, 0.32);
+  border-radius: var(--radius-control);
+  padding: 12px 0;
+  font-weight: 600;
+  font-size: 15px;
+  font-family: inherit;
+  cursor: pointer;
+}
+.google:hover {
+  border-color: var(--paper);
+  background: rgba(244, 243, 239, 0.06);
+}
+.googleGlyph {
+  font-weight: 800;
+  font-size: 17px;
+}
