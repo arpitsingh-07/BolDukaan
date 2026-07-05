@@ -162,23 +162,26 @@ export function StorefrontCard({
                 : product.name;
               return (
                 <div key={`${product.name}-${i}`} className={styles.item}>
-                  <span className={styles.itemName}>{product.name}</span>
+                  <div className={styles.itemHead}>
+                    <span className={styles.itemName}>{product.name}</span>
+                    {waNumber && (
+                      <a
+                        className={styles.itemWa}
+                        href={waHref(waNumber, tr.itemAskText(label))}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        aria-label={tr.askOnWhatsApp}
+                        title={tr.askOnWhatsApp}
+                      >
+                        <WhatsAppIcon size={16} />
+                      </a>
+                    )}
+                  </div>
                   {product.price && (
                     <span className={styles.itemPrice}>{product.price}</span>
                   )}
                   {product.note && (
                     <span className={styles.itemNote}>{product.note}</span>
-                  )}
-                  {waNumber && (
-                    <a
-                      className={styles.itemAsk}
-                      href={waHref(waNumber, tr.itemAskText(label))}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      <WhatsAppIcon size={13} />
-                      {tr.askOnWhatsApp}
-                    </a>
                   )}
                 </div>
               );

@@ -173,43 +173,48 @@
 .item {
   display: flex;
   flex-direction: column;
-  gap: 3px;
+  gap: 2px;
   background: var(--surface-tint);
-  border-radius: 12px;
-  padding: 12px;
+  border-radius: 11px;
+  padding: 10px 12px;
+}
+.itemHead {
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 .itemName {
+  flex: 1;
+  min-width: 0;
   font-weight: 700;
   font-size: 14px;
   line-height: 1.25;
   color: var(--ink);
 }
+.itemWa {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: #25d366;
+  color: #fff;
+  text-decoration: none;
+}
+.itemWa:hover {
+  background: #1fb958;
+}
 .itemPrice {
   font-weight: 700;
-  font-size: 14px;
+  font-size: 13px;
   color: var(--marigold-deep);
 }
 .itemNote {
   font-size: 12px;
   line-height: 1.35;
   color: var(--muted);
-}
-.itemAsk {
-  margin-top: 8px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 6px;
-  background: #25d366;
-  color: #fff;
-  border-radius: 9px;
-  padding: 8px 0;
-  font-size: 12px;
-  font-weight: 600;
-  text-decoration: none;
-}
-.itemAsk:hover {
-  background: #1fb958;
 }
 
 .about {
