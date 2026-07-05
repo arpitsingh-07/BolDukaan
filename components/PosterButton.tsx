@@ -14,7 +14,6 @@ import styles from "./poster-button.module.css";
  */
 
 const W = 1080;
-const H = 1600;
 
 // DESIGN.md tokens (canvas can't read CSS variables from a stylesheet).
 const PAPER = "#F4F3EF";
@@ -73,17 +72,12 @@ async function drawPoster(
   });
 
   const canvas = document.createElement("canvas");
-  canvas.width = W;
-  canvas.height = H;
   const ctx = canvas.getContext("2d");
   if (!ctx) throw new Error("Canvas unavailable");
   const { display, body } = fontStacks();
 
-  ctx.fillStyle = PAPER;
-  ctx.fillRect(0, 0, W, H);
-  ctx.textAlign = "center";
-
-  // ---- measure the petrol header before drawing it ----
+  // ---- measurement pass: nothing is drawn yet, we just size the poster to
+  // its content so a sparse shop doesn't get a big empty middle ----
   ctx.font = `800 84px ${display}`;
   const nameLines = wrapText(ctx, storefront.name ?? "My shop", 920).slice(0, 2);
   const subtitle = storefront.tagline ?? storefront.category ?? "";
@@ -91,6 +85,50 @@ async function drawPoster(
   const subLines = subtitle ? wrapText(ctx, subtitle, 880).slice(0, 2) : [];
   const headerH =
     150 + nameLines.length * 96 + (subLines.length > 0 ? 26 + subLines.length * 48 : 0) + 70;
+
+  const products = storefront.products.slice(0, 4);
+  ctx.font = `500 30px ${body}`;
+  const addrLines = storefront.address
+    ? wrapText(ctx, storefront.address, 820).slice(0, 2)
+    : [];
+
+  // Vertical rhythm — the same constants drive the height computation and the
+  // draw pass, so the QR/footer always land flush with the canvas bottom.
+  const BODY_TOP_GAP = 96;
+  const PRODUCT_LH = 62;
+  const ADDR_GAP = 24;
+  const ADDR_LH = 46;
+  const QR_GAP = 76;
+  const SCAN_TO_BOX = 56;
+  const QR_BOX = 500;
+  const BOX_TO_URL = 60;
+  const URL_TO_FOOTER = 54;
+  const BOTTOM_PAD = 56;
+
+  const contentH =
+    products.length * PRODUCT_LH +
+    (addrLines.length ? (products.length ? ADDR_GAP : 0) + addrLines.length * ADDR_LH : 0);
+
+  const bodyTop = headerH + BODY_TOP_GAP;
+  const totalH = Math.round(
+    bodyTop +
+      contentH +
+      QR_GAP +
+      SCAN_TO_BOX +
+      QR_BOX +
+      BOX_TO_URL +
+      URL_TO_FOOTER +
+      BOTTOM_PAD,
+  );
+
+  // Setting canvas dimensions clears it and resets ctx state — do it once here,
+  // between the measurement pass and the draw pass.
+  canvas.width = W;
+  canvas.height = totalH;
+
+  ctx.fillStyle = PAPER;
+  ctx.fillRect(0, 0, W, totalH);
+  ctx.textAlign = "center";
 
   // ---- petrol signboard header ----
   ctx.fillStyle = PETROL;
@@ -128,31 +166,23 @@ async function drawPoster(
   ctx.fillStyle = MARIGOLD;
   ctx.fillRect(W / 2 - 70, headerH - 4, 140, 8);
 
-  // ---- QR block is anchored to the bottom; body content must stop above it ----
-  const qrBox = 500;
-  const qrBoxY = H - 660;
-  const contentLimit = qrBoxY - 90;
-
   // ---- products ----
-  y = headerH + 100;
+  y = bodyTop;
   ctx.fillStyle = INK;
   ctx.font = `600 38px ${body}`;
-  for (const product of storefront.products.slice(0, 4)) {
-    if (y > contentLimit) break;
+  for (const product of products) {
     ctx.fillText(`✓  ${product.name}`, W / 2, y, 900);
-    y += 62;
+    y += PRODUCT_LH;
   }
 
   // ---- address (map-pin glyph drawn as a path, centered with line one) ----
-  if (storefront.address) {
+  if (addrLines.length > 0) {
     ctx.fillStyle = MUTED;
     ctx.font = `500 30px ${body}`;
-    y += storefront.products.length > 0 ? 18 : 0;
-    const addrLines = wrapText(ctx, storefront.address, 820).slice(0, 2);
+    y += products.length > 0 ? ADDR_GAP : 0;
     const pin = new Path2D(PIN_PATH_24);
     const pinSize = 30;
     for (let i = 0; i < addrLines.length; i++) {
-      if (y > contentLimit) break;
       if (i === 0) {
         const lineW = ctx.measureText(addrLines[i]).width;
         const startX = (W - (pinSize + 8 + lineW)) / 2;
@@ -167,33 +197,35 @@ async function drawPoster(
       } else {
         ctx.fillText(addrLines[i], W / 2, y, 880);
       }
-      y += 46;
+      y += ADDR_LH;
     }
   }
 
-  // ---- QR block ----
+  // ---- QR block (flows right after the content) ----
+  y = bodyTop + contentH + QR_GAP;
   ctx.fillStyle = MUTED;
   ctx.font = `700 27px ${body}`;
-  ctx.fillText(scanLabel.toUpperCase(), W / 2, qrBoxY - 30);
+  ctx.fillText(scanLabel.toUpperCase(), W / 2, y);
 
+  const qrBoxY = y + SCAN_TO_BOX;
   ctx.fillStyle = "#ffffff";
-  const boxX = (W - qrBox) / 2;
+  const boxX = (W - QR_BOX) / 2;
   if (typeof ctx.roundRect === "function") {
     ctx.beginPath();
-    ctx.roundRect(boxX, qrBoxY, qrBox, qrBox, 24);
+    ctx.roundRect(boxX, qrBoxY, QR_BOX, QR_BOX, 24);
     ctx.fill();
   } else {
-    ctx.fillRect(boxX, qrBoxY, qrBox, qrBox);
+    ctx.fillRect(boxX, qrBoxY, QR_BOX, QR_BOX);
   }
   ctx.drawImage(qrImg, (W - 400) / 2, qrBoxY + 50, 400, 400);
 
   ctx.fillStyle = PETROL;
   ctx.font = `600 30px ${body}`;
-  ctx.fillText(url.replace(/^https?:\/\//, ""), W / 2, qrBoxY + qrBox + 62, 960);
+  ctx.fillText(url.replace(/^https?:\/\//, ""), W / 2, qrBoxY + QR_BOX + BOX_TO_URL, 960);
 
   ctx.fillStyle = MUTED;
   ctx.font = `500 24px ${body}`;
-  ctx.fillText("BolDukaan", W / 2, H - 44);
+  ctx.fillText("BolDukaan", W / 2, qrBoxY + QR_BOX + BOX_TO_URL + URL_TO_FOOTER);
 
   return canvas;
 }
@@ -245,7 +277,13 @@ export function PosterButtons({
       if (!win) return;
       win.document.write(
         `<!doctype html><html><head><title>${fileName}-poster</title>` +
-          `<style>@page{margin:0}body{margin:0}img{width:100%;display:block}</style>` +
+          `<style>` +
+          `@page{size:A4 portrait;margin:8mm}` +
+          `html,body{margin:0;padding:0;height:100%}` +
+          `body{display:flex;align-items:center;justify-content:center}` +
+          // contain within one page whatever the poster's aspect ratio
+          `img{max-width:100%;max-height:100%;object-fit:contain}` +
+          `</style>` +
           `</head><body><img src="${dataUrl}" onload="window.print()"></body></html>`,
       );
       win.document.close();
