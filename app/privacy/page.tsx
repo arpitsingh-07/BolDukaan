@@ -14,7 +14,12 @@ export const metadata: Metadata = {
 
 // Bump when the policy text materially changes.
 const LAST_UPDATED = "5 July 2026";
-const CONTACT_EMAIL = "hello@boldukaan.in";
+// Current contact is a Gmail address; will move to a custom domain address
+// once the .com is purchased. Instagram handle is @boldukaan.in (boldukaan
+// and boldukaan.com were taken).
+const CONTACT_EMAIL = "boldukaan@gmail.com";
+const INSTAGRAM_HANDLE = "boldukaan.in";
+const INSTAGRAM_URL = "https://instagram.com/boldukaan.in";
 
 /**
  * Plain-language privacy policy. The body is intentionally English (a single
@@ -178,6 +183,15 @@ export default async function PrivacyPage() {
             this page. Questions or requests? Email{" "}
             <a className={styles.link} href={`mailto:${CONTACT_EMAIL}`}>
               {CONTACT_EMAIL}
+            </a>{" "}
+            or reach us on Instagram at{" "}
+            <a
+              className={styles.link}
+              href={INSTAGRAM_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              @{INSTAGRAM_HANDLE}
             </a>
             .
           </p>

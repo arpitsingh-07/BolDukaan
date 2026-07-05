@@ -344,6 +344,11 @@
   gap: 12px;
   flex-wrap: wrap;
 }
+.footerLinks {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
 .footerLink {
   color: var(--petrol);
   font-weight: 600;
