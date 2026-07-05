@@ -6,6 +6,7 @@ import {
 import { normalizeLang, t, type UiLang } from "@/lib/i18n";
 import { mapsDirectionsUrl } from "@/lib/seo";
 import { WhatsAppIcon } from "./WhatsAppIcon";
+import { CheckIcon, PhoneIcon } from "./icons";
 import styles from "./storefront-card.module.css";
 
 function telHref(num: string): string {
@@ -103,12 +104,18 @@ export function StorefrontCard({
       )}
 
       <div className={styles.trustRow}>
-        <span className={styles.trustBadge}>✓ {tr.badgeLocalBiz}</span>
+        <span className={styles.trustBadge}>
+          <CheckIcon size={12} /> {tr.badgeLocalBiz}
+        </span>
         {storefront.phone && (
-          <span className={styles.trustBadge}>✓ {tr.badgePhoneAvail}</span>
+          <span className={styles.trustBadge}>
+            <CheckIcon size={12} /> {tr.badgePhoneAvail}
+          </span>
         )}
         {(storefront.whatsapp || storefront.phone) && (
-          <span className={styles.trustBadge}>✓ {tr.badgeOnWhatsApp}</span>
+          <span className={styles.trustBadge}>
+            <CheckIcon size={12} /> {tr.badgeOnWhatsApp}
+          </span>
         )}
       </div>
 
@@ -163,7 +170,7 @@ export function StorefrontCard({
               className={`${styles.btn} ${styles.call}`}
               href={telHref(storefront.phone)}
             >
-              📞 {tr.callShop}
+              <PhoneIcon size={15} /> {tr.callShop}
             </a>
           )}
           {/* Most owners give one number for both — fall back to phone so the

@@ -35,6 +35,11 @@ export function NearbyBrowser({ lang }: { lang: UiLang }) {
   const [filterOpen, setFilterOpen] = useState(false);
   const [categories, setCategories] = useState<string[]>([]);
   const [openNowOnly, setOpenNowOnly] = useState(false);
+  // Demand generation: where they searched (to tag a request) + the request form.
+  const [coords, setCoords] = useState<{ lat: number; lng: number } | null>(null);
+  const [reqQuery, setReqQuery] = useState("");
+  const [reqBusy, setReqBusy] = useState(false);
+  const [reqDone, setReqDone] = useState(false);
 
   const find = useCallback(() => {
     if (!("geolocation" in navigator)) {
@@ -45,6 +50,7 @@ export function NearbyBrowser({ lang }: { lang: UiLang }) {
     navigator.geolocation.getCurrentPosition(
       async (pos) => {
         setState("loading");
+        setCoords({ lat: pos.coords.latitude, lng: pos.coords.longitude });
         try {
           const res = await fetch(
             `/api/nearby?lat=${pos.coords.latitude}&lng=${pos.coords.longitude}&radius=5`,
@@ -62,6 +68,26 @@ export function NearbyBrowser({ lang }: { lang: UiLang }) {
       { enableHighAccuracy: true, timeout: 10000 },
     );
   }, []);
+
+  // Consumer names a shop they want online → the ground team's target list.
+  const submitRequest = async () => {
+    const q = reqQuery.trim();
+    if (q.length < 2) return;
+    setReqBusy(true);
+    try {
+      await fetch("/api/shop-requests", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({ query: q, lat: coords?.lat ?? null, lng: coords?.lng ?? null }),
+      });
+      setReqDone(true);
+    } catch {
+      /* best-effort — don't block the visitor on a failed lead capture */
+      setReqDone(true);
+    } finally {
+      setReqBusy(false);
+    }
+  };
 
   const showCta = state === "idle" || state === "denied" || state === "error";
 
@@ -115,7 +141,33 @@ export function NearbyBrowser({ lang }: { lang: UiLang }) {
         <p className={styles.status}>{tr.nearbyLoading}</p>
       )}
       {state === "done" && shops.length === 0 && (
-        <p className={styles.status}>{tr.nearbyEmpty}</p>
+        <div className={styles.demandBox}>
+          {reqDone ? (
+            <p className={styles.demandThanks}>{tr.nearbyRequestThanks}</p>
+          ) : (
+            <>
+              <p className={styles.demandTitle}>{tr.nearbyExpandingTitle}</p>
+              <p className={styles.demandSub}>{tr.nearbyExpandingSub}</p>
+              <div className={styles.demandForm}>
+                <input
+                  className={styles.search}
+                  type="text"
+                  placeholder={tr.nearbyRequestPlaceholder}
+                  value={reqQuery}
+                  onChange={(e) => setReqQuery(e.target.value)}
+                />
+                <button
+                  type="button"
+                  className={styles.cta}
+                  onClick={submitRequest}
+                  disabled={reqBusy || reqQuery.trim().length < 2}
+                >
+                  {tr.nearbyRequestCta}
+                </button>
+              </div>
+            </>
+          )}
+        </div>
       )}
 
       {state === "done" && shops.length > 0 && (
@@ -171,7 +223,8 @@ export function NearbyBrowser({ lang }: { lang: UiLang }) {
                 aria-pressed={openNowOnly}
                 onClick={() => setOpenNowOnly((v) => !v)}
               >
-                🟢 {tr.openNow}
+                <span className={styles.dotGreen} aria-hidden />
+                {tr.openNow}
               </button>
               <div className={styles.panelDivider} />
               <div className={styles.catRow} role="group" aria-label="Category">
@@ -197,7 +250,7 @@ export function NearbyBrowser({ lang }: { lang: UiLang }) {
       )}
 
       {state === "done" && shops.length > 0 && filtered.length === 0 && (
-        <p className={styles.status}>{tr.nearbyEmpty}</p>
+        <p className={styles.status}>{tr.nearbyNoMatch}</p>
       )}
 
       {state === "done" && filtered.length > 0 && (
@@ -220,7 +273,10 @@ export function NearbyBrowser({ lang }: { lang: UiLang }) {
                       <span className={styles.cat}>{shop.category}</span>
                     )}
                     {open.status === "open" && (
-                      <span className={styles.open}>🟢 {tr.openNow}</span>
+                      <span className={styles.open}>
+                        <span className={styles.dotGreen} aria-hidden />
+                        {tr.openNow}
+                      </span>
                     )}
                     {open.status === "closed" && (
                       <span className={styles.closed}>

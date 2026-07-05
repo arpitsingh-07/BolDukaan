@@ -166,12 +166,27 @@ async function drawPoster(
   ctx.fillStyle = MARIGOLD;
   ctx.fillRect(W / 2 - 70, headerH - 4, 140, 8);
 
-  // ---- products ----
+  // ---- products (green check drawn as strokes, no emoji) ----
   y = bodyTop;
-  ctx.fillStyle = INK;
   ctx.font = `600 38px ${body}`;
+  const checkW = 26;
   for (const product of products) {
-    ctx.fillText(`✓  ${product.name}`, W / 2, y, 900);
+    const text = product.name;
+    const tw = Math.min(ctx.measureText(text).width, 820);
+    const startX = (W - (checkW + 16 + tw)) / 2;
+    ctx.strokeStyle = "#2E9E5B";
+    ctx.lineWidth = 4.5;
+    ctx.lineCap = "round";
+    ctx.lineJoin = "round";
+    ctx.beginPath();
+    ctx.moveTo(startX, y - 12);
+    ctx.lineTo(startX + checkW * 0.38, y - 2);
+    ctx.lineTo(startX + checkW, y - 22);
+    ctx.stroke();
+    ctx.fillStyle = INK;
+    ctx.textAlign = "left";
+    ctx.fillText(text, startX + checkW + 16, y, 820);
+    ctx.textAlign = "center";
     y += PRODUCT_LH;
   }
 

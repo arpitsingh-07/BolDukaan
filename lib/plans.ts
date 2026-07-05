@@ -6,7 +6,7 @@ export const FREE_STOREFRONT_LIMIT = 1;
 export const PRO_STOREFRONT_LIMIT = 5;
 
 /** Target price — validate with real owners before committing (PRD §10). */
-export const PRO_PRICE_INR = 249;
+export const PRO_PRICE_INR = 149;
 /** Same price in paise — Razorpay works in the smallest currency unit. */
 export const PRO_PRICE_PAISE = PRO_PRICE_INR * 100;
 

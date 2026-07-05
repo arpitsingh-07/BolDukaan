@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { MicIcon, CheckIcon } from "./icons";
 import styles from "@/app/landing.module.css";
 
 /**
@@ -43,7 +44,7 @@ export function LandingDemo({
     <div className={styles.demoCard}>
       <div className={styles.demoInput}>
         <span className={styles.demoMic} aria-hidden>
-          🎤
+          <MicIcon size={20} />
         </span>
         <div>
           <span className={styles.demoLabel}>{youSpeak}</span>
@@ -62,7 +63,7 @@ export function LandingDemo({
             className={`${styles.demoStep} ${i < count ? styles.demoStepOn : ""}`}
           >
             <span className={styles.demoCheck} aria-hidden>
-              ✓
+              <CheckIcon size={12} />
             </span>
             {step}
           </li>

@@ -5,11 +5,12 @@ import { auth } from "@/auth";
 import { isDbConfigured } from "@/lib/db";
 import { getSubscriptionForOwner, isPro } from "@/lib/subscriptions";
 import { PRO_PRICE_INR } from "@/lib/plans";
-import { razorpayConfigured } from "@/lib/razorpay";
+import { razorpayConfigured, isBillingEnabled } from "@/lib/razorpay";
 import { t } from "@/lib/i18n";
 import { viewerLang } from "@/lib/server-lang";
 import { AccountNav } from "@/components/AccountNav";
 import { UpgradeButton } from "@/components/UpgradeButton";
+import { CheckIcon } from "@/components/icons";
 import styles from "./billing.module.css";
 
 export const dynamic = "force-dynamic";
@@ -26,6 +27,7 @@ export default async function BillingPage() {
     : null;
   const pro = isPro(sub);
   const billingReady = razorpayConfigured();
+  const billingLive = isBillingEnabled();
 
   return (
     <div className={styles.page}>
@@ -39,6 +41,14 @@ export default async function BillingPage() {
         <h1 className={styles.title}>{tr.billTitle}</h1>
       </header>
 
+      {!billingLive ? (
+        <main className={styles.main}>
+          <section className={styles.planCard}>
+            <div className={styles.planName}>{tr.billComingSoonTitle}</div>
+            <p className={styles.planDesc}>{tr.billComingSoonBody}</p>
+          </section>
+        </main>
+      ) : (
       <main className={styles.main}>
         <div className={styles.grid}>
           <section
@@ -61,7 +71,7 @@ export default async function BillingPage() {
               {tr.billFeaturesFree.map((f) => (
                 <li key={f} className={styles.feature}>
                   <span className={styles.tick} aria-hidden>
-                    ✓
+                    <CheckIcon size={12} />
                   </span>
                   {f}
                 </li>
@@ -92,7 +102,7 @@ export default async function BillingPage() {
               {tr.billFeaturesPro.map((f) => (
                 <li key={f} className={styles.feature}>
                   <span className={styles.tick} aria-hidden>
-                    ✓
+                    <CheckIcon size={12} />
                   </span>
                   {f}
                 </li>
@@ -114,6 +124,7 @@ export default async function BillingPage() {
           </section>
         </div>
       </main>
+      )}
     </div>
   );
 }

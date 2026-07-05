@@ -17,7 +17,10 @@ const LAST_UPDATED = "5 July 2026";
 const CONTACT_EMAIL = "boldukaan@gmail.com";
 const INSTAGRAM_HANDLE = "boldukaan.in";
 const INSTAGRAM_URL = "https://instagram.com/boldukaan.in";
-const PRO_PRICE = "₹249";
+const PRO_PRICE = "₹149";
+// India's IT Rules 2021 require a named Grievance Officer for platforms that
+// host user content. Update this to the responsible person.
+const GRIEVANCE_OFFICER = "Arpit Singh";
 
 /**
  * Plain-language Terms & Conditions covering the launch feature set: accounts
@@ -277,7 +280,62 @@ export default async function TermsPage() {
         </section>
 
         <section className={styles.section}>
-          <h2 className={styles.h2}>17. Governing law</h2>
+          <h2 className={styles.h2}>17. Our intellectual property</h2>
+          <p className={styles.p}>
+            The BolDukaan name, logo, design, and the software behind the
+            service are owned by us or our licensors. These terms don’t give you
+            any right to use our branding, except as needed to use the service
+            normally. Please don’t copy, resell, or reverse-engineer the
+            platform. If you send us feedback or suggestions, we may use them
+            freely, without any obligation to you.
+          </p>
+        </section>
+
+        <section className={styles.section}>
+          <h2 className={styles.h2}>18. Reporting a problem &amp; Grievance Officer</h2>
+          <p className={styles.p}>
+            If you believe a storefront breaks these terms or the law, or
+            infringes your rights, tell us and we’ll review it and take action —
+            including removal — where appropriate. In line with India’s
+            Information Technology rules, our Grievance Officer is{" "}
+            <strong>{GRIEVANCE_OFFICER}</strong>, reachable at{" "}
+            <a className={styles.link} href={`mailto:${CONTACT_EMAIL}`}>
+              {CONTACT_EMAIL}
+            </a>
+            . We aim to acknowledge complaints within 24 hours and resolve them
+            within 15 days.
+          </p>
+        </section>
+
+        <section className={styles.section}>
+          <h2 className={styles.h2}>19. General</h2>
+          <ul className={styles.list}>
+            <li>
+              <strong>Severability:</strong> if any part of these terms is found
+              invalid, the rest stays in force.
+            </li>
+            <li>
+              <strong>Entire agreement:</strong> these terms and the Privacy
+              Policy are the whole agreement between you and BolDukaan.
+            </li>
+            <li>
+              <strong>Assignment:</strong> we may transfer our rights and duties
+              (for example, if the business is sold or reorganised); you may not
+              transfer yours without our consent.
+            </li>
+            <li>
+              <strong>No waiver:</strong> if we don’t enforce a term, that isn’t
+              a waiver of it.
+            </li>
+            <li>
+              <strong>Force majeure:</strong> we aren’t responsible for delays or
+              failures caused by events beyond our reasonable control.
+            </li>
+          </ul>
+        </section>
+
+        <section className={styles.section}>
+          <h2 className={styles.h2}>20. Governing law</h2>
           <p className={styles.p}>
             These terms are governed by the laws of India, and any disputes are
             subject to the jurisdiction of the courts of India.
@@ -285,7 +343,7 @@ export default async function TermsPage() {
         </section>
 
         <section className={styles.section}>
-          <h2 className={styles.h2}>18. Contact</h2>
+          <h2 className={styles.h2}>21. Contact</h2>
           <p className={styles.p}>
             Questions about these terms? Email{" "}
             <a className={styles.link} href={`mailto:${CONTACT_EMAIL}`}>

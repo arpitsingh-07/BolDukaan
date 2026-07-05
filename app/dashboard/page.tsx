@@ -2,6 +2,7 @@ import Link from "next/link";
 import type { Metadata } from "next";
 import { auth } from "@/auth";
 import { isDbConfigured } from "@/lib/db";
+import { isBillingEnabled } from "@/lib/razorpay";
 import { listShopsByOwner, type ShopSummary } from "@/lib/shops";
 import { planForOwner } from "@/lib/subscriptions";
 import type { Plan } from "@/lib/plans";
@@ -81,10 +82,15 @@ export default async function DashboardPage() {
         </div>
         <h1 className={styles.title}>{tr.dashWelcome}</h1>
         <p className={styles.subtitle}>
-          {tr.dashSignedInAs} {session.user.email ?? session.user.name ?? "—"} ·{" "}
-          <Link href="/dashboard/billing" className={styles.planLink}>
-            {tr.dashManagePlan}
-          </Link>
+          {tr.dashSignedInAs} {session.user.email ?? session.user.name ?? "—"}
+          {isBillingEnabled() && (
+            <>
+              {" · "}
+              <Link href="/dashboard/billing" className={styles.planLink}>
+                {tr.dashManagePlan}
+              </Link>
+            </>
+          )}
         </p>
         <div className={styles.headerActions}>
           <Link href="/create" className={styles.createBtn}>

@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { auth } from "@/auth";
 import { isDbConfigured } from "@/lib/db";
-import { razorpayConfigured, createOrder } from "@/lib/razorpay";
+import { razorpayConfigured, isBillingEnabled, createOrder } from "@/lib/razorpay";
 import {
   recordPendingSubscription,
   getSubscriptionForOwner,
@@ -19,6 +19,12 @@ export const runtime = "nodejs";
 export async function POST() {
   if (!isDbConfigured()) {
     return NextResponse.json({ error: "Database not configured." }, { status: 503 });
+  }
+  if (!isBillingEnabled()) {
+    return NextResponse.json(
+      { error: "Subscriptions are paused right now." },
+      { status: 503 },
+    );
   }
   if (!razorpayConfigured()) {
     return NextResponse.json(

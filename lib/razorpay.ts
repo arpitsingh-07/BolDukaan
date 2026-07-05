@@ -14,6 +14,16 @@ export function razorpayConfigured(): boolean {
   );
 }
 
+/**
+ * Master switch for the whole subscriptions/billing flow. Off by default so
+ * the Pro upgrade stays paused until Razorpay KYC is live under the business
+ * account — flip it on by setting BILLING_ENABLED=true (plus the RAZORPAY_*
+ * keys) in the host env. Guards the billing page and the order/verify routes.
+ */
+export function isBillingEnabled(): boolean {
+  return process.env.BILLING_ENABLED === "true";
+}
+
 function authHeader(): string {
   const id = process.env.RAZORPAY_KEY_ID ?? "";
   const secret = process.env.RAZORPAY_KEY_SECRET ?? "";

@@ -340,6 +340,21 @@ export interface NearbyShop {
   distanceKm: number;
 }
 
+/**
+ * Record a "which shop do you want here?" request from a consumer who searched
+ * and found nothing — the ground team's demand/target list. Location optional.
+ */
+export async function recordShopRequest(input: {
+  query: string;
+  lat?: number | null;
+  lng?: number | null;
+}): Promise<void> {
+  const sql = getSql();
+  await sql`
+    INSERT INTO shop_requests (query, lat, lng)
+    VALUES (${input.query}, ${input.lat ?? null}, ${input.lng ?? null})`;
+}
+
 /** Great-circle distance in km between two lat/lng points. */
 function haversineKm(
   lat1: number,

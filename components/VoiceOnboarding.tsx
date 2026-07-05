@@ -519,6 +519,23 @@ export function VoiceOnboarding({
   // Render from state (the ref mirrors it for stable callbacks only).
   const caption = storefront ? tr.holdToAddMore : tr.holdToSpeak;
 
+  // Key fields a shop really needs. If any are missing after structuring, we
+  // suggest them back so the owner can fill the gaps by speaking again —
+  // rather than silently shipping a half-empty page.
+  const missingFields: string[] = [];
+  if (storefront) {
+    if (!storefront.name) missingFields.push(tr.missingName);
+    if (!storefront.phone && !storefront.whatsapp)
+      missingFields.push(tr.missingPhone);
+    if (!storefront.address) missingFields.push(tr.missingAddress);
+    if (storefront.products.length === 0)
+      missingFields.push(tr.missingProducts);
+    const hasHours =
+      storefront.hours &&
+      Object.values(storefront.hours).some((d) => d && d.open);
+    if (!hasHours) missingFields.push(tr.missingHours);
+  }
+
   return (
     <div className={styles.page}>
       <section className={styles.hero}>
@@ -661,6 +678,19 @@ export function VoiceOnboarding({
                 />
               </div>
               {partial && <p className={styles.partialNote}>{tr.partialNote}</p>}
+
+              {missingFields.length > 0 && (
+                <div className={styles.missingBox}>
+                  <p className={styles.missingIntro}>{tr.missingIntro}</p>
+                  <div className={styles.missingChips}>
+                    {missingFields.map((m) => (
+                      <span key={m} className={styles.missingChip}>
+                        {m}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              )}
 
               <p className={styles.photoProgress}>
                 {tr.photosProgress(images.length, MAX_IMAGES)}

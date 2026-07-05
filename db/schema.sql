@@ -57,6 +57,18 @@ CREATE TABLE IF NOT EXISTS users (
 );
 CREATE UNIQUE INDEX IF NOT EXISTS users_email_unique ON users (lower(email));
 
+-- Consumer demand signals: when someone searches "shops near you" and finds
+-- nothing, they can name the shop they want online. This is the ground team's
+-- target list (which shops to go sign up, and where demand is).
+CREATE TABLE IF NOT EXISTS shop_requests (
+  id          UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  query       TEXT NOT NULL,             -- shop name or phone number the visitor entered
+  lat         DOUBLE PRECISION,          -- where they were searching (optional)
+  lng         DOUBLE PRECISION,
+  created_at  TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+CREATE INDEX IF NOT EXISTS shop_requests_geo_idx ON shop_requests (lat, lng);
+
 -- M3: billing. One row per owner (free by default; flips to pro on payment).
 CREATE TABLE IF NOT EXISTS subscriptions (
   id                 UUID PRIMARY KEY DEFAULT gen_random_uuid(),

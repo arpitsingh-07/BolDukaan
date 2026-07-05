@@ -125,6 +125,23 @@ export interface UiStrings {
   authAgree: string; // contains "{terms}" and "{privacy}" tokens for the links
   authGoogleConsent: string; // contains "{terms}" and "{privacy}"
   authMustAgree: string;
+  // billing paused
+  billComingSoonTitle: string;
+  billComingSoonBody: string;
+  // missing-field suggestions after structuring
+  missingIntro: string;
+  missingName: string;
+  missingPhone: string;
+  missingAddress: string;
+  missingProducts: string;
+  missingHours: string;
+  // nearby demand generation (no shops nearby yet)
+  nearbyExpandingTitle: string;
+  nearbyExpandingSub: string;
+  nearbyRequestPlaceholder: string;
+  nearbyRequestCta: string;
+  nearbyRequestThanks: string;
+  nearbyNoMatch: string;
   // dashboard
   dashTitle: string;
   dashSignedInAs: string;
@@ -216,12 +233,12 @@ function waMessage(
   args: { name: string | null; address: string | null; products: string[]; url: string },
 ): string {
   const lines: string[] = [parts.hello, ""];
-  if (args.name) lines.push(`🏪 ${args.name}`);
-  if (args.address) lines.push(`📍 ${args.address}`);
+  if (args.name) lines.push(args.name);
+  if (args.address) lines.push(args.address);
   const products = args.products.filter(Boolean).slice(0, 4);
   if (products.length > 0) {
     lines.push("");
-    for (const p of products) lines.push(`✓ ${p}`);
+    for (const p of products) lines.push(`- ${p}`);
   }
   lines.push("", `${parts.visit}: ${args.url}`);
   return lines.join("\n");
@@ -283,7 +300,7 @@ const en: UiStrings = {
   shareText: "check out my shop",
   madeWith: "Made with BolDukaan — speak your shop into existence",
   setLocation: "Set shop location",
-  locationSet: "Shop location set ✓",
+  locationSet: "Shop location set",
   locationError:
     "Couldn't get your location. Allow location access and try again.",
   nearbyTitle: "Shops near you",
@@ -321,6 +338,23 @@ const en: UiStrings = {
   authGoogleConsent: "By continuing, you agree to our {terms} and {privacy}.",
   authMustAgree:
     "Please accept the Terms and Privacy Policy to create an account.",
+  billComingSoonTitle: "Paid plans are coming soon",
+  billComingSoonBody:
+    "You're on the Free plan — enjoy everything free for now. Pro upgrades will open shortly.",
+  missingIntro: "Add these to complete your shop — just hold and speak again:",
+  missingName: "shop name",
+  missingPhone: "phone number",
+  missingAddress: "address",
+  missingProducts: "what you sell",
+  missingHours: "opening hours",
+  nearbyExpandingTitle: "We're expanding in your area!",
+  nearbyExpandingSub:
+    "Which local shop do you want to see here? Enter its name or phone number and we'll bring it online.",
+  nearbyRequestPlaceholder: "Shop name or phone number",
+  nearbyRequestCta: "Request this shop",
+  nearbyRequestThanks:
+    "Thanks! We've noted it and will reach out to get them online.",
+  nearbyNoMatch: "No shops match that. Try a different search or category.",
   dashTitle: "Your shops",
   dashSignedInAs: "Signed in as",
   dashManagePlan: "Manage plan",
@@ -382,7 +416,7 @@ const en: UiStrings = {
   demoTitle: "From voice to shop in under a minute",
   demoYouSpeak: "You speak",
   demoTranscript:
-    "“My name is Singh Electronics. We repair phones and sell accessories in Mohali. We have covers, chargers and screen guards.”",
+    "“My name is Singh Electronics in Mohali. Our phone number is 98765-43210. We repair phones and sell covers. We are open till 8 PM.”",
   demoSteps: [
     "Shop created",
     "QR generated",
@@ -475,7 +509,7 @@ const hi: UiStrings = {
   shareText: "देखो मेरी दुकान",
   madeWith: "BolDukaan से बनी — बोलो, दुकान तैयार",
   setLocation: "दुकान की लोकेशन सेट करें",
-  locationSet: "दुकान की लोकेशन सेट हो गई ✓",
+  locationSet: "दुकान की लोकेशन सेट हो गई",
   locationError: "लोकेशन नहीं मिली। लोकेशन की अनुमति देकर फिर कोशिश करें।",
   nearbyTitle: "आपके पास की दुकानें",
   nearbyIntro: "अपने आस-पास की दुकानें ढूँढें।",
@@ -511,6 +545,23 @@ const hi: UiStrings = {
   authAgree: "मैंने {terms} और {privacy} पढ़ ली हैं और उनसे सहमत हूँ।",
   authGoogleConsent: "जारी रखने पर आप हमारी {terms} और {privacy} से सहमत होते हैं।",
   authMustAgree: "खाता बनाने के लिए नियम व शर्तें और प्राइवेसी पॉलिसी स्वीकार करें।",
+  billComingSoonTitle: "पेड प्लान जल्द आ रहे हैं",
+  billComingSoonBody:
+    "आप Free प्लान पर हैं — फ़िलहाल सब कुछ मुफ़्त। Pro अपग्रेड जल्द शुरू होगा।",
+  missingIntro: "दुकान पूरी करने के लिए ये भी बताएँ — दबाकर फिर बोलें:",
+  missingName: "दुकान का नाम",
+  missingPhone: "फ़ोन नंबर",
+  missingAddress: "पता",
+  missingProducts: "आप क्या बेचते हैं",
+  missingHours: "खुलने का समय",
+  nearbyExpandingTitle: "हम आपके इलाके में आ रहे हैं!",
+  nearbyExpandingSub:
+    "आप यहाँ कौन सी दुकान देखना चाहते हैं? उसका नाम या फ़ोन नंबर लिखें, हम उसे ऑनलाइन लाएँगे।",
+  nearbyRequestPlaceholder: "दुकान का नाम या फ़ोन नंबर",
+  nearbyRequestCta: "यह दुकान माँगें",
+  nearbyRequestThanks:
+    "धन्यवाद! हमने नोट कर लिया और उन्हें ऑनलाइन लाने के लिए संपर्क करेंगे।",
+  nearbyNoMatch: "इससे मिलती दुकान नहीं मिली। कोई और खोज या श्रेणी आज़माएँ।",
   dashTitle: "आपकी दुकानें",
   dashSignedInAs: "साइन इन:",
   dashManagePlan: "प्लान देखें",
@@ -568,7 +619,7 @@ const hi: UiStrings = {
   demoTitle: "आवाज़ से दुकान — एक मिनट से कम में",
   demoYouSpeak: "आप बोलते हैं",
   demoTranscript:
-    "“मेरी दुकान सिंह इलेक्ट्रॉनिक्स है। मोहाली में फ़ोन रिपेयर करते हैं और एक्सेसरीज़ बेचते हैं। कवर, चार्जर और स्क्रीन गार्ड मिलते हैं।”",
+    "“मेरी दुकान सिंह इलेक्ट्रॉनिक्स है, मोहाली में। हमारा फ़ोन नंबर 98765-43210 है। हम फ़ोन रिपेयर करते हैं और कवर बेचते हैं। हम रात 8 बजे तक खुले रहते हैं।”",
   demoSteps: [
     "दुकान बन गई",
     "QR बन गया",
@@ -664,7 +715,7 @@ const pa: UiStrings = {
   shareText: "ਵੇਖੋ ਮੇਰੀ ਦੁਕਾਨ",
   madeWith: "BolDukaan ਨਾਲ ਬਣੀ — ਬੋਲੋ, ਦੁਕਾਨ ਤਿਆਰ",
   setLocation: "ਦੁਕਾਨ ਦੀ ਲੋਕੇਸ਼ਨ ਸੈੱਟ ਕਰੋ",
-  locationSet: "ਦੁਕਾਨ ਦੀ ਲੋਕੇਸ਼ਨ ਸੈੱਟ ਹੋ ਗਈ ✓",
+  locationSet: "ਦੁਕਾਨ ਦੀ ਲੋਕੇਸ਼ਨ ਸੈੱਟ ਹੋ ਗਈ",
   locationError: "ਲੋਕੇਸ਼ਨ ਨਹੀਂ ਮਿਲੀ। ਲੋਕੇਸ਼ਨ ਦੀ ਇਜਾਜ਼ਤ ਦੇ ਕੇ ਮੁੜ ਕੋਸ਼ਿਸ਼ ਕਰੋ।",
   nearbyTitle: "ਤੁਹਾਡੇ ਨੇੜੇ ਦੀਆਂ ਦੁਕਾਨਾਂ",
   nearbyIntro: "ਆਪਣੇ ਨੇੜੇ ਦੀਆਂ ਦੁਕਾਨਾਂ ਲੱਭੋ।",
@@ -700,6 +751,23 @@ const pa: UiStrings = {
   authAgree: "ਮੈਂ {terms} ਅਤੇ {privacy} ਪੜ੍ਹੀਆਂ ਹਨ ਅਤੇ ਇਨ੍ਹਾਂ ਨਾਲ ਸਹਿਮਤ ਹਾਂ।",
   authGoogleConsent: "ਜਾਰੀ ਰੱਖਣ 'ਤੇ ਤੁਸੀਂ ਸਾਡੀਆਂ {terms} ਅਤੇ {privacy} ਨਾਲ ਸਹਿਮਤ ਹੁੰਦੇ ਹੋ।",
   authMustAgree: "ਖਾਤਾ ਬਣਾਉਣ ਲਈ ਨਿਯਮ ਤੇ ਸ਼ਰਤਾਂ ਅਤੇ ਪ੍ਰਾਈਵੇਸੀ ਪਾਲਿਸੀ ਸਵੀਕਾਰ ਕਰੋ।",
+  billComingSoonTitle: "ਪੇਡ ਪਲਾਨ ਜਲਦੀ ਆ ਰਹੇ ਹਨ",
+  billComingSoonBody:
+    "ਤੁਸੀਂ Free ਪਲਾਨ 'ਤੇ ਹੋ — ਹੁਣ ਸਭ ਕੁਝ ਮੁਫ਼ਤ। Pro ਅੱਪਗ੍ਰੇਡ ਜਲਦੀ ਸ਼ੁਰੂ ਹੋਵੇਗਾ।",
+  missingIntro: "ਦੁਕਾਨ ਪੂਰੀ ਕਰਨ ਲਈ ਇਹ ਵੀ ਦੱਸੋ — ਦਬਾ ਕੇ ਮੁੜ ਬੋਲੋ:",
+  missingName: "ਦੁਕਾਨ ਦਾ ਨਾਮ",
+  missingPhone: "ਫ਼ੋਨ ਨੰਬਰ",
+  missingAddress: "ਪਤਾ",
+  missingProducts: "ਤੁਸੀਂ ਕੀ ਵੇਚਦੇ ਹੋ",
+  missingHours: "ਖੁੱਲ੍ਹਣ ਦਾ ਸਮਾਂ",
+  nearbyExpandingTitle: "ਅਸੀਂ ਤੁਹਾਡੇ ਇਲਾਕੇ ਵਿੱਚ ਆ ਰਹੇ ਹਾਂ!",
+  nearbyExpandingSub:
+    "ਤੁਸੀਂ ਇੱਥੇ ਕਿਹੜੀ ਦੁਕਾਨ ਵੇਖਣਾ ਚਾਹੁੰਦੇ ਹੋ? ਉਸ ਦਾ ਨਾਮ ਜਾਂ ਫ਼ੋਨ ਨੰਬਰ ਲਿਖੋ, ਅਸੀਂ ਉਸ ਨੂੰ ਆਨਲਾਈਨ ਲਿਆਵਾਂਗੇ।",
+  nearbyRequestPlaceholder: "ਦੁਕਾਨ ਦਾ ਨਾਮ ਜਾਂ ਫ਼ੋਨ ਨੰਬਰ",
+  nearbyRequestCta: "ਇਹ ਦੁਕਾਨ ਮੰਗੋ",
+  nearbyRequestThanks:
+    "ਧੰਨਵਾਦ! ਅਸੀਂ ਨੋਟ ਕਰ ਲਿਆ ਅਤੇ ਉਨ੍ਹਾਂ ਨੂੰ ਆਨਲਾਈਨ ਲਿਆਉਣ ਲਈ ਸੰਪਰਕ ਕਰਾਂਗੇ।",
+  nearbyNoMatch: "ਇਸ ਨਾਲ ਮਿਲਦੀ ਦੁਕਾਨ ਨਹੀਂ ਮਿਲੀ। ਕੋਈ ਹੋਰ ਖੋਜ ਜਾਂ ਸ਼੍ਰੇਣੀ ਅਜ਼ਮਾਓ।",
   dashTitle: "ਤੁਹਾਡੀਆਂ ਦੁਕਾਨਾਂ",
   dashSignedInAs: "ਸਾਈਨ ਇਨ:",
   dashManagePlan: "ਪਲਾਨ ਵੇਖੋ",
@@ -757,7 +825,7 @@ const pa: UiStrings = {
   demoTitle: "ਆਵਾਜ਼ ਤੋਂ ਦੁਕਾਨ — ਇੱਕ ਮਿੰਟ ਤੋਂ ਘੱਟ ਵਿੱਚ",
   demoYouSpeak: "ਤੁਸੀਂ ਬੋਲਦੇ ਹੋ",
   demoTranscript:
-    "“ਮੇਰੀ ਦੁਕਾਨ ਸਿੰਘ ਇਲੈਕਟ੍ਰਾਨਿਕਸ ਹੈ। ਮੋਹਾਲੀ ਵਿੱਚ ਫ਼ੋਨ ਰਿਪੇਅਰ ਕਰਦੇ ਹਾਂ ਅਤੇ ਐਕਸੈਸਰੀਜ਼ ਵੇਚਦੇ ਹਾਂ। ਕਵਰ, ਚਾਰਜਰ ਅਤੇ ਸਕ੍ਰੀਨ ਗਾਰਡ ਮਿਲਦੇ ਹਨ।”",
+    "“ਮੇਰੀ ਦੁਕਾਨ ਸਿੰਘ ਇਲੈਕਟ੍ਰਾਨਿਕਸ ਹੈ, ਮੋਹਾਲੀ ਵਿੱਚ। ਸਾਡਾ ਫ਼ੋਨ ਨੰਬਰ 98765-43210 ਹੈ। ਅਸੀਂ ਫ਼ੋਨ ਰਿਪੇਅਰ ਕਰਦੇ ਹਾਂ ਅਤੇ ਕਵਰ ਵੇਚਦੇ ਹਾਂ। ਅਸੀਂ ਰਾਤ 8 ਵਜੇ ਤੱਕ ਖੁੱਲ੍ਹੇ ਰਹਿੰਦੇ ਹਾਂ।”",
   demoSteps: [
     "ਦੁਕਾਨ ਬਣ ਗਈ",
     "QR ਬਣ ਗਿਆ",

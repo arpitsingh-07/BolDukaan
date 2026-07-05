@@ -5,6 +5,7 @@ import { LangSwitcher } from "@/components/LangSwitcher";
 import { LandingDemo } from "@/components/LandingDemo";
 import { BrandMark } from "@/components/BrandMark";
 import { BrandName } from "@/components/BrandName";
+import { SearchIcon, StoreIcon, CheckIcon } from "@/components/icons";
 import { t } from "@/lib/i18n";
 import { viewerLang } from "@/lib/server-lang";
 import styles from "./landing.module.css";
@@ -77,7 +78,7 @@ export default async function LandingPage() {
           <div className={styles.ctaRow}>
             <Link href="/nearby" className={styles.ctaCard}>
               <span className={styles.ctaIcon} aria-hidden>
-                🔍
+                <SearchIcon size={26} />
               </span>
               <span>
                 <span className={styles.ctaTitle}>{tr.findShopsCta}</span>
@@ -89,7 +90,7 @@ export default async function LandingPage() {
               className={`${styles.ctaCard} ${styles.ctaRegister}`}
             >
               <span className={styles.ctaIcon} aria-hidden>
-                🏪
+                <StoreIcon size={26} />
               </span>
               <span>
                 <span className={styles.ctaTitle}>{tr.registerShopCta}</span>
@@ -102,7 +103,7 @@ export default async function LandingPage() {
             {tr.trustItems.map((item) => (
               <span key={item} className={styles.trustChip}>
                 <span className={styles.trustTick} aria-hidden>
-                  ✓
+                  <CheckIcon size={13} />
                 </span>
                 {item}
               </span>

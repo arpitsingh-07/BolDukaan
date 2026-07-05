@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { auth } from "@/auth";
 import { isDbConfigured } from "@/lib/db";
-import { verifyPaymentSignature } from "@/lib/razorpay";
+import { verifyPaymentSignature, isBillingEnabled } from "@/lib/razorpay";
 import { activateProByOrder } from "@/lib/subscriptions";
 
 export const runtime = "nodejs";
@@ -19,6 +19,12 @@ interface VerifyBody {
 export async function POST(request: Request) {
   if (!isDbConfigured()) {
     return NextResponse.json({ error: "Database not configured." }, { status: 503 });
+  }
+  if (!isBillingEnabled()) {
+    return NextResponse.json(
+      { error: "Subscriptions are paused right now." },
+      { status: 503 },
+    );
   }
 
   const session = await auth();

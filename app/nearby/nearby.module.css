@@ -268,9 +268,55 @@
   color: var(--muted);
 }
 .open {
+  display: inline-flex;
+  align-items: center;
   font-size: 13px;
   font-weight: 600;
   color: var(--green);
+}
+.dotGreen {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--green);
+  margin-right: 6px;
+}
+.demandBox {
+  margin-top: 18px;
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-card);
+  padding: 20px;
+  box-shadow: var(--shadow-card);
+}
+.demandTitle {
+  font-family: var(--font-display-stack);
+  font-weight: 800;
+  font-size: 20px;
+  letter-spacing: -0.01em;
+  color: var(--ink);
+  margin: 0 0 6px;
+}
+.demandSub {
+  font-size: 14px;
+  line-height: 1.55;
+  color: var(--muted);
+  margin: 0 0 14px;
+}
+.demandForm {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.demandForm .search {
+  margin-top: 0;
+}
+.demandThanks {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--green);
+  margin: 0;
 }
 .closed {
   font-size: 13px;
