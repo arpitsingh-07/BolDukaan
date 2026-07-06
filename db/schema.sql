@@ -69,6 +69,16 @@ CREATE TABLE IF NOT EXISTS shop_requests (
 );
 CREATE INDEX IF NOT EXISTS shop_requests_geo_idx ON shop_requests (lat, lng);
 
+-- Visitor reports about a shop (fake/illegal/wrong info). Feeds the Grievance
+-- Officer review required by India's IT Rules.
+CREATE TABLE IF NOT EXISTS shop_reports (
+  id          UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  slug        TEXT NOT NULL,
+  reason      TEXT NOT NULL,
+  created_at  TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+CREATE INDEX IF NOT EXISTS shop_reports_slug_idx ON shop_reports (slug);
+
 -- M3: billing. One row per owner (free by default; flips to pro on payment).
 CREATE TABLE IF NOT EXISTS subscriptions (
   id                 UUID PRIMARY KEY DEFAULT gen_random_uuid(),

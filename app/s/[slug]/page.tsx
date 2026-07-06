@@ -5,6 +5,7 @@ import { headers } from "next/headers";
 import { auth } from "@/auth";
 import { StorefrontCard } from "@/components/StorefrontCard";
 import { ShareButton } from "@/components/ShareButton";
+import { ReportShop } from "@/components/ReportShop";
 import { BrandMark } from "@/components/BrandMark";
 import { BrandName } from "@/components/BrandName";
 import { getPublicShopBySlug, recordView } from "@/lib/shops";
@@ -109,6 +110,10 @@ export default async function PublicStorefrontPage({ params }: Params) {
             label={tr.shareOnWhatsApp}
             shareText={tr.shareText}
           />
+        </div>
+
+        <div className={styles.reportRow}>
+          <ReportShop slug={slug} lang={lang} />
         </div>
 
         {showBranding && (

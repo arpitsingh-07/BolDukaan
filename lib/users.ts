@@ -25,6 +25,21 @@ export function isValidEmail(email: string): boolean {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 }
 
+/**
+ * Permanently delete an account and everything it owns: shops (storefronts
+ * cascade), the subscription, and — for email/password users — the users row.
+ * For Google users the users delete matches nothing (their owner id is a
+ * Google sub), which is fine; their shops and subscription still go.
+ */
+export async function deleteAccount(ownerUserId: string): Promise<void> {
+  const sql = getSql();
+  await sql.transaction([
+    sql`DELETE FROM shops WHERE owner_user_id = ${ownerUserId}`,
+    sql`DELETE FROM subscriptions WHERE owner_user_id = ${ownerUserId}`,
+    sql`DELETE FROM users WHERE id = ${ownerUserId}`,
+  ]);
+}
+
 export async function getUserByEmail(email: string): Promise<AppUser | null> {
   const sql = getSql();
   const rows = await sql`

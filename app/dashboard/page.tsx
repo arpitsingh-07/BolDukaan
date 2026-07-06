@@ -13,6 +13,7 @@ import { DashboardShops } from "@/components/DashboardShops";
 import { BrandMark } from "@/components/BrandMark";
 import { BrandName } from "@/components/BrandName";
 import { AuthForm } from "@/components/AuthForm";
+import { DeleteAccountButton } from "@/components/DeleteAccountButton";
 import styles from "./dashboard.module.css";
 
 export const dynamic = "force-dynamic";
@@ -117,6 +118,7 @@ export default async function DashboardPage() {
           <DashboardShops shops={shops} plan={plan} lang={lang} />
         )}
       </main>
+      <DeleteAccountButton lang={lang} />
     </div>
   );
 }

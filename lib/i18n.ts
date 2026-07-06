@@ -161,6 +161,14 @@ export interface UiStrings {
   actDelete: string;
   confirmDelete: string;
   proThemeNotice: string;
+  dashDeleteAccount: string;
+  confirmDeleteAccount: string;
+  // report a shop
+  reportShop: string;
+  reportPrompt: string;
+  reportPlaceholder: string;
+  reportSubmit: string;
+  reportThanks: string;
   // billing
   billTitle: string;
   billBack: string;
@@ -377,6 +385,14 @@ const en: UiStrings = {
   actDelete: "Delete",
   confirmDelete: "Delete this storefront? This can't be undone.",
   proThemeNotice: "Premium themes need Pro — see Manage plan.",
+  dashDeleteAccount: "Delete account",
+  confirmDeleteAccount:
+    "Permanently delete your account and all your shops? This can't be undone.",
+  reportShop: "Report this shop",
+  reportPrompt: "Tell us what's wrong — fake shop, wrong details, illegal, etc.",
+  reportPlaceholder: "What's the problem?",
+  reportSubmit: "Send report",
+  reportThanks: "Thanks — we'll review this shop.",
   billTitle: "Plan & billing",
   billBack: "← Dashboard",
   billCurrentFree: "Current: Free plan",
@@ -588,6 +604,14 @@ const hi: UiStrings = {
   actDelete: "हटाएँ",
   confirmDelete: "यह दुकान हटा दें? इसे वापस नहीं लाया जा सकता।",
   proThemeNotice: "प्रीमियम थीम के लिए Pro चाहिए — प्लान देखें।",
+  dashDeleteAccount: "खाता हटाएँ",
+  confirmDeleteAccount:
+    "अपना खाता और सभी दुकानें हमेशा के लिए हटा दें? इसे वापस नहीं लाया जा सकता।",
+  reportShop: "इस दुकान की शिकायत करें",
+  reportPrompt: "बताइए क्या गड़बड़ है — फ़र्ज़ी दुकान, ग़लत जानकारी, ग़ैरक़ानूनी, आदि।",
+  reportPlaceholder: "क्या समस्या है?",
+  reportSubmit: "शिकायत भेजें",
+  reportThanks: "धन्यवाद — हम इस दुकान की जाँच करेंगे।",
   billTitle: "प्लान और बिलिंग",
   billBack: "← डैशबोर्ड",
   billCurrentFree: "अभी: Free प्लान",
@@ -798,6 +822,14 @@ const pa: UiStrings = {
   actDelete: "ਹਟਾਓ",
   confirmDelete: "ਇਹ ਦੁਕਾਨ ਹਟਾ ਦੇਈਏ? ਇਹ ਵਾਪਸ ਨਹੀਂ ਆਵੇਗੀ।",
   proThemeNotice: "ਪ੍ਰੀਮੀਅਮ ਥੀਮ ਲਈ Pro ਚਾਹੀਦਾ ਹੈ — ਪਲਾਨ ਵੇਖੋ।",
+  dashDeleteAccount: "ਖਾਤਾ ਹਟਾਓ",
+  confirmDeleteAccount:
+    "ਆਪਣਾ ਖਾਤਾ ਅਤੇ ਸਾਰੀਆਂ ਦੁਕਾਨਾਂ ਹਮੇਸ਼ਾ ਲਈ ਹਟਾ ਦੇਈਏ? ਇਹ ਵਾਪਸ ਨਹੀਂ ਆਵੇਗਾ।",
+  reportShop: "ਇਸ ਦੁਕਾਨ ਦੀ ਸ਼ਿਕਾਇਤ ਕਰੋ",
+  reportPrompt: "ਦੱਸੋ ਕੀ ਗ਼ਲਤ ਹੈ — ਜਾਅਲੀ ਦੁਕਾਨ, ਗ਼ਲਤ ਜਾਣਕਾਰੀ, ਗ਼ੈਰਕਾਨੂੰਨੀ, ਆਦਿ।",
+  reportPlaceholder: "ਕੀ ਸਮੱਸਿਆ ਹੈ?",
+  reportSubmit: "ਸ਼ਿਕਾਇਤ ਭੇਜੋ",
+  reportThanks: "ਧੰਨਵਾਦ — ਅਸੀਂ ਇਸ ਦੁਕਾਨ ਦੀ ਜਾਂਚ ਕਰਾਂਗੇ।",
   billTitle: "ਪਲਾਨ ਅਤੇ ਬਿਲਿੰਗ",
   billBack: "← ਡੈਸ਼ਬੋਰਡ",
   billCurrentFree: "ਹੁਣ: Free ਪਲਾਨ",

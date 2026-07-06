@@ -195,6 +195,20 @@ export async function listShopsByOwner(
   }));
 }
 
+/** All active shop slugs (+ last-modified) for the sitemap. */
+export async function listActiveShopSlugs(): Promise<
+  { slug: string; updatedAt: string }[]
+> {
+  const sql = getSql();
+  const rows = await sql`
+    SELECT slug, updated_at FROM shops WHERE status = 'active'
+    ORDER BY updated_at DESC LIMIT 5000`;
+  return rows.map((r) => ({
+    slug: r.slug as string,
+    updatedAt: String(r.updated_at),
+  }));
+}
+
 /** Increment the public view counter (best-effort; only for active shops). */
 export async function recordView(slug: string): Promise<void> {
   const sql = getSql();
@@ -338,6 +352,15 @@ export interface NearbyShop {
   products: string[];
   manuallyClosed: boolean;
   distanceKm: number;
+}
+
+/** Record a visitor's report about a shop (for Grievance Officer review). */
+export async function recordShopReport(input: {
+  slug: string;
+  reason: string;
+}): Promise<void> {
+  const sql = getSql();
+  await sql`INSERT INTO shop_reports (slug, reason) VALUES (${input.slug}, ${input.reason})`;
 }
 
 /**

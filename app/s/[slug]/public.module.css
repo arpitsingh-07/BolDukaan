@@ -53,6 +53,10 @@
 .shareRow {
   margin-top: 2px;
 }
+.reportRow {
+  margin-top: 8px;
+  text-align: center;
+}
 
 .footer {
   margin-top: 8px;
