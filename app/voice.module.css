@@ -503,6 +503,21 @@
   font-family: inherit;
   cursor: pointer;
 }
+/* Required state: marigold-outlined chip that draws the eye to the one thing
+   blocking publish. */
+.locationBtnRequired {
+  composes: locationBtn;
+  background: rgba(245, 158, 27, 0.12);
+  color: var(--marigold-deep);
+  border: 1px solid var(--marigold);
+}
+.locationRequiredNote {
+  margin: 8px 0 0;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--marigold-deep);
+  text-align: center;
+}
 .locationSet {
   font-size: 13px;
   font-weight: 600;

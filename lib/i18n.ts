@@ -91,6 +91,7 @@ export interface UiStrings {
   setLocation: string;
   locationSet: string;
   locationError: string;
+  locationRequired: string;
   nearbyTitle: string;
   nearbyIntro: string;
   nearbyUseLocation: string;
@@ -307,6 +308,8 @@ const en: UiStrings = {
   locationSet: "Shop location set",
   locationError:
     "Couldn't get your location. Allow location access and try again.",
+  locationRequired:
+    "Set your shop location to publish — it's how customers find you in nearby search.",
   nearbyTitle: "Shops near you",
   nearbyIntro: "Find local shops around you.",
   nearbyUseLocation: "Use my location",
@@ -517,6 +520,8 @@ const hi: UiStrings = {
   setLocation: "दुकान की लोकेशन सेट करें",
   locationSet: "दुकान की लोकेशन सेट हो गई",
   locationError: "लोकेशन नहीं मिली। लोकेशन की अनुमति देकर फिर कोशिश करें।",
+  locationRequired:
+    "पब्लिश करने के लिए दुकान की लोकेशन सेट करें — पास की खोज में यही से आप मिलेंगे।",
   nearbyTitle: "आपके पास की दुकानें",
   nearbyIntro: "अपने आस-पास की दुकानें ढूँढें।",
   nearbyUseLocation: "मेरी लोकेशन इस्तेमाल करें",
@@ -725,6 +730,8 @@ const pa: UiStrings = {
   setLocation: "ਦੁਕਾਨ ਦੀ ਲੋਕੇਸ਼ਨ ਸੈੱਟ ਕਰੋ",
   locationSet: "ਦੁਕਾਨ ਦੀ ਲੋਕੇਸ਼ਨ ਸੈੱਟ ਹੋ ਗਈ",
   locationError: "ਲੋਕੇਸ਼ਨ ਨਹੀਂ ਮਿਲੀ। ਲੋਕੇਸ਼ਨ ਦੀ ਇਜਾਜ਼ਤ ਦੇ ਕੇ ਮੁੜ ਕੋਸ਼ਿਸ਼ ਕਰੋ।",
+  locationRequired:
+    "ਪਬਲਿਸ਼ ਕਰਨ ਲਈ ਦੁਕਾਨ ਦੀ ਲੋਕੇਸ਼ਨ ਸੈੱਟ ਕਰੋ — ਨੇੜੇ ਦੀ ਖੋਜ ਵਿੱਚ ਇਸੇ ਨਾਲ ਤੁਸੀਂ ਮਿਲੋਗੇ।",
   nearbyTitle: "ਤੁਹਾਡੇ ਨੇੜੇ ਦੀਆਂ ਦੁਕਾਨਾਂ",
   nearbyIntro: "ਆਪਣੇ ਨੇੜੇ ਦੀਆਂ ਦੁਕਾਨਾਂ ਲੱਭੋ।",
   nearbyUseLocation: "ਮੇਰੀ ਲੋਕੇਸ਼ਨ ਵਰਤੋ",

@@ -519,6 +519,13 @@ export function VoiceOnboarding({
   // Render from state (the ref mirrors it for stable callbacks only).
   const caption = storefront ? tr.holdToAddMore : tr.holdToSpeak;
 
+  // Location is mandatory to publish a NEW shop — it's what makes the shop
+  // appear in area/nearby search and gives a reliable "Get directions".
+  // Edits (existing slug, or already published) keep their saved coordinates,
+  // so they aren't forced to re-capture.
+  const requireLocation = !initialSlug && !publicUrl;
+  const locationBlocksPublish = requireLocation && !locationSet;
+
   // Key fields a shop really needs. If any are missing after structuring, we
   // suggest them back so the owner can fill the gaps by speaking again —
   // rather than silently shipping a half-empty page.
@@ -735,7 +742,11 @@ export function VoiceOnboarding({
                 ) : (
                   <button
                     type="button"
-                    className={styles.locationBtn}
+                    className={
+                      locationBlocksPublish
+                        ? styles.locationBtnRequired
+                        : styles.locationBtn
+                    }
                     onClick={captureLocation}
                   >
                     <PinIcon size={15} />
@@ -743,6 +754,11 @@ export function VoiceOnboarding({
                   </button>
                 )}
               </div>
+              {locationBlocksPublish && (
+                <p className={styles.locationRequiredNote}>
+                  {tr.locationRequired}
+                </p>
+              )}
               {locationError && (
                 <p className={styles.publishErrorNote}>{locationError}</p>
               )}
@@ -802,7 +818,7 @@ export function VoiceOnboarding({
                   type="button"
                   className={styles.primaryBtn}
                   onClick={publish}
-                  disabled={publishing}
+                  disabled={publishing || locationBlocksPublish}
                 >
                   {publishing ? tr.publishing : tr.publishCta}
                 </button>
