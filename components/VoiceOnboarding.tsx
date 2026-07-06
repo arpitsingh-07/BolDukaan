@@ -10,15 +10,17 @@ import {
 } from "react";
 import { useRouter } from "next/navigation";
 import { createSpeechToText, type SttSession } from "@/lib/stt";
-import type { Storefront } from "@/lib/storefront";
+import { sanitizeStorefront, type Storefront } from "@/lib/storefront";
 import { UI_LANGS, uiToSttLang, t, LANG_COOKIE, type UiLang } from "@/lib/i18n";
 import { StorefrontCard } from "./StorefrontCard";
+import { StorefrontEditor } from "./StorefrontEditor";
 import { ShareButton } from "./ShareButton";
 import { QrCode } from "./QrCode";
 import { PosterButtons } from "./PosterButton";
 import { BrandMark } from "./BrandMark";
 import { BrandName } from "./BrandName";
 import { PinIcon } from "./PinIcon";
+import { PencilIcon } from "./icons";
 import styles from "@/app/voice.module.css";
 
 const BAR_COUNT = 5;
@@ -118,6 +120,10 @@ export function VoiceOnboarding({
     initialStorefront,
   );
   const [partial, setPartial] = useState(false);
+  const [editing, setEditing] = useState(false);
+  // Bumped only when a NEW structuring result arrives, so the card's entrance
+  // animation replays on voice edits but NOT on every manual keystroke.
+  const [revealKey, setRevealKey] = useState(0);
   const [error, setError] = useState<string | null>(null);
   const [levels, setLevels] = useState<number[]>(() =>
     new Array(BAR_COUNT).fill(0.4),
@@ -317,6 +323,7 @@ export function VoiceOnboarding({
       }
       setStorefront(data.storefront);
       setPartial(Boolean(data.partial));
+      setRevealKey((k) => k + 1);
       setStatus("done");
     } catch {
       setError(trNow.errNetwork);
@@ -334,7 +341,10 @@ export function VoiceOnboarding({
         method: "POST",
         headers: { "content-type": "application/json" },
         body: JSON.stringify({
-          storefront: { ...storefrontRef.current, images: imagesRef.current },
+          storefront: sanitizeStorefront({
+            ...storefrontRef.current,
+            images: imagesRef.current,
+          }),
           transcript: lastTranscriptRef.current,
           // Present on re-publish → server updates the same shop (token-gated).
           slug: publishedSlugRef.current,
@@ -490,6 +500,7 @@ export function VoiceOnboarding({
     setStorefront(null);
     storefrontRef.current = null;
     setPartial(false);
+    setEditing(false);
     setLiveTranscript("");
     setTypedText("");
     setError(null);
@@ -526,22 +537,27 @@ export function VoiceOnboarding({
   const requireLocation = !initialSlug && !publicUrl;
   const locationBlocksPublish = requireLocation && !locationSet;
 
+  // Trimmed/blank-stripped view — what actually gets published and previewed.
+  // Manual edits may leave empty strings or blank product rows behind; cleaning
+  // here keeps the preview honest and the missing-field checks accurate.
+  const cleanStorefront = storefront ? sanitizeStorefront(storefront) : null;
+
   // Key fields a shop really needs. If any are missing after structuring, we
-  // suggest them back so the owner can fill the gaps by speaking again —
+  // suggest them back so the owner can fill the gaps by speaking (or typing) —
   // rather than silently shipping a half-empty page.
   const missingFields: string[] = [];
-  if (storefront) {
-    if (!storefront.name) missingFields.push(tr.missingName);
+  if (cleanStorefront) {
+    if (!cleanStorefront.name) missingFields.push(tr.missingName);
     // Prompt for a number only when none was given — no format filtering
     // (international numbers vary; we accept whatever the owner provides).
-    if (!storefront.phone && !storefront.whatsapp)
+    if (!cleanStorefront.phone && !cleanStorefront.whatsapp)
       missingFields.push(tr.missingPhone);
-    if (!storefront.address) missingFields.push(tr.missingAddress);
-    if (storefront.products.length === 0)
+    if (!cleanStorefront.address) missingFields.push(tr.missingAddress);
+    if (cleanStorefront.products.length === 0)
       missingFields.push(tr.missingProducts);
     const hasHours =
-      storefront.hours &&
-      Object.values(storefront.hours).some((d) => d && d.open);
+      cleanStorefront.hours &&
+      Object.values(cleanStorefront.hours).some((d) => d && d.open);
     if (!hasHours) missingFields.push(tr.missingHours);
   }
 
@@ -680,13 +696,33 @@ export function VoiceOnboarding({
                 {tr.yourVoice}
                 <span className={styles.arrow}>↓</span>
               </p>
-              <div className={styles.reveal} key={JSON.stringify(storefront)}>
+              <div className={styles.reveal} key={revealKey}>
                 <StorefrontCard
-                  storefront={{ ...storefront, images }}
+                  storefront={{ ...cleanStorefront!, images }}
                   lang={uiLang}
                 />
               </div>
               {partial && <p className={styles.partialNote}>{tr.partialNote}</p>}
+
+              <button
+                type="button"
+                className={styles.editToggle}
+                aria-expanded={editing}
+                onClick={() => setEditing((v) => !v)}
+              >
+                <PencilIcon size={14} />
+                {editing ? tr.editDone : tr.editDetails}
+              </button>
+              {editing && (
+                <StorefrontEditor
+                  value={storefront}
+                  lang={uiLang}
+                  onChange={(next) => {
+                    storefrontRef.current = next;
+                    setStorefront(next);
+                  }}
+                />
+              )}
 
               {missingFields.length > 0 && (
                 <div className={styles.missingBox}>
@@ -786,7 +822,7 @@ export function VoiceOnboarding({
                   </div>
 
                   <PosterButtons
-                    storefront={{ ...storefront, images }}
+                    storefront={{ ...cleanStorefront!, images }}
                     url={publicUrl}
                     scanLabel={tr.posterScan}
                     downloadLabel={tr.posterDownload}
@@ -794,13 +830,13 @@ export function VoiceOnboarding({
                   />
 
                   <ShareButton
-                    name={storefront.name}
+                    name={cleanStorefront!.name}
                     url={publicUrl}
                     label={tr.shareOnWhatsApp}
                     fullText={tr.waShareMessage({
-                      name: storefront.name,
-                      address: storefront.address,
-                      products: storefront.products.map((p) => p.name),
+                      name: cleanStorefront!.name,
+                      address: cleanStorefront!.address,
+                      products: cleanStorefront!.products.map((p) => p.name),
                       url: publicUrl,
                     })}
                   />

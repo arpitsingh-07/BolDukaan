@@ -1,0 +1,159 @@
+/* Per-field storefront editor. Lives on the paper result surface, so inputs are
+   white with hairline borders and petrol focus — no default browser chrome. */
+.editor {
+  margin-top: 12px;
+  background: var(--surface-tint);
+  border-radius: var(--radius-card);
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.intro {
+  margin: 0;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--muted);
+  line-height: 1.4;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.label {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+/* Name + WhatsApp sit side by side on all but the narrowest screens. */
+.pair {
+  display: flex;
+  gap: 10px;
+}
+.pair .field {
+  flex: 1;
+  min-width: 0;
+}
+
+.input,
+.textarea,
+.timeInput,
+.priceInput {
+  width: 100%;
+  border: 1px solid var(--line);
+  background: #fff;
+  color: var(--ink);
+  border-radius: var(--radius-control);
+  padding: 10px 12px;
+  font-family: inherit;
+  font-size: 15px;
+  line-height: 1.4;
+}
+.textarea {
+  resize: vertical;
+  min-height: 44px;
+}
+.input:focus,
+.textarea:focus,
+.timeInput:focus,
+.priceInput:focus {
+  outline: none;
+  border-color: var(--petrol);
+  box-shadow: 0 0 0 3px rgba(12, 59, 56, 0.12);
+}
+
+/* ---- hours ---- */
+.hours {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.dayRow {
+  display: grid;
+  grid-template-columns: 44px 1fr auto 1fr;
+  align-items: center;
+  gap: 8px;
+}
+.dayLabel {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ink);
+}
+.dash {
+  color: var(--muted);
+  text-align: center;
+}
+.timeInput {
+  padding: 8px 10px;
+  font-size: 14px;
+}
+
+/* ---- products ---- */
+.products {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.productRow {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-control);
+  padding: 10px;
+}
+.productMain {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+.productMain .input {
+  flex: 1;
+  min-width: 0;
+}
+.productRow .input {
+  border-color: var(--line);
+}
+.priceInput {
+  width: 92px;
+  flex: none;
+}
+.removeBtn {
+  flex: none;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  border: none;
+  background: var(--surface-tint);
+  color: var(--ink);
+  font-size: 18px;
+  line-height: 1;
+  cursor: pointer;
+}
+.removeBtn:hover {
+  background: var(--line);
+}
+.addBtn {
+  align-self: flex-start;
+  background: transparent;
+  border: 1px dashed var(--line);
+  border-radius: var(--radius-control);
+  padding: 9px 14px;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--petrol);
+  cursor: pointer;
+}
+.addBtn:hover {
+  background: #fff;
+  border-color: var(--petrol);
+}

@@ -138,6 +138,23 @@ export interface UiStrings {
   missingAddress: string;
   missingProducts: string;
   missingHours: string;
+  // per-field editor — fix mis-heard details without re-speaking
+  editDetails: string;
+  editIntro: string;
+  editDone: string;
+  editName: string;
+  editTagline: string;
+  editCategory: string;
+  editAbout: string;
+  editPhone: string;
+  editProducts: string;
+  editItemName: string;
+  editItemPrice: string;
+  editItemNote: string;
+  editAddItem: string;
+  editRemoveItem: string;
+  editOpen: string;
+  editClose: string;
   // nearby demand generation (no shops nearby yet)
   nearbyExpandingTitle: string;
   nearbyExpandingSub: string;
@@ -362,6 +379,22 @@ const en: UiStrings = {
   missingAddress: "address",
   missingProducts: "what you sell",
   missingHours: "opening hours",
+  editDetails: "Edit details",
+  editIntro: "Fix anything we misheard — no need to speak again.",
+  editDone: "Done",
+  editName: "Shop name",
+  editTagline: "Tagline",
+  editCategory: "Category",
+  editAbout: "About the shop",
+  editPhone: "Phone",
+  editProducts: "Items you sell",
+  editItemName: "Item",
+  editItemPrice: "Price",
+  editItemNote: "Note",
+  editAddItem: "+ Add item",
+  editRemoveItem: "Remove item",
+  editOpen: "Opens",
+  editClose: "Closes",
   nearbyExpandingTitle: "We're expanding in your area!",
   nearbyExpandingSub:
     "Which local shop do you want to see here? Enter its name or phone number and we'll bring it online.",
@@ -581,6 +614,22 @@ const hi: UiStrings = {
   missingAddress: "पता",
   missingProducts: "आप क्या बेचते हैं",
   missingHours: "खुलने का समय",
+  editDetails: "जानकारी ठीक करें",
+  editIntro: "जो ग़लत सुना उसे यहीं ठीक करें — दोबारा बोलने की ज़रूरत नहीं।",
+  editDone: "हो गया",
+  editName: "दुकान का नाम",
+  editTagline: "टैगलाइन",
+  editCategory: "श्रेणी",
+  editAbout: "दुकान के बारे में",
+  editPhone: "फ़ोन",
+  editProducts: "आपका सामान",
+  editItemName: "सामान",
+  editItemPrice: "दाम",
+  editItemNote: "नोट",
+  editAddItem: "+ सामान जोड़ें",
+  editRemoveItem: "सामान हटाएँ",
+  editOpen: "खुलता है",
+  editClose: "बंद होता है",
   nearbyExpandingTitle: "हम आपके इलाके में आ रहे हैं!",
   nearbyExpandingSub:
     "आप यहाँ कौन सी दुकान देखना चाहते हैं? उसका नाम या फ़ोन नंबर लिखें, हम उसे ऑनलाइन लाएँगे।",
@@ -799,6 +848,22 @@ const pa: UiStrings = {
   missingAddress: "ਪਤਾ",
   missingProducts: "ਤੁਸੀਂ ਕੀ ਵੇਚਦੇ ਹੋ",
   missingHours: "ਖੁੱਲ੍ਹਣ ਦਾ ਸਮਾਂ",
+  editDetails: "ਜਾਣਕਾਰੀ ਠੀਕ ਕਰੋ",
+  editIntro: "ਜੋ ਗ਼ਲਤ ਸੁਣਿਆ ਉਹ ਇੱਥੇ ਠੀਕ ਕਰੋ — ਮੁੜ ਬੋਲਣ ਦੀ ਲੋੜ ਨਹੀਂ।",
+  editDone: "ਹੋ ਗਿਆ",
+  editName: "ਦੁਕਾਨ ਦਾ ਨਾਮ",
+  editTagline: "ਟੈਗਲਾਈਨ",
+  editCategory: "ਸ਼੍ਰੇਣੀ",
+  editAbout: "ਦੁਕਾਨ ਬਾਰੇ",
+  editPhone: "ਫ਼ੋਨ",
+  editProducts: "ਤੁਹਾਡਾ ਸਮਾਨ",
+  editItemName: "ਸਮਾਨ",
+  editItemPrice: "ਕੀਮਤ",
+  editItemNote: "ਨੋਟ",
+  editAddItem: "+ ਸਮਾਨ ਸ਼ਾਮਲ ਕਰੋ",
+  editRemoveItem: "ਸਮਾਨ ਹਟਾਓ",
+  editOpen: "ਖੁੱਲ੍ਹਦਾ ਹੈ",
+  editClose: "ਬੰਦ ਹੁੰਦਾ ਹੈ",
   nearbyExpandingTitle: "ਅਸੀਂ ਤੁਹਾਡੇ ਇਲਾਕੇ ਵਿੱਚ ਆ ਰਹੇ ਹਾਂ!",
   nearbyExpandingSub:
     "ਤੁਸੀਂ ਇੱਥੇ ਕਿਹੜੀ ਦੁਕਾਨ ਵੇਖਣਾ ਚਾਹੁੰਦੇ ਹੋ? ਉਸ ਦਾ ਨਾਮ ਜਾਂ ਫ਼ੋਨ ਨੰਬਰ ਲਿਖੋ, ਅਸੀਂ ਉਸ ਨੂੰ ਆਨਲਾਈਨ ਲਿਆਵਾਂਗੇ।",

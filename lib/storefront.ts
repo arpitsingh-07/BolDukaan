@@ -99,6 +99,62 @@ export function emptyStorefront(): Storefront {
   };
 }
 
+/** A full hours object with every day closed — the seed for manual editing. */
+export function emptyHours(): NonNullable<Storefront["hours"]> {
+  return {
+    mon: null,
+    tue: null,
+    wed: null,
+    thu: null,
+    fri: null,
+    sat: null,
+    sun: null,
+  };
+}
+
+/**
+ * Normalise a manually-edited storefront before preview/publish: trim strings
+ * (empty → null), drop blank-name products, and collapse half-empty day rows.
+ * The zod schema accepts empty strings, but persisting them would render blank
+ * item cards and stray whitespace on the public page — so we clean here.
+ */
+export function sanitizeStorefront(s: Storefront): Storefront {
+  const clean = (v: string | null): string | null => {
+    const trimmed = v?.trim();
+    return trimmed ? trimmed : null;
+  };
+
+  const hours = s.hours
+    ? (Object.fromEntries(
+        DAY_KEYS.map((key) => {
+          const day = s.hours?.[key];
+          const open = day?.open?.trim() || null;
+          const close = day?.close?.trim() || null;
+          return [key, open || close ? { open, close } : null];
+        }),
+      ) as NonNullable<Storefront["hours"]>)
+    : null;
+
+  return {
+    ...s,
+    name: clean(s.name),
+    tagline: clean(s.tagline),
+    about: clean(s.about),
+    category: clean(s.category),
+    phone: clean(s.phone),
+    whatsapp: clean(s.whatsapp),
+    address: clean(s.address),
+    hours,
+    products: s.products
+      .map((p) => ({
+        name: p.name.trim(),
+        price: clean(p.price),
+        note: clean(p.note),
+      }))
+      .filter((p) => p.name.length > 0),
+  };
+}
+
 /** "21:00" -> "9:00 PM". Returns the raw value if it isn't HH:MM. */
 export function formatTime(hhmm: string | null | undefined): string {
   if (!hhmm) return "";

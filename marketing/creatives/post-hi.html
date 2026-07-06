@@ -1,0 +1,62 @@
+<!doctype html><html><head><meta charset="utf-8"><style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  :root{ --petrol:#0C3B38; --petrol-deep:#072724; --marigold:#F59E1B; --paper:#F4F3EF; }
+  html,body{ background:#0C3B38; }
+  .frame{ position:relative; background:var(--petrol); color:var(--paper); overflow:hidden;
+    font-family:"Nirmala UI","Segoe UI","Noto Sans",Arial,sans-serif;
+    display:flex; flex-direction:column; }
+  .enamel{ position:absolute; inset:26px; border:2px solid rgba(245,158,27,.22); border-radius:44px; pointer-events:none; }
+  .wm{ font-weight:800; letter-spacing:-1px; color:var(--paper); }
+  .wm span{ color:var(--marigold); }
+  .wm sup{ font-size:.46em; font-weight:800; }
+  .kicker{ text-transform:uppercase; letter-spacing:.18em; color:rgba(244,243,239,.55); font-weight:700; }
+  .voice{ position:relative; display:flex; align-items:center; justify-content:center; margin:0 auto; }
+  .ring{ position:absolute; border-radius:50%; border:2px solid var(--marigold); }
+  .r1{ opacity:.30; } .r2{ opacity:.5; }
+  .dot{ border-radius:50%; background:var(--marigold); display:flex; align-items:flex-end; justify-content:center;
+    box-shadow:0 18px 44px rgba(245,158,27,.42); }
+  .bars{ display:flex; align-items:flex-end; }
+  .bars i{ border-radius:6px; background:var(--petrol-deep); display:block; }
+  .free{ display:inline-flex; align-items:center; gap:12px; align-self:center; border:2px solid var(--marigold);
+    color:var(--marigold); border-radius:999px; font-weight:800; }
+  .free::before{ content:"●"; font-size:.7em; }
+  h1{ color:var(--paper); font-weight:800; line-height:1.04; letter-spacing:-1.5px; }
+  h1 span{ color:var(--marigold); }
+  .sub{ color:rgba(244,243,239,.72); font-weight:500; }
+  .steps{ color:var(--paper); font-weight:700; }
+  .steps b{ color:var(--marigold); font-weight:800; padding:0 .3em; }
+  .cta{ background:var(--marigold); color:var(--petrol-deep); font-weight:800; border-radius:999px; align-self:center; }
+  .langs{ color:rgba(244,243,239,.55); font-weight:600; }
+  .soon{ color:var(--marigold); font-weight:700; opacity:.9; }
+  .soon::before{ content:"+ "; }
+  .qrcard{ background:#fff; border-radius:28px; align-self:center; display:flex; flex-direction:column; align-items:center; }
+  .qrcard img{ display:block; }
+  .qrcard .scan{ color:var(--petrol-deep); font-weight:800; }
+
+    .frame{ width:1080px; height:1080px; }</style></head><body>
+    <div class="frame">
+    <div class="enamel"></div>
+    <div style="padding:58px 78px; flex:1; display:flex; flex-direction:column; align-items:center; text-align:center; gap:20px; justify-content:center;">
+      <div style="display:flex; flex-direction:column; align-items:center; gap:10px;">
+        <div class="wm" style="font-size:46px">Bol<span>Dukaan</span><sup>™</sup></div>
+        <div class="kicker" style="font-size:22px">बोलो · दुकान तैयार</div>
+      </div>
+      <div class="voice" style="width:168px;height:168px">
+    <span class="ring r1" style="width:168px;height:168px"></span>
+    <span class="ring r2" style="width:141px;height:141px"></span>
+    <span class="dot" style="width:114px;height:114px;padding-bottom:32px">
+      <span class="bars" style="height:44px;gap:5px">
+        <i style="width:7px;height:18px"></i><i style="width:7px;height:35px"></i><i style="width:7px;height:24px"></i><i style="width:7px;height:40px"></i><i style="width:7px;height:19px"></i>
+      </span>
+    </span>
+  </div>
+      <div class="free" style="font-size:26px; padding:12px 26px">बिलकुल मुफ़्त</div>
+      <h1 style="font-size:80px">एक मिनट में<br><span>दुकान ऑनलाइन।</span></h1>
+      <div class="sub" style="font-size:31px; max-width:820px; line-height:1.45">बस बोलिए — पेज, कैटलॉग, QR कोड और शेयर लिंक, सब अपने आप तैयार।</div>
+      <div class="steps" style="font-size:30px">बोलो <b>→</b> दुकान तैयार <b>→</b> WhatsApp शेयर</div>
+      <div class="cta" style="font-size:34px; padding:22px 52px">boldukaan.com</div>
+      <div style="display:flex; flex-direction:column; align-items:center; gap:8px;">
+        <div class="langs" style="font-size:26px">हिंदी · ਪੰਜਾਬੀ · English</div>
+        <div class="soon" style="font-size:23px">और भाषाएँ जल्द आ रही हैं</div>
+      </div>
+    </div></div></body></html>

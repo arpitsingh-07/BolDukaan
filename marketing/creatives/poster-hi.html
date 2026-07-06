@@ -1,0 +1,58 @@
+<!doctype html><html><head><meta charset="utf-8"><style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  :root{ --petrol:#0C3B38; --petrol-deep:#072724; --marigold:#F59E1B; --paper:#F4F3EF; }
+  html,body{ background:#0C3B38; }
+  .frame{ position:relative; background:var(--petrol); color:var(--paper); overflow:hidden;
+    font-family:"Nirmala UI","Segoe UI","Noto Sans",Arial,sans-serif;
+    display:flex; flex-direction:column; }
+  .enamel{ position:absolute; inset:26px; border:2px solid rgba(245,158,27,.22); border-radius:44px; pointer-events:none; }
+  .wm{ font-weight:800; letter-spacing:-1px; color:var(--paper); }
+  .wm span{ color:var(--marigold); }
+  .wm sup{ font-size:.46em; font-weight:800; }
+  .kicker{ text-transform:uppercase; letter-spacing:.18em; color:rgba(244,243,239,.55); font-weight:700; }
+  .voice{ position:relative; display:flex; align-items:center; justify-content:center; margin:0 auto; }
+  .ring{ position:absolute; border-radius:50%; border:2px solid var(--marigold); }
+  .r1{ opacity:.30; } .r2{ opacity:.5; }
+  .dot{ border-radius:50%; background:var(--marigold); display:flex; align-items:flex-end; justify-content:center;
+    box-shadow:0 18px 44px rgba(245,158,27,.42); }
+  .bars{ display:flex; align-items:flex-end; }
+  .bars i{ border-radius:6px; background:var(--petrol-deep); display:block; }
+  .free{ display:inline-flex; align-items:center; gap:12px; align-self:center; border:2px solid var(--marigold);
+    color:var(--marigold); border-radius:999px; font-weight:800; }
+  .free::before{ content:"●"; font-size:.7em; }
+  h1{ color:var(--paper); font-weight:800; line-height:1.04; letter-spacing:-1.5px; }
+  h1 span{ color:var(--marigold); }
+  .sub{ color:rgba(244,243,239,.72); font-weight:500; }
+  .steps{ color:var(--paper); font-weight:700; }
+  .steps b{ color:var(--marigold); font-weight:800; padding:0 .3em; }
+  .cta{ background:var(--marigold); color:var(--petrol-deep); font-weight:800; border-radius:999px; align-self:center; }
+  .langs{ color:rgba(244,243,239,.55); font-weight:600; }
+  .soon{ color:var(--marigold); font-weight:700; opacity:.9; }
+  .soon::before{ content:"+ "; }
+  .qrcard{ background:#fff; border-radius:28px; align-self:center; display:flex; flex-direction:column; align-items:center; }
+  .qrcard img{ display:block; }
+  .qrcard .scan{ color:var(--petrol-deep); font-weight:800; }
+
+    .frame{ width:1080px; height:1350px; }</style></head><body>
+    <div class="frame">
+    <div class="enamel"></div>
+    <div style="padding:86px 84px; flex:1; display:flex; flex-direction:column; align-items:center; text-align:center; justify-content:space-between;">
+      <div style="display:flex; flex-direction:column; align-items:center; gap:12px;">
+        <div class="wm" style="font-size:50px">Bol<span>Dukaan</span><sup>™</sup></div>
+        <div class="kicker" style="font-size:23px">बोलो · दुकान तैयार</div>
+      </div>
+      <div style="display:flex; flex-direction:column; align-items:center; gap:22px;">
+        <div class="free" style="font-size:28px; padding:12px 28px">बिलकुल मुफ़्त</div>
+        <h1 style="font-size:76px">एक मिनट में <span>दुकान ऑनलाइन।</span></h1>
+      </div>
+      <div class="qrcard" style="padding:34px 34px 26px; gap:20px">
+        <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAggAAAIICAYAAAAL/BZjAAAAAklEQVR4AewaftIAAAsYSURBVO3BQaokSZYEQK3HX/hFHPz+pzGwi9iuppaNUptsfMjoDBH56+9/BADgP0wAAMoEAKBMAADKBACgTAAAygQAoEwAAMoEAKBMAADKBACgTAAAygQAoEwAAMoEAKBMAADKBACgTAAAygQAoEwAAMpPXnY9d+DfnLXzia7nzqc6a+ct13PnE521w6+5njvwb87aecsEAKBMAADKBACgTAAAygQAoEwAAMoEAKBMAADKBACgTAAAygQAoEwAAMoEAKBMAADKBACgTAAAygQAoEwAAMpPPthZO/w+13OH3+t67vzprufOpzpr5xuctcPvcz13PtEEAKBMAADKBACgTAAAygQAoEwAAMoEAKBMAADKBACgTAAAygQAoEwAAMoEAKBMAADKBACgTAAAygQAoEwAAMpPvsT13PkGZ+18g+u584nO2uHPcT133nLWzje4njvf4KydP90EAKBMAADKBACgTAAAygQAoEwAAMoEAKBMAADKBACgTAAAygQAoEwAAMoEAKBMAADKBACgTAAAygQAoEwAAMoEAKD8BL7cWTtvuZ47bzpr5y3Xc+cbnLXzlrN24FtNAADKBACgTAAAygQAoEwAAMoEAKBMAADKBACgTAAAygQAoEwAAMoEAKBMAADKBACgTAAAygQAoEwAAMoEAKD8BL7c9dz5VNdz5y1n7fBrrufOW87agf8lEwCAMgEAKBMAgDIBACgTAIAyAQAoEwCAMgEAKBMAgDIBACgTAIAyAQAoEwCAMgEAKBMAgDIBACgTAIAyAQAoP/kSZ+3Avzlr5y3Xc+dNZ+285XrufKKzdt50PXf4fc7a4c8wAQAoEwCAMgEAKBMAgDIBACgTAIAyAQAoEwCAMgEAKBMAgDIBACgTAIAyAQAoEwCAMgEAKBMAgDIBACgTAIDykw92PXeAz3PWzluu586bztp5y/Xc+QbXcwfaBACgTAAAygQAoEwAAMoEAKBMAADKBACgTAAAygQAoEwAAMoEAKBMAADKBACgTAAAygQAoEwAAMoEAKBMAADKBACg/PX3PwL/Y67nzic6a4dfcz13PtVZO/CtJgAAZQIAUCYAAGUCAFAmAABlAgBQJgAAZQIAUCYAAGUCAFAmAABlAgBQJgAAZQIAUCYAAGUCAFAmAABlAgBQfvKy67nzlrN23nI9d/i9ztp5y1k7n+h67sD/t+u5w+911s6fbgIAUCYAAGUCAFAmAABlAgBQJgAAZQIAUCYAAGUCAFAmAABlAgBQJgAAZQIAUCYAAGUCAFAmAABlAgBQJgAA5ScvO2vnLddz5y1n7XyD67nzlrN2PtX13HnLWTv8PmftfKrrufOWs3bectbOm67nzlvO2vkG13PnLWftfKIJAECZAACUCQBAmQAAlAkAQJkAAJQJAECZAACUCQBAmQAAlAkAQJkAAJQJAECZAACUCQBAmQAAlAkAQJkAAJS//v5HXnQ9dz7RWTtvup47bzlr5xNdzx3+HGftvOV67vD7nLXzqa7nzic6a+dN13PnE52185YJAECZAACUCQBAmQAAlAkAQJkAAJQJAECZAACUCQBAmQAAlAkAQJkAAJQJAECZAACUCQBAmQAAlAkAQJkAAJQJAED5Cf+Vs3becj133nLWzlvO2nnT9dz5052186brufOJztp5y/Xc+VRn7bzleu58g7N2vsFZO2+5njufaAIAUCYAAGUCAFAmAABlAgBQJgAAZQIAUCYAAGUCAFAmAABlAgBQJgAAZQIAUCYAAGUCAFAmAABlAgBQJgAA5ScvO2vnLddz5y3Xc4dfcz133nTWzie6njtvuZ47n+p67vBnuJ47bzpr5y3Xc+ctZ+285Xru8GsmAABlAgBQJgAAZQIAUCYAAGUCAFAmAABlAgBQJgAAZQIAUCYAAGUCAFAmAABlAgBQJgAAZQIAUCYAAGUCAFB+8rLrufOWs3b4Nddz5y1n7fB7nbXzia7nzlvO2vlU13PnLWftfKrrufOWs3becj133nLWzpuu585bztr5RBMAgDIBACgTAIAyAQAoEwCAMgEAKBMAgDIBACgTAIAyAQAoEwCAMgEAKBMAgDIBACgTAIAyAQAoEwCAMgEAKD/5Etdz501n7Xyis3becj13PtVZO9/geu58orN23nI9d77B9dx5y1k7n+p67vBrrufOW87aecsEAKBMAADKBACgTAAAygQAoEwAAMoEAKBMAADKBACgTAAAygQAoEwAAMoEAKBMAADKBACgTAAAygQAoEwAAMoEAKD85EuctfOprufOJzpr503Xc+ct13PnE52186brufOWs3a+wVk7f7rrufMNztr5VGftvOV67nyiCQBAmQAAlAkAQJkAAJQJAECZAACUCQBAmQAAlAkAQJkAAJQJAECZAACUCQBAmQAAlAkAQJkAAJQJAECZAACUn/BfuZ47bzlr5y3Xc+ct13PnTWftvOV67rzlrJ23XM8dfs1ZO5/qeu7wZ7ieO286a+ctZ+18ogkAQJkAAJQJAECZAACUCQBAmQAAlAkAQJkAAJQJAECZAACUCQBAmQAAlAkAQJkAAJQJAECZAACUCQBAmQAAlL/+/kfgf8z13HnLWTvf4HrufKKzdt50PXc+0Vk73+B67nyis3b4NRMAgDIBACgTAIAyAQAoEwCAMgEAKBMAgDIBACgTAIAyAQAoEwCAMgEAKBMAgDIBACgTAIAyAQAoEwCAMgEAKD952fXcgX9z1s5bztp5y/XcectZO5/qrJ23XM+dt1zPnTedtfOW67nzia7nzpvO2vlEZ+285XrufIOzdt4yAQAoEwCAMgEAKBMAgDIBACgTAIAyAQAoEwCAMgEAKBMAgDIBACgTAIAyAQAoEwCAMgEAKBMAgDIBACgTAIAyAQAoP/lgZ+3w+1zPnU91PXfectbOW67nzpvO2nnL9dz5RGft8GvO2vkG13PnLWftvOl67vzpJgAAZQIAUCYAAGUCAFAmAABlAgBQJgAAZQIAUCYAAGUCAFAmAABlAgBQJgAAZQIAUCYAAGUCAFAmAABlAgBQfvIlrufONzhrh9/nrJ1vcNbOW67nzje4njv8mrN23nI9d/g1EwCAMgEAKBMAgDIBACgTAIAyAQAoEwCAMgEAKBMAgDIBACgTAIAyAQAoEwCAMgEAKBMAgDIBACgTAIAyAQAoP4Evdz13PtVZO285a+cTnbXzDa7nzqc6a+ct13PnLddzh99nAgBQJgAAZQIAUCYAAGUCAFAmAABlAgBQJgAAZQIAUCYAAGUCAFAmAABlAgBQJgAAZQIAUCYAAGUCAFAmAADlJ8DHup47n+isHX7NWTvf4Kydt1zPnU911s5brufOJ5oAAJQJAECZAACUCQBAmQAAlAkAQJkAAJQJAECZAACUCQBAmQAAlAkAQJkAAJQJAECZAACUCQBAmQAAlAkAQJkAAJSffImzdvhznLXzDa7nzlvO2vlE13PnTWftvOV67vBnOGuHXzMBACgTAIAyAQAoEwCAMgEAKBMAgDIBACgTAIAyAQAoEwCAMgEAKBMAgDIBACgTAIAyAQAoEwCAMgEAKBMAgPKTD3Y9d+DfXM+dt5y1w+9z1s6nOmvnE13PHX7N9dzh10wAAMoEAKBMAADKBACgTAAAygQAoEwAAMoEAKBMAADKBACgTAAAygQAoEwAAMoEAKBMAADKBACgTAAAygQAoPz19z8CAPAfJgAAZQIAUCYAAGUCAFAmAABlAgBQJgAAZQIAUCYAAGUCAFAmAABlAgBQJgAAZQIAUCYAAGUCAFAmAABlAgBQ/g+MQIU0veWKxAAAAABJRU5ErkJggg==" width="440" height="440" alt="QR"/>
+        <div class="scan" style="font-size:32px">स्कैन करके अभी बनाओ</div>
+      </div>
+      <div style="display:flex; flex-direction:column; align-items:center; gap:18px;">
+        <div class="steps" style="font-size:30px">बोलो <b>→</b> दुकान तैयार <b>→</b> WhatsApp शेयर</div>
+        <div class="cta" style="font-size:32px; padding:20px 48px">boldukaan.com</div>
+        <div class="langs" style="font-size:26px">हिंदी · ਪੰਜਾਬੀ · English</div>
+        <div class="soon" style="font-size:23px">और भाषाएँ जल्द आ रही हैं</div>
+      </div>
+    </div></div></body></html>

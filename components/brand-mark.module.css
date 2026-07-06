@@ -13,3 +13,13 @@
 .dukaanLight {
   color: var(--marigold-deep);
 }
+
+/* Trademark mark: small, raised, and inheriting the wordmark's base color.
+   line-height:0 keeps the superscript from stretching the line box. */
+.tm {
+  font-size: 0.5em;
+  font-weight: 700;
+  vertical-align: super;
+  line-height: 0;
+  margin-left: 0.08em;
+}

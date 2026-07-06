@@ -78,6 +78,9 @@ export default async function Image({ params }: Params) {
         <div style={{ display: "flex", alignItems: "center", fontSize: 34, fontWeight: 800 }}>
           <span style={{ color: PAPER }}>Bol</span>
           <span style={{ color: MARIGOLD }}>Dukaan</span>
+          <span style={{ color: PAPER, fontSize: 18, alignSelf: "flex-start", marginLeft: 3 }}>
+            ™
+          </span>
         </div>
       </div>
     ),

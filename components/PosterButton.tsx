@@ -144,6 +144,10 @@ async function drawPoster(
   ctx.fillText("Bol", wmX, 100);
   ctx.fillStyle = MARIGOLD;
   ctx.fillText("Dukaan", wmX + bolW, 100);
+  // trademark mark — small and raised, in the paper base color
+  ctx.font = `800 20px ${display}`;
+  ctx.fillStyle = PAPER;
+  ctx.fillText("™", wmX + bolW + dukaanW + 5, 84);
   ctx.textAlign = "center";
 
   ctx.fillStyle = PAPER;
@@ -240,7 +244,7 @@ async function drawPoster(
 
   ctx.fillStyle = MUTED;
   ctx.font = `500 24px ${body}`;
-  ctx.fillText("BolDukaan", W / 2, qrBoxY + QR_BOX + BOX_TO_URL + URL_TO_FOOTER);
+  ctx.fillText("BolDukaan™", W / 2, qrBoxY + QR_BOX + BOX_TO_URL + URL_TO_FOOTER);
 
   return canvas;
 }

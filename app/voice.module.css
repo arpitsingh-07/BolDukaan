@@ -387,6 +387,32 @@
   text-align: center;
 }
 
+/* "Edit details" — the tap-to-fix affordance under the preview card. Quiet
+   until the tester needs it (they always do, the moment a detail is wrong). */
+.editToggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  margin-top: 12px;
+  background: transparent;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 8px 16px;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--petrol);
+  cursor: pointer;
+}
+.editToggle:hover {
+  background: var(--surface-tint);
+  border-color: var(--petrol);
+}
+.editToggle[aria-expanded="true"] {
+  background: var(--surface-tint);
+  border-color: var(--petrol);
+}
+
 .missingBox {
   margin-top: 14px;
   background: rgba(245, 158, 27, 0.1);

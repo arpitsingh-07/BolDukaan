@@ -14,6 +14,11 @@ export function BrandName({ tone = "dark" }: { tone?: "dark" | "light" }) {
       >
         Dukaan
       </span>
+      {/* Registered/pending trademark — sits on the wordmark itself, in the
+          surrounding brand color (not marigold) so it reads as a mark. */}
+      <span className={styles.tm} aria-hidden>
+        ™
+      </span>
     </span>
   );
 }
