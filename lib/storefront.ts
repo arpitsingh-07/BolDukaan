@@ -100,17 +100,17 @@ export function emptyStorefront(): Storefront {
 }
 
 /**
- * True if `raw` is (or normalises to) a proper 10-digit Indian mobile number.
- * Owners speak numbers loosely — "+91", a leading 0, spaces, dashes — so we
- * strip to digits, drop a 91 country code or leading 0, then require exactly
- * 10 digits starting 6–9 (the valid Indian mobile range).
+ * True if `raw` is (or normalises to) a 10-digit phone number. Owners speak
+ * numbers loosely — "+91", a leading 0, spaces, dashes — so we strip to digits
+ * and drop a 91 country code or leading 0, then require exactly 10 digits.
+ * No restriction on the starting digit.
  */
 export function isValidPhone(raw: string | null | undefined): boolean {
   if (!raw) return false;
   let d = raw.replace(/\D/g, "");
   if (d.length === 12 && d.startsWith("91")) d = d.slice(2);
   if (d.length === 11 && d.startsWith("0")) d = d.slice(1);
-  return d.length === 10 && /^[6-9]/.test(d);
+  return d.length === 10;
 }
 
 /** "21:00" -> "9:00 PM". Returns the raw value if it isn't HH:MM. */
