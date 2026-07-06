@@ -1,0 +1,176 @@
+.page {
+  min-height: 100svh;
+  background: var(--petrol);
+  color: var(--paper);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 24px;
+  position: relative;
+  overflow: hidden;
+  text-align: center;
+}
+
+/* faint enamel signboard frame — same device as the hero */
+.frame {
+  position: absolute;
+  inset: 16px;
+  border: 1.5px solid rgba(245, 158, 27, 0.22);
+  border-radius: 26px;
+  pointer-events: none;
+}
+
+.inner {
+  position: relative;
+  z-index: 1;
+  max-width: 640px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+}
+
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--font-display-stack);
+  font-size: 20px;
+  font-weight: 800;
+  letter-spacing: -0.01em;
+}
+
+/* ---- marigold voice motif (the signature) ---- */
+.voice {
+  position: relative;
+  width: 152px;
+  height: 152px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 8px 0 2px;
+}
+.ring {
+  position: absolute;
+  border-radius: 50%;
+  border: 1.5px solid rgba(245, 158, 27, 0.4);
+}
+.r1 {
+  width: 152px;
+  height: 152px;
+  animation: cs-breathe 3.4s ease-in-out infinite;
+}
+.r2 {
+  width: 126px;
+  height: 126px;
+  animation: cs-breathe 3.4s ease-in-out infinite 0.25s;
+}
+@keyframes cs-breathe {
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 0.8;
+  }
+  50% {
+    transform: scale(1.08);
+    opacity: 0.35;
+  }
+}
+.dot {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  background: var(--marigold);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: var(--shadow-voice);
+}
+.bars {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  height: 44px;
+}
+.bars i {
+  width: 6px;
+  border-radius: 3px;
+  background: var(--petrol-deep);
+  transform-origin: center;
+  animation: cs-eq 1s ease-in-out infinite;
+}
+.bars i:nth-child(1) {
+  height: 16px;
+  animation-delay: 0s;
+}
+.bars i:nth-child(2) {
+  height: 34px;
+  animation-delay: 0.18s;
+}
+.bars i:nth-child(3) {
+  height: 22px;
+  animation-delay: 0.36s;
+}
+.bars i:nth-child(4) {
+  height: 40px;
+  animation-delay: 0.12s;
+}
+.bars i:nth-child(5) {
+  height: 18px;
+  animation-delay: 0.3s;
+}
+@keyframes cs-eq {
+  0%,
+  100% {
+    transform: scaleY(0.5);
+  }
+  50% {
+    transform: scaleY(1);
+  }
+}
+
+.title {
+  font-family: var(--font-display-stack);
+  font-weight: 800;
+  font-size: clamp(54px, 12vw, 108px);
+  line-height: 1;
+  letter-spacing: -0.03em;
+  margin: 6px 0 0;
+}
+.accent {
+  color: var(--marigold);
+}
+
+.hi {
+  font-family: var(--font-display-stack);
+  font-weight: 700;
+  font-size: clamp(20px, 5vw, 28px);
+  color: var(--paper);
+  margin: 0;
+}
+
+.sub {
+  font-size: clamp(14px, 3.4vw, 17px);
+  color: rgba(244, 243, 239, 0.66);
+  max-width: 470px;
+  margin: 0;
+  line-height: 1.55;
+}
+
+.footer {
+  margin-top: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.url {
+  font-weight: 800;
+  font-size: 16px;
+  color: var(--marigold);
+}
+.langs {
+  font-size: 13px;
+  font-weight: 600;
+  color: rgba(244, 243, 239, 0.5);
+}
