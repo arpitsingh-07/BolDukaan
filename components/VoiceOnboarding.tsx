@@ -10,7 +10,7 @@ import {
 } from "react";
 import { useRouter } from "next/navigation";
 import { createSpeechToText, type SttSession } from "@/lib/stt";
-import type { Storefront } from "@/lib/storefront";
+import { isValidPhone, type Storefront } from "@/lib/storefront";
 import { UI_LANGS, uiToSttLang, t, LANG_COOKIE, type UiLang } from "@/lib/i18n";
 import { StorefrontCard } from "./StorefrontCard";
 import { ShareButton } from "./ShareButton";
@@ -525,8 +525,17 @@ export function VoiceOnboarding({
   const missingFields: string[] = [];
   if (storefront) {
     if (!storefront.name) missingFields.push(tr.missingName);
-    if (!storefront.phone && !storefront.whatsapp)
+    // No number at all → ask for one; a number that isn't a proper 10-digit
+    // one → ask them to say it again (re-speaking merges/corrects it).
+    const { phone, whatsapp } = storefront;
+    if (!phone && !whatsapp) {
       missingFields.push(tr.missingPhone);
+    } else if (
+      !(phone && isValidPhone(phone)) &&
+      !(whatsapp && isValidPhone(whatsapp))
+    ) {
+      missingFields.push(tr.invalidPhone);
+    }
     if (!storefront.address) missingFields.push(tr.missingAddress);
     if (storefront.products.length === 0)
       missingFields.push(tr.missingProducts);

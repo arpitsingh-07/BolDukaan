@@ -137,6 +137,7 @@ export interface UiStrings {
   missingAddress: string;
   missingProducts: string;
   missingHours: string;
+  invalidPhone: string;
   // nearby demand generation (no shops nearby yet)
   nearbyExpandingTitle: string;
   nearbyExpandingSub: string;
@@ -351,6 +352,7 @@ const en: UiStrings = {
   missingAddress: "address",
   missingProducts: "what you sell",
   missingHours: "opening hours",
+  invalidPhone: "a correct 10-digit phone number",
   nearbyExpandingTitle: "We're expanding in your area!",
   nearbyExpandingSub:
     "Which local shop do you want to see here? Enter its name or phone number and we'll bring it online.",
@@ -560,6 +562,7 @@ const hi: UiStrings = {
   missingAddress: "पता",
   missingProducts: "आप क्या बेचते हैं",
   missingHours: "खुलने का समय",
+  invalidPhone: "सही 10 अंकों का फ़ोन नंबर",
   nearbyExpandingTitle: "हम आपके इलाके में आ रहे हैं!",
   nearbyExpandingSub:
     "आप यहाँ कौन सी दुकान देखना चाहते हैं? उसका नाम या फ़ोन नंबर लिखें, हम उसे ऑनलाइन लाएँगे।",
@@ -768,6 +771,7 @@ const pa: UiStrings = {
   missingAddress: "ਪਤਾ",
   missingProducts: "ਤੁਸੀਂ ਕੀ ਵੇਚਦੇ ਹੋ",
   missingHours: "ਖੁੱਲ੍ਹਣ ਦਾ ਸਮਾਂ",
+  invalidPhone: "ਸਹੀ 10 ਅੰਕਾਂ ਦਾ ਫ਼ੋਨ ਨੰਬਰ",
   nearbyExpandingTitle: "ਅਸੀਂ ਤੁਹਾਡੇ ਇਲਾਕੇ ਵਿੱਚ ਆ ਰਹੇ ਹਾਂ!",
   nearbyExpandingSub:
     "ਤੁਸੀਂ ਇੱਥੇ ਕਿਹੜੀ ਦੁਕਾਨ ਵੇਖਣਾ ਚਾਹੁੰਦੇ ਹੋ? ਉਸ ਦਾ ਨਾਮ ਜਾਂ ਫ਼ੋਨ ਨੰਬਰ ਲਿਖੋ, ਅਸੀਂ ਉਸ ਨੂੰ ਆਨਲਾਈਨ ਲਿਆਵਾਂਗੇ।",
