@@ -14,10 +14,11 @@ export const metadata: Metadata = {
 
 // Bump when the policy text materially changes.
 const LAST_UPDATED = "5 July 2026";
-// Current contact is a Gmail address; will move to a custom domain address
-// once the .com is purchased. Instagram handle is @boldukaan.in (boldukaan
-// and boldukaan.com were taken).
-const CONTACT_EMAIL = "boldukaan@gmail.com";
+// Role-based mailboxes on the custom domain. Account/data actions (like
+// deletion) go to support@; privacy & data-rights questions go to legal@.
+// Instagram handle is @boldukaan.in (boldukaan and boldukaan.com were taken).
+const SUPPORT_EMAIL = "support@boldukaan.com";
+const LEGAL_EMAIL = "legal@boldukaan.com";
 const INSTAGRAM_HANDLE = "boldukaan.in";
 const INSTAGRAM_URL = "https://instagram.com/boldukaan.in";
 
@@ -151,8 +152,8 @@ export default async function PrivacyPage() {
             </li>
             <li>
               To delete your entire account and everything in it, email us at{" "}
-              <a className={styles.link} href={`mailto:${CONTACT_EMAIL}`}>
-                {CONTACT_EMAIL}
+              <a className={styles.link} href={`mailto:${SUPPORT_EMAIL}`}>
+                {SUPPORT_EMAIL}
               </a>
               .
             </li>
@@ -181,8 +182,8 @@ export default async function PrivacyPage() {
           <p className={styles.p}>
             If we make important changes, we’ll update the date at the top of
             this page. Questions or requests? Email{" "}
-            <a className={styles.link} href={`mailto:${CONTACT_EMAIL}`}>
-              {CONTACT_EMAIL}
+            <a className={styles.link} href={`mailto:${LEGAL_EMAIL}`}>
+              {LEGAL_EMAIL}
             </a>{" "}
             or reach us on Instagram at{" "}
             <a

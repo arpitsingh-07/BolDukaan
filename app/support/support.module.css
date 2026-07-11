@@ -1,0 +1,41 @@
+/* Support page — email CTA card + help topics, layered on the shared legal layout. */
+.emailCard {
+  margin: 22px 0 4px;
+  padding: 24px;
+  background: var(--surface-tint);
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  box-shadow: 0 6px 20px rgba(21, 32, 30, 0.05);
+}
+.emailLabel {
+  margin: 0 0 8px;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.emailAddress {
+  margin: 0 0 18px;
+  font-family: var(--font-display-stack);
+  font-weight: 800;
+  font-size: 24px;
+  letter-spacing: -0.01em;
+  color: var(--ink);
+  word-break: break-word;
+}
+.emailButton {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 20px;
+  background: var(--ink);
+  color: var(--paper);
+  font-weight: 600;
+  font-size: 15px;
+  border-radius: 12px;
+  text-decoration: none;
+}
+.emailButton:hover {
+  background: var(--petrol-deep);
+}

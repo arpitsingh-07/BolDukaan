@@ -14,7 +14,10 @@ export const metadata: Metadata = {
 
 // Bump when the terms change materially.
 const LAST_UPDATED = "5 July 2026";
-const CONTACT_EMAIL = "boldukaan@gmail.com";
+// Role-based mailboxes on the custom domain. Legal/grievance & questions about
+// these terms go to legal@; billing/refund problems go to support@.
+const LEGAL_EMAIL = "legal@boldukaan.com";
+const SUPPORT_EMAIL = "support@boldukaan.com";
 const INSTAGRAM_HANDLE = "boldukaan.in";
 const INSTAGRAM_URL = "https://instagram.com/boldukaan.in";
 const PRO_PRICE = "₹149";
@@ -209,8 +212,11 @@ export default async function TermsPage() {
             return to the Free plan. Because Pro is a digital service that starts
             immediately, fees already paid are generally non-refundable except
             where the law requires otherwise. If you were charged in error, or
-            you believe there is a genuine problem, contact us within 7 days and
-            we will review it in good faith.
+            you believe there is a genuine problem, email us at{" "}
+            <a className={styles.link} href={`mailto:${SUPPORT_EMAIL}`}>
+              {SUPPORT_EMAIL}
+            </a>{" "}
+            within 7 days and we will review it in good faith.
           </p>
         </section>
 
@@ -299,8 +305,8 @@ export default async function TermsPage() {
             including removal — where appropriate. In line with India’s
             Information Technology rules, our Grievance Officer is{" "}
             <strong>{GRIEVANCE_OFFICER}</strong>, reachable at{" "}
-            <a className={styles.link} href={`mailto:${CONTACT_EMAIL}`}>
-              {CONTACT_EMAIL}
+            <a className={styles.link} href={`mailto:${LEGAL_EMAIL}`}>
+              {LEGAL_EMAIL}
             </a>
             . We aim to acknowledge complaints within 24 hours and resolve them
             within 15 days.
@@ -346,8 +352,8 @@ export default async function TermsPage() {
           <h2 className={styles.h2}>21. Contact</h2>
           <p className={styles.p}>
             Questions about these terms? Email{" "}
-            <a className={styles.link} href={`mailto:${CONTACT_EMAIL}`}>
-              {CONTACT_EMAIL}
+            <a className={styles.link} href={`mailto:${LEGAL_EMAIL}`}>
+              {LEGAL_EMAIL}
             </a>{" "}
             or reach us on Instagram at{" "}
             <a

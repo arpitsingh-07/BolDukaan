@@ -53,22 +53,22 @@ export async function recordPendingSubscription(input: {
 }
 
 /**
- * Grant Pro after a verified Standard Checkout payment. Succeeds only if a
- * pending row for this owner AND this order exists (written when the order was
- * created) — so a valid signature can't upgrade an account that didn't order.
+ * Grant Pro after a verified subscription checkout. Succeeds only if a pending
+ * row for this owner AND this subscription exists (written when the
+ * subscription was created) — so a valid signature can't upgrade an account
+ * that didn't subscribe. provider_sub_id stays the subscription id so later
+ * webhook events (charged / halted / cancelled) can find and update this row.
  */
-export async function activateProByOrder(input: {
+export async function activateProBySubscription(input: {
   ownerUserId: string;
-  orderId: string;
-  paymentId: string;
+  subscriptionId: string;
 }): Promise<boolean> {
   const sql = getSql();
   const rows = await sql`
     UPDATE subscriptions
-    SET plan = 'pro', status = 'active',
-        provider_sub_id = ${input.paymentId}, updated_at = now()
+    SET plan = 'pro', status = 'active', updated_at = now()
     WHERE owner_user_id = ${input.ownerUserId}
-      AND provider_sub_id = ${input.orderId}
+      AND provider_sub_id = ${input.subscriptionId}
     RETURNING owner_user_id`;
   return rows.length > 0;
 }

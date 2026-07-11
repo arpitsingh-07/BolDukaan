@@ -1,20 +1,21 @@
 import { NextResponse } from "next/server";
 import { auth } from "@/auth";
 import { isDbConfigured } from "@/lib/db";
-import { verifyPaymentSignature, isBillingEnabled } from "@/lib/razorpay";
-import { activateProByOrder } from "@/lib/subscriptions";
+import { verifySubscriptionSignature, isBillingEnabled } from "@/lib/razorpay";
+import { activateProBySubscription } from "@/lib/subscriptions";
 
 export const runtime = "nodejs";
 
 interface VerifyBody {
-  razorpay_order_id?: unknown;
   razorpay_payment_id?: unknown;
+  razorpay_subscription_id?: unknown;
   razorpay_signature?: unknown;
 }
 
 /**
- * Verify a Standard Checkout payment and grant Pro. The signature is the sole
- * proof of payment — a mismatch returns 400 and grants nothing.
+ * Verify a subscription checkout and grant Pro. The signature is the sole proof
+ * that the first payment is real — a mismatch returns 400 and grants nothing.
+ * Recurring renewals are handled separately by the Razorpay webhook.
  */
 export async function POST(request: Request) {
   if (!isDbConfigured()) {
@@ -40,30 +41,33 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Invalid body." }, { status: 400 });
   }
 
-  const orderId = body.razorpay_order_id;
   const paymentId = body.razorpay_payment_id;
+  const subscriptionId = body.razorpay_subscription_id;
   const signature = body.razorpay_signature;
   if (
-    typeof orderId !== "string" ||
     typeof paymentId !== "string" ||
+    typeof subscriptionId !== "string" ||
     typeof signature !== "string"
   ) {
     return NextResponse.json({ error: "Missing payment fields." }, { status: 400 });
   }
 
   // Signature mismatch → do NOT mark as paid.
-  if (!verifyPaymentSignature(orderId, paymentId, signature)) {
+  if (!verifySubscriptionSignature(paymentId, subscriptionId, signature)) {
     return NextResponse.json(
       { error: "Payment verification failed." },
       { status: 400 },
     );
   }
 
-  const activated = await activateProByOrder({ ownerUserId, orderId, paymentId });
+  const activated = await activateProBySubscription({
+    ownerUserId,
+    subscriptionId,
+  });
   if (!activated) {
-    // Valid signature, but no matching pending order for this account.
+    // Valid signature, but no matching pending subscription for this account.
     return NextResponse.json(
-      { error: "Order not found for this account." },
+      { error: "Subscription not found for this account." },
       { status: 400 },
     );
   }

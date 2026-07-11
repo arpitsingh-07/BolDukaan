@@ -15,8 +15,8 @@ declare global {
 }
 
 interface CheckoutSuccess {
-  razorpay_order_id: string;
   razorpay_payment_id: string;
+  razorpay_subscription_id: string;
   razorpay_signature: string;
 }
 
@@ -46,16 +46,14 @@ export function UpgradeButton({
     setBusy(true);
     setError(null);
     try {
-      // 1) Create the order on the server.
-      const res = await fetch("/api/billing/order", { method: "POST" });
+      // 1) Create the subscription on the server.
+      const res = await fetch("/api/billing/subscribe", { method: "POST" });
       const data = (await res.json()) as {
-        orderId?: string;
-        amount?: number;
-        currency?: string;
+        subscriptionId?: string;
         keyId?: string;
         error?: string;
       };
-      if (!res.ok || !data.orderId) {
+      if (!res.ok || !data.subscriptionId) {
         setError(data.error ?? "Couldn't start checkout.");
         setBusy(false);
         return;
@@ -71,11 +69,9 @@ export function UpgradeButton({
 
       const rzp = new window.Razorpay({
         key: data.keyId,
-        order_id: data.orderId,
-        amount: data.amount,
-        currency: data.currency,
+        subscription_id: data.subscriptionId,
         name: "BolDukaan",
-        description: "Pro plan",
+        description: "Pro plan · ₹149/month",
         theme: { color: "#0C3B38" },
         // 3) On success, verify the signature server-side before trusting it.
         handler: async (resp: unknown) => {

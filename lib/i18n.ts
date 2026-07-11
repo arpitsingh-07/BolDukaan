@@ -125,6 +125,7 @@ export interface UiStrings {
   authBusy: string;
   privacyPolicy: string;
   terms: string;
+  support: string;
   authAgree: string; // contains "{terms}" and "{privacy}" tokens for the links
   authGoogleConsent: string; // contains "{terms}" and "{privacy}"
   authMustAgree: string;
@@ -366,6 +367,7 @@ const en: UiStrings = {
   authBusy: "Please wait…",
   privacyPolicy: "Privacy Policy",
   terms: "Terms & Conditions",
+  support: "Support",
   authAgree: "I have read and agree to the {terms} and {privacy}.",
   authGoogleConsent: "By continuing, you agree to our {terms} and {privacy}.",
   authMustAgree:
@@ -602,6 +604,7 @@ const hi: UiStrings = {
   authBusy: "कृपया रुकें…",
   privacyPolicy: "प्राइवेसी पॉलिसी",
   terms: "नियम व शर्तें",
+  support: "सहायता",
   authAgree: "मैंने {terms} और {privacy} पढ़ ली हैं और उनसे सहमत हूँ।",
   authGoogleConsent: "जारी रखने पर आप हमारी {terms} और {privacy} से सहमत होते हैं।",
   authMustAgree: "खाता बनाने के लिए नियम व शर्तें और प्राइवेसी पॉलिसी स्वीकार करें।",
@@ -836,6 +839,7 @@ const pa: UiStrings = {
   authBusy: "ਕਿਰਪਾ ਕਰਕੇ ਰੁਕੋ…",
   privacyPolicy: "ਪ੍ਰਾਈਵੇਸੀ ਪਾਲਿਸੀ",
   terms: "ਨਿਯਮ ਤੇ ਸ਼ਰਤਾਂ",
+  support: "ਸਹਾਇਤਾ",
   authAgree: "ਮੈਂ {terms} ਅਤੇ {privacy} ਪੜ੍ਹੀਆਂ ਹਨ ਅਤੇ ਇਨ੍ਹਾਂ ਨਾਲ ਸਹਿਮਤ ਹਾਂ।",
   authGoogleConsent: "ਜਾਰੀ ਰੱਖਣ 'ਤੇ ਤੁਸੀਂ ਸਾਡੀਆਂ {terms} ਅਤੇ {privacy} ਨਾਲ ਸਹਿਮਤ ਹੁੰਦੇ ਹੋ।",
   authMustAgree: "ਖਾਤਾ ਬਣਾਉਣ ਲਈ ਨਿਯਮ ਤੇ ਸ਼ਰਤਾਂ ਅਤੇ ਪ੍ਰਾਈਵੇਸੀ ਪਾਲਿਸੀ ਸਵੀਕਾਰ ਕਰੋ।",

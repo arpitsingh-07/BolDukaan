@@ -55,6 +55,9 @@ export default function ComingSoonPage() {
           <span className={styles.langs}>
             हिंदी · ਪੰਜਾਬੀ · English · + more languages soon
           </span>
+          <a className={styles.contact} href="mailto:hello@boldukaan.com">
+            hello@boldukaan.com
+          </a>
         </div>
       </div>
     </main>

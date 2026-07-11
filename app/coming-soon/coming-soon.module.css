@@ -174,3 +174,14 @@
   font-weight: 600;
   color: rgba(244, 243, 239, 0.5);
 }
+.contact {
+  margin-top: 2px;
+  font-size: 13px;
+  font-weight: 600;
+  color: rgba(244, 243, 239, 0.5);
+  text-decoration: none;
+}
+.contact:hover {
+  color: var(--marigold);
+  text-decoration: underline;
+}

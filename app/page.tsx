@@ -140,6 +140,9 @@ export default async function LandingPage() {
             <Link href="/privacy" className={styles.footerLink}>
               {tr.privacyPolicy}
             </Link>
+            <Link href="/support" className={styles.footerLink}>
+              {tr.support}
+            </Link>
             <a
               href="https://instagram.com/boldukaan.in"
               target="_blank"

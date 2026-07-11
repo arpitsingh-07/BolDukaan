@@ -5,6 +5,7 @@ import {
   Noto_Sans_Devanagari,
   Noto_Sans_Gurmukhi,
 } from "next/font/google";
+import { siteUrl } from "@/lib/site";
 import "./globals.css";
 
 const display = Bricolage_Grotesque({
@@ -31,10 +32,24 @@ const gurmukhi = Noto_Sans_Gurmukhi({
   display: "swap",
 });
 
+const description =
+  "Speak your shop into existence. Describe your shop out loud in Hindi, Punjabi, or English and get a live storefront page.";
+
 export const metadata: Metadata = {
+  // Absolute base for resolving OpenGraph/Twitter image URLs (e.g. the
+  // per-shop opengraph-image) and canonical links.
+  metadataBase: new URL(siteUrl()),
   title: "BolDukaan — bol, aur dukaan taiyaar",
-  description:
-    "Speak your shop into existence. Describe your shop out loud in Hindi, Punjabi, or English and get a live storefront page.",
+  description,
+  openGraph: {
+    title: "BolDukaan — bol, aur dukaan taiyaar",
+    description,
+    url: "/",
+    siteName: "BolDukaan",
+    type: "website",
+    locale: "en_IN",
+  },
+  twitter: { card: "summary", title: "BolDukaan", description },
 };
 
 export const viewport: Viewport = {

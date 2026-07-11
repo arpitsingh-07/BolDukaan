@@ -14,6 +14,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${base}/nearby`, changeFrequency: "daily", priority: 0.8 },
     { url: `${base}/privacy`, changeFrequency: "yearly", priority: 0.3 },
     { url: `${base}/terms`, changeFrequency: "yearly", priority: 0.3 },
+    { url: `${base}/support`, changeFrequency: "yearly", priority: 0.3 },
   ];
 
   let shops: MetadataRoute.Sitemap = [];

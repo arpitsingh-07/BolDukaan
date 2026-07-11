@@ -1,20 +1,23 @@
 import { NextResponse } from "next/server";
 import { auth } from "@/auth";
 import { isDbConfigured } from "@/lib/db";
-import { razorpayConfigured, isBillingEnabled, createOrder } from "@/lib/razorpay";
+import {
+  razorpayConfigured,
+  isBillingEnabled,
+  createSubscription,
+} from "@/lib/razorpay";
 import {
   recordPendingSubscription,
   getSubscriptionForOwner,
   isPro,
 } from "@/lib/subscriptions";
-import { PRO_PRICE_PAISE } from "@/lib/plans";
 
 export const runtime = "nodejs";
 
 /**
- * Create a Razorpay order for the Pro upgrade and return the ids the browser
- * needs to open Standard Checkout. Records a pending row keyed by the order id
- * so /verify can only activate the account that actually ordered.
+ * Create a Razorpay subscription for the Pro upgrade and return the id the
+ * browser needs to open Checkout. Records a pending row keyed by the
+ * subscription id so /verify can only activate the account that subscribed.
  */
 export async function POST() {
   if (!isDbConfigured()) {
@@ -28,7 +31,10 @@ export async function POST() {
   }
   if (!razorpayConfigured()) {
     return NextResponse.json(
-      { error: "Billing isn't configured yet. Set RAZORPAY_KEY_ID and RAZORPAY_KEY_SECRET." },
+      {
+        error:
+          "Billing isn't configured yet. Set RAZORPAY_KEY_ID, RAZORPAY_KEY_SECRET and RAZORPAY_PLAN_ID.",
+      },
       { status: 503 },
     );
   }
@@ -44,27 +50,22 @@ export async function POST() {
     return NextResponse.json({ error: "You're already on Pro." }, { status: 400 });
   }
 
-  const amount = PRO_PRICE_PAISE;
-  if (amount < 100) {
-    return NextResponse.json({ error: "Invalid amount." }, { status: 400 });
-  }
-
   try {
-    const order = await createOrder({
-      amount,
-      receipt: `pro-${Date.now()}`,
+    const subscription = await createSubscription({
+      planId: process.env.RAZORPAY_PLAN_ID as string,
       notes: { owner_user_id: ownerUserId },
     });
-    await recordPendingSubscription({ ownerUserId, providerSubId: order.id });
+    await recordPendingSubscription({
+      ownerUserId,
+      providerSubId: subscription.id,
+    });
     return NextResponse.json({
-      orderId: order.id,
-      amount: order.amount,
-      currency: order.currency,
+      subscriptionId: subscription.id,
       // key_id is public — safe to send to the browser. KEY_SECRET never leaves the server.
       keyId: process.env.RAZORPAY_KEY_ID,
     });
   } catch (err) {
-    console.error("[/api/billing/order] failed:", err);
+    console.error("[/api/billing/subscribe] failed:", err);
     return NextResponse.json({ error: "Couldn't start checkout." }, { status: 500 });
   }
 }

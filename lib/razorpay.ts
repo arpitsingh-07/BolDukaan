@@ -7,10 +7,12 @@ import { createHmac, timingSafeEqual } from "node:crypto";
 
 const API = "https://api.razorpay.com/v1";
 
-/** Standard Checkout (orders) needs only the API key pair — no plan id. */
+/** Subscriptions need the API key pair AND a pre-created Pro plan id. */
 export function razorpayConfigured(): boolean {
   return Boolean(
-    process.env.RAZORPAY_KEY_ID && process.env.RAZORPAY_KEY_SECRET,
+    process.env.RAZORPAY_KEY_ID &&
+      process.env.RAZORPAY_KEY_SECRET &&
+      process.env.RAZORPAY_PLAN_ID,
   );
 }
 
@@ -30,51 +32,61 @@ function authHeader(): string {
   return "Basic " + Buffer.from(`${id}:${secret}`).toString("base64");
 }
 
-export interface RazorpayOrder {
+export interface RazorpaySubscription {
   id: string;
-  amount: number;
-  currency: string;
+  status: string;
+  shortUrl: string | null;
 }
 
-/** Create a Razorpay order (amount in paise, ≥ 100). Server-side only. */
-export async function createOrder(input: {
-  amount: number;
-  receipt: string;
+/**
+ * Create a Razorpay subscription for the Pro plan (recurring monthly). The plan
+ * id fixes the amount and interval, so no amount is passed here. `total_count`
+ * caps the number of billing cycles — 120 months (10 years) is our
+ * "runs until cancelled" horizon. Server-side only.
+ */
+export async function createSubscription(input: {
+  planId: string;
   notes?: Record<string, string>;
-}): Promise<RazorpayOrder> {
-  const res = await fetch(`${API}/orders`, {
+}): Promise<RazorpaySubscription> {
+  const res = await fetch(`${API}/subscriptions`, {
     method: "POST",
     headers: { authorization: authHeader(), "content-type": "application/json" },
     body: JSON.stringify({
-      amount: input.amount,
-      currency: "INR",
-      receipt: input.receipt,
+      plan_id: input.planId,
+      total_count: 120,
+      customer_notify: 1,
       notes: input.notes ?? {},
     }),
   });
   if (!res.ok) {
-    throw new Error(`Razorpay order failed: ${res.status} ${await res.text()}`);
+    throw new Error(
+      `Razorpay subscription failed: ${res.status} ${await res.text()}`,
+    );
   }
-  const data = (await res.json()) as RazorpayOrder;
-  return { id: data.id, amount: data.amount, currency: data.currency };
+  const data = (await res.json()) as {
+    id: string;
+    status: string;
+    short_url?: string;
+  };
+  return { id: data.id, status: data.status, shortUrl: data.short_url ?? null };
 }
 
 /**
- * Verify a Standard Checkout payment: HMAC-SHA256(order_id + "|" + payment_id)
- * with KEY_SECRET must equal the razorpay_signature returned to the browser.
- * Timing-safe. This is what proves a payment is real before granting Pro.
- * (Distinct from verifyWebhookSignature, which signs the raw body with the
- * webhook secret.)
+ * Verify a subscription checkout. For subscriptions Razorpay signs
+ * HMAC-SHA256(payment_id + "|" + subscription_id) with KEY_SECRET — note the
+ * order is the REVERSE of the one-time Orders flow. Timing-safe. This proves
+ * the first payment is real before granting Pro; recurring charges thereafter
+ * are confirmed via verifyWebhookSignature on subscription.charged events.
  */
-export function verifyPaymentSignature(
-  orderId: string,
+export function verifySubscriptionSignature(
   paymentId: string,
+  subscriptionId: string,
   signature: string,
 ): boolean {
   const secret = process.env.RAZORPAY_KEY_SECRET;
   if (!secret || !signature) return false;
   const expected = createHmac("sha256", secret)
-    .update(`${orderId}|${paymentId}`)
+    .update(`${paymentId}|${subscriptionId}`)
     .digest("hex");
   const a = Buffer.from(expected);
   const b = Buffer.from(signature);
